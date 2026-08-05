@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BASSCRAFT — Haptic is the future</title>
+  <meta name="description" content="Feel every frequency. BASSCRAFT transforms your seat into a full-body haptic experience. No Bluetooth. Zero latency.">
+  <link rel="stylesheet" href="styles.css?v=3">
+</head>
+<body>
+<div id="site-wrapper">
+
+<!-- ═══ NAV ═══ -->
+<nav class="navbar" style="justify-content: space-between;">
+  <a href="#" class="nav-logo" id="nav-logo" style="display: flex; align-items: center; gap: 10px;">
+    <!-- Moved Text Logo to Nav -->
+    <img src="assets/evergreen/logo/transparent PNG/core logos, icons and designs/white/Text Logo  -  BASSCRAFT - white.png" alt="BASSCRAFT" style="height: 24px;">
+  </a>
+  <div class="nav-links">
+    <a href="#home">HOME</a>
+    <a href="#experience">EXPERIENCE</a>
+    <a href="#installation">INSTALLATION</a>
+    <a href="#specs">TECH SPECS</a>
+    <a href="#order">ORDER</a>
+  </div>
+  <div style="display: flex; gap: 15px; align-items: center;">
+    <a href="#order" class="nav-cta">PRE-ORDER</a>
+    <button id="global-mute-btn" style="background: none; border: none; color: var(--white); cursor: pointer; padding: 5px; display: flex; align-items: center; justify-content: center;">
+      <svg id="icon-audio-on" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+        <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+      </svg>
+      <svg id="icon-audio-off" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none;">
+        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+        <line x1="23" y1="9" x2="17" y2="15"></line>
+        <line x1="17" y1="9" x2="23" y2="15"></line>
+      </svg>
+    </button>
+  </div>
+</nav>
+
+<!-- ═════ CART MODAL ═════ -->
+<div class="cart-overlay" id="cart-overlay">
+  <div class="cart-modal">
+    <button class="cart-close" id="cart-close">&times;</button>
+    
+    <!-- UPSELL VIEW -->
+    <div class="cart-view" id="cart-upsell-view">
+      <h3 style="font-size: 1.8rem; margin-bottom: 10px;">Wait!</h3>
+      <p style="color: var(--grey-light); margin-bottom: 25px;">Are you sure you don't want <span style="color: #E63946;">to save 100 bucks?</span><br>Share the experience with a friend!</p>
+      
+      <div style="background: rgba(20,20,20,0.8); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 15px; margin-bottom: 25px; display: flex; align-items: center; gap: 15px;">
+        <img src="assets/images/basscraft_studio_2 product offer.png" alt="Double Kit" style="width: 80px; border-radius: 8px;">
+        <div style="text-align: left;">
+          <h4 style="margin: 0; font-size: 1.2rem;">Double Kit</h4>
+          <div style="color: #E63946; font-weight: 700;">Save $100 Instantly</div>
+        </div>
+      </div>
+      
+      <button class="buy-btn btn-ruby" id="upsell-accept-btn" style="width: 100%; margin-bottom: 15px; padding: 15px;">UPGRADE & SAVE $100</button>
+      <button class="btn-ghost" id="upsell-decline-btn" style="width: 100%;">No thanks, continue with Starter Kit</button>
+    </div>
+    
+    <!-- CHECKOUT VIEW -->
+    <div class="cart-view" id="cart-checkout-view" style="display: none;">
+      <h3 style="font-size: 1.8rem; margin-bottom: 20px;">Your Cart</h3>
+      
+      <div class="cart-item">
+        <img src="" alt="Kit" id="cart-item-img">
+        <div class="cart-item-details">
+          <h4 id="cart-item-title" style="margin: 0; font-size: 1.1rem;">Kit</h4>
+          <p id="cart-item-desc" style="color: var(--grey-light); margin: 5px 0 0; font-size: 0.9rem;">Description</p>
+          
+          <div class="cart-qty-selector" style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
+            <button id="cart-qty-minus" style="background: rgba(255,255,255,0.1); border: none; color: white; width: 24px; height: 24px; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center;">-</button>
+            <span id="cart-qty-val" style="font-weight: 600; min-width: 20px; text-align: center;">1</span>
+            <button id="cart-qty-plus" style="background: rgba(255,255,255,0.1); border: none; color: white; width: 24px; height: 24px; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center;">+</button>
+          </div>
+
+          <div id="cart-item-badge" style="display:none; color: #E63946; font-weight: 700; font-size: 0.95rem; margin-top: 8px;">YOU'RE SAVING $100!</div>
+        </div>
+        <div class="cart-item-price-wrap" style="text-align: right;">
+          <div id="cart-item-original-price" style="display:none; color: var(--grey); text-decoration: line-through; font-size: 0.9rem; margin-bottom: -2px;">$600</div>
+          <div class="cart-item-price" id="cart-item-price" style="font-weight: 700; font-size: 1.1rem;">$0</div>
+        </div>
+      </div>
+      
+      <div class="cart-summary" style="margin-top: 25px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px;">
+        <div class="cart-summary-row" style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+          <span style="color: var(--grey-light);">Subtotal</span>
+          <span id="cart-subtotal" style="font-weight: 600;">$0</span>
+        </div>
+        <div class="cart-summary-row" style="display: flex; justify-content: space-between;">
+          <span style="color: var(--grey-light);">Shipping</span>
+          <span style="font-size: 0.9rem;">Calculated at checkout</span>
+        </div>
+      </div>
+      <button class="buy-btn btn-ruby" id="cart-checkout-btn" style="width: 100%; margin-top: 25px; padding: 15px;">PROCEED TO CHECKOUT</button>
+      <button class="cart-secondary-btn" id="cart-downgrade-btn" style="display:none; margin-top: 15px; width: 100%;">BUY JUST ONE KIT AT REGULAR PRICE</button>
+      <button class="cart-upsell-link" id="cart-upsell-link" style="display:none; margin-top: 12px; width: 100%;">ACTUALLY, GIVE ME THE DISCOUNT!</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ 1. HERO ═══ -->
+<section class="hero" id="home">
+  <div class="hero-bg">
+    <!-- Placeholder for new Hero Video -->
+    <div style="width: 100%; height: 100%; background: #000; display:flex; align-items:center; justify-content:center; color: var(--grey-light);">
+      [New Hero Video Placeholder: Car Seat -> Person Holding -> Headrest Hook]
+    </div>
+    <div class="hero-dim" style="background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.4) 100%);"></div>
+  </div>
+  <div class="hero-center" id="hero-center">
+    <!-- Logo removed, now in nav -->
+    <h1 class="hero-title glow" style="font-size: clamp(3rem, 6vw, 5rem); margin-bottom: 20px;">Feel every frequency.</h1>
+    <p class="hero-tagline" style="margin-bottom: 30px;">The immersive in-car haptic engine.</p>
+    <a href="#order" class="hero-cta" id="hero-cta" style="margin-bottom: 20px;">PRE-ORDER &mdash; GET $100 OFF</a>
+    <p style="color: var(--grey-light); font-size: 0.9rem;">Universal Power: Use USB-C or DC Car Outlet</p>
+  </div>
+</section>
+
+<!-- ═══ 2. EXPERIENCE ═══ -->
+<section class="s-dark" id="experience" style="padding: 100px 0;">
+  <div class="container tc">
+    <h2 class="glow mb-5">Music, activated.</h2>
+    <p class="mb-5" style="max-width: 600px; margin: 0 auto; color: var(--grey-light);">Experience your favorite tracks like never before. Every 808, every bass drop, felt directly in your core.</p>
+    <div class="vid-r" style="max-width: 1000px; margin: 0 auto;">
+       <video autoplay loop muted playsinline>
+         <source src="assets/July 2026 website video exports/lead hero with people/lead hero with people - horizontal - 4k.mp4" type="video/mp4">
+       </video>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 3. INSTALLATION (3-STEP) ═══ -->
+<section class="s-light" id="installation" style="padding: 100px 0;">
+  <div class="container">
+    <h2 class="tc mb-5 glow" style="color: var(--black);">Setup in seconds.</h2>
+    <div class="install-steps-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 40px; margin-top: 40px;">
+      <div class="install-step">
+        <div class="vid-r" style="aspect-ratio: 1; background: #eee; display:flex; align-items:center; justify-content:center; color: #555;">
+          [Video: Headrest Hook]
+        </div>
+        <h3 class="mt-4 glow" style="color: var(--black);">1. Hook it</h3>
+        <p style="color: var(--grey-dark);">Simply slip the integrated hook under your driver or passenger headrest.</p>
+      </div>
+      <div class="install-step">
+        <div class="vid-r" style="aspect-ratio: 1; background: #eee; display:flex; align-items:center; justify-content:center; color: #555;">
+          [Video: Controller Box]
+        </div>
+        <h3 class="mt-4 glow" style="color: var(--black);">2. Mount it</h3>
+        <p style="color: var(--grey-dark);">Place the compact Command Central controller in your center console.</p>
+      </div>
+      <div class="install-step">
+        <div class="vid-r" style="aspect-ratio: 1; background: #eee; display:flex; align-items:center; justify-content:center; color: #555;">
+          [Video: Power/Cables]
+        </div>
+        <h3 class="mt-4 glow" style="color: var(--black);">3. Power it</h3>
+        <p style="color: var(--grey-dark);">Plug into your car's 12V cigarette lighter or any USB-C port.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 4. TECH SPECS (AirPods Style) ═══ -->
+<section class="s-dark" id="specs" style="padding: 120px 0; background: #000;">
+  <div class="container">
+    <h2 class="glow mb-5" style="font-size: clamp(2.5rem, 4vw, 4rem);">Explore the details.</h2>
+    
+    <div class="tech-specs-container" style="display: flex; flex-wrap: wrap; gap: 40px; align-items: center; margin-top: 60px;">
+      
+      <!-- Left side: Accordion list -->
+      <div class="tech-specs-list" style="flex: 1; min-width: 300px;">
+        <!-- Engine -->
+        <div class="tech-item active" style="margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 20px; cursor: pointer;">
+          <h3 style="font-size: 1.5rem; display: flex; align-items: center; gap: 15px; margin-bottom: 10px;">
+            <div style="width: 24px; height: 24px; border: 1px solid #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px;">+</div> The Engine
+          </h3>
+          <p style="color: var(--grey-light); display: block;">Dual high-torque haptic transducers deliver precise frequencies (10Hz-200Hz).</p>
+        </div>
+        <!-- Cushion -->
+        <div class="tech-item" style="margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 20px; cursor: pointer;">
+          <h3 style="font-size: 1.5rem; display: flex; align-items: center; gap: 15px; margin-bottom: 10px; color: var(--grey);">
+            <div style="width: 24px; height: 24px; border: 1px solid var(--grey); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px;">+</div> Breathable Design
+          </h3>
+          <p style="color: var(--grey-light); display: none;">Memory foam core and breathable mesh for extended sessions.</p>
+        </div>
+        <!-- Controller -->
+        <div class="tech-item" style="margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 20px; cursor: pointer;">
+          <h3 style="font-size: 1.5rem; display: flex; align-items: center; gap: 15px; margin-bottom: 10px; color: var(--grey);">
+            <div style="width: 24px; height: 24px; border: 1px solid var(--grey); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px;">+</div> Tactile Control
+          </h3>
+          <p style="color: var(--grey-light); display: none;">Three analog knobs allow you to adjust intensity by feel.</p>
+        </div>
+        <!-- DAC -->
+        <div class="tech-item" style="margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 20px; cursor: pointer;">
+          <h3 style="font-size: 1.5rem; display: flex; align-items: center; gap: 15px; margin-bottom: 10px; color: var(--grey);">
+            <div style="width: 24px; height: 24px; border: 1px solid var(--grey); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px;">+</div> Premium DAC
+          </h3>
+          <p style="color: var(--grey-light); display: none;">Built-in audiophile-grade digital-to-analog conversion.</p>
+        </div>
+      </div>
+
+      <!-- Right side: Image/Video frame -->
+      <div class="tech-specs-visual" style="flex: 1; min-width: 300px; display: flex; justify-content: center;">
+        <div style="width: 100%; max-width: 500px; aspect-ratio: 4/3; background: #1c1c1e; border-radius: 24px; display: flex; align-items: center; justify-content: center; color: var(--grey-light); font-size: 1.2rem; border: 1px solid rgba(255,255,255,0.05);">
+          [Diagram / Asset Renders Here]
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 5. ORDER ═══ -->
+<section class="s-light" id="order" style="padding-top: 100px; padding-bottom: 100px;">
+  <div class="container tc">
+    <h2 class="glow mb-5" style="color: var(--black);">Choose your kit.</h2>
+    <div class="pricing-grid">
+      <!-- DOUBLE KIT -->
+      <div class="pricing-card featured">
+        <div class="pricing-badge">BEST VALUE</div>
+        <div class="pricing-card-inner">
+          <div class="pricing-card-image" style="position: relative;">
+            <div style="position: absolute; top: -15px; right: 5px; background: #E63946; color: white; padding: 15px; border-radius: 50%; font-weight: 800; font-size: 1.2rem; line-height: 1; text-align: center; box-shadow: 0 10px 20px rgba(230,57,70,0.4); transform: rotate(12deg); z-index: 10;">SAVE<br>$100</div>
+            <img src="assets/images/basscraft_studio_2 product offer.png" alt="Double Kit Product">
+          </div>
+          <div class="pricing-card-info">
+            <h3>Double Kit</h3>
+            <p class="pricing-desc" style="font-weight: 600; font-size: 1.1rem;">Sharing is caring.</p>
+            <div class="pricing-price"><span class="pricing-was">$600</span>$500</div>
+            <button class="buy-btn buy-btn-featured">PRE-ORDER — GET $100 OFF</button>
+          </div>
+        </div>
+      </div>
+      <!-- STARTER KIT -->
+      <div class="pricing-card">
+        <div class="pricing-card-inner">
+          <div class="pricing-card-image">
+            <img src="assets/images/basscraft_studio_product.jpg" alt="Starter Kit Product">
+          </div>
+          <div class="pricing-card-info">
+            <h3>Starter Kit</h3>
+            <p class="pricing-desc">1 Cushion + 1 Controller</p>
+            <div class="pricing-price">$300</div>
+            <button class="buy-btn">PRE-ORDER</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 6. NO BLUETOOTH (Relegated) ═══ -->
+<section class="s-dark" id="no-bluetooth" style="padding: 100px 0; background: #000;">
+  <div class="container tc">
+    <h2 class="glow mb-4">Zero Latency. Zero Bluetooth.</h2>
+    <p class="mb-5" style="max-width: 600px; margin: 0 auto; color: var(--grey-light);">Lag is the enemy of rhythm. That's why BASSCRAFT runs purely on a wired connection, ensuring you feel the bass the exact millisecond it hits.</p>
+    <div class="vid-r" style="max-width: 800px; margin: 0 auto;">
+      <video autoplay loop muted playsinline>
+         <source src="assets/July 2026 website video exports/no bluetooth/no bluetooth skit - horizontal.mp4" type="video/mp4">
+      </video>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FLOATING BUY WIDGET ═══ -->
+<div class="buy-widget" id="buy-widget">
+  <div class="buy-widget-inner">
+    <div style="display:flex; flex-direction:column; flex:1;">
+      <span style="font-weight:700; font-size:1rem; letter-spacing:0.05em;">BASSCRAFT</span>
+      <span style="color:var(--grey-light); font-size:0.95rem;">$100 OFF - Double Kit</span>
+    </div>
+    <a href="#order" class="nav-cta" style="padding: 10px 20px; font-size: 1rem;">ORDER</a>
+  </div>
+</div>
+
+<!-- ═══ FOOTER ═══ -->
+<footer class="footer">
+  <div class="container tc">
+    <p>&copy; 2026 BASSCRAFT. All rights reserved.</p>
+    <div class="footer-links mt-3">
+      <a href="#">Privacy</a>
+      <a href="#">Terms</a>
+      <a href="#">Support</a>
+    </div>
+  </div>
+</footer>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
