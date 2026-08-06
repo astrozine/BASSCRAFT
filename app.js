@@ -1468,6 +1468,13 @@ document.querySelectorAll('a[href="#order"], .hero-cta, .buy-btn, .nav-cta').for
   // The lightbox chrome's BUY NOW is also an a[href="#order"], but it has to
   // dismiss the open viewer first — it runs its own handler instead of this one.
   if (btn.closest('#lightbox-chrome')) return;
+  // The plain "ORDER" link in the nav list / mobile drawer is also an
+  // a[href="#order"] — but it's a section-navigation link like its HOME/
+  // INSTALLATION/etc. siblings, not a buy CTA, and already has its own
+  // scrollIntoView handler. Without this, both handlers fired on the same
+  // click: this one opened the cart and locked scroll mid-animation, which
+  // froze the smooth-scroll before it could actually move the page.
+  if (btn.closest('.nav-links') || btn.closest('#mobile-nav-menu')) return;
 
   btn.addEventListener('click', (e) => {
     e.preventDefault();

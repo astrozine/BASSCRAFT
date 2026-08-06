@@ -34,7 +34,14 @@
 
 /* ── Reset ── */
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+/* Every in-page nav link (desktop bar + mobile hamburger) uses
+   scrollIntoView({block:'start'}), which lands a section's top edge flush
+   with the very top of the viewport — right under the fixed nav, and with
+   nothing above the heading to read. scroll-padding-top is what
+   scrollIntoView actually measures "start" against, so this single rule
+   fixes every one of those calls at once: sections now land with a
+   breathing-room gap below the nav instead of butted up against it. */
+html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; scroll-padding-top: 20vh; }
 video { background-color: #000; }
 body {
   background: #f7f4ef; color: var(--white);
