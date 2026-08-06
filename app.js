@@ -161,9 +161,15 @@ window.addEventListener('resize', setResponsiveImageSources);
 // Nav starts transparent over the hero (so the video isn't cropped by a solid bar)
 // and picks up its solid/blurred background once scrolled past it.
 const navbarEl = document.querySelector('.navbar');
+const navHeroCta = document.getElementById('hero-cta');
 if (navbarEl) {
   const toggleNavScrolled = () => {
     navbarEl.classList.toggle('scrolled', window.scrollY > 40);
+    if (navHeroCta) {
+      navbarEl.classList.toggle('show-buy-btn', navHeroCta.getBoundingClientRect().bottom < 90);
+    } else {
+      navbarEl.classList.toggle('show-buy-btn', window.scrollY > 400);
+    }
   };
   toggleNavScrolled();
   window.addEventListener('scroll', toggleNavScrolled, { passive: true });
@@ -1073,7 +1079,7 @@ const lightboxChrome = (() => {
     // The cart's product-photo viewer is the one lightbox whose background is
     // the photo itself — shot on near-white — rather than a dark backdrop, so
     // the mark needs the opposite treatment there (see .chrome-on-light in CSS).
-    el.classList.toggle('chrome-on-light', openIds.has('cart-image'));
+    el.classList.toggle('chrome-on-light', openIds.has('cart-image') || openIds.has('doc'));
     el.setAttribute('aria-hidden', any ? 'false' : 'true');
   };
   return {
@@ -1102,12 +1108,11 @@ const lightboxChrome = (() => {
     lightboxCloseFns.specFullscreen?.();
     lightboxChrome.closeAll();
   };
-  // Matches #nav-logo: back to the top of the page.
+  // Instead of jumping to the top of the page, clicking the B logo while in a
+  // viewer now acts as a "back" button, returning the user to where they were.
   logo?.addEventListener('click', (e) => {
     e.preventDefault();
     closeViewers();
-    closeCart();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
   });
   // Matches the navbar's own BUY NOW, which opens the cart straight at checkout
   // on the Double Kit rather than scrolling to the order section.
@@ -1184,10 +1189,12 @@ document.addEventListener('keydown', (e) => {
   // visible) tears that down properly instead of leaving it running.
   let closeCleanupTimer = null;
 
-  function openVideoLightbox(sources) {
+  function openVideoLightbox(sources, posterUrl) {
     if (!sources || !sources.length) return;
     clearTimeout(closeCleanupTimer);
     lightbox.style.display = '';
+    if (posterUrl) player.poster = posterUrl;
+    else player.removeAttribute('poster');
     queue = sources;
     queueIdx = 0;
     player.muted = false;
@@ -1211,12 +1218,27 @@ document.addEventListener('keydown', (e) => {
   lightboxCloseFns.video = closeVideoLightbox;
 
   document.querySelectorAll('.vid-clickable[data-lightbox-src]').forEach(el => {
-    el.addEventListener('click', () => openVideoLightbox([el.dataset.lightboxSrc]));
+    el.addEventListener('click', () => {
+      const vid = el.querySelector('video');
+      let src = el.dataset.lightboxSrc;
+      if (window.innerWidth <= 768 && vid) {
+        src = vid.getAttribute('data-v') || vid.getAttribute('data-sq') || vid.getAttribute('data-h') || src;
+      }
+      openVideoLightbox([src], vid ? vid.getAttribute('poster') : null);
+    });
   });
   document.querySelectorAll('.vid-clickable[data-lightbox-playlist]').forEach(el => {
     el.addEventListener('click', () => {
       try {
-        openVideoLightbox(JSON.parse(el.dataset.lightboxPlaylist));
+        const vid = el.querySelector('video');
+        let playlist = JSON.parse(el.dataset.lightboxPlaylist);
+        if (window.innerWidth <= 768 && vid && vid.hasAttribute('data-playlist')) {
+          const inlinePlaylist = JSON.parse(vid.dataset.playlist);
+          if (Array.isArray(inlinePlaylist) && inlinePlaylist.length === playlist.length) {
+            playlist = inlinePlaylist.map(item => item.v || item.sq || item.h || (typeof item === 'string' ? item : Object.values(item)[0]));
+          }
+        }
+        openVideoLightbox(playlist, vid ? vid.getAttribute('poster') : null);
       } catch (e) {}
     });
   });
@@ -1308,9 +1330,8 @@ document.addEventListener('keydown', (e) => {
     paper.style.height = nh + 'px';
     computeBounds();
     if (initial) {
-      // Open already enlarged past fit, so panning is immediately meaningful
-      // and the hand affordance isn't lying about there being somewhere to go.
-      scale = Math.min(fitScale * 1.5, maxScale);
+      // Open fully zoomed out so the entire document is visible at a glance.
+      scale = fitScale;
       tx = (stage.clientWidth - nw * scale) / 2;
       ty = (stage.clientHeight - nh * scale) / 2;
     } else {
@@ -1516,6 +1537,7 @@ if (globalMuteBtn) {
 document.querySelectorAll('video').forEach(vid => {
   if (vid.classList.contains('scrub-vid')) return; // Skip background scrub videos
   if (vid.hasAttribute('autoplay')) return; // Skip ambient loops
+  if (vid.id === 'hero-video') return; // Skip hero video
 
   const indicator = document.createElement('div');
   indicator.className = 'vid-status-indicator';

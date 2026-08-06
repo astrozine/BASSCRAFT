@@ -98,8 +98,35 @@ p {
   background: linear-gradient(to bottom, rgba(0,0,0,0.32) 0%, rgba(0,0,0,0) 100%);
   backdrop-filter: none; -webkit-backdrop-filter: none;
   transition: background .4s ease, backdrop-filter .4s ease, border-color .4s ease;
-  display: flex; justify-content: space-between; align-items: center; padding: 0 5%;
+  display: flex; align-items: center; padding: 0 5%;
   z-index: 9999; border-bottom: 1px solid transparent;
+}
+.nav-left {
+  flex: 1 1 0;
+  display: flex;
+  align-items: center;
+  transition: flex 0.4s ease;
+}
+.nav-logo {
+  transition: flex 0.4s ease;
+}
+.nav-links {
+  flex: 0 0 auto;
+  transition: transform 0.4s ease, margin 0.4s ease;
+}
+.nav-right {
+  flex: 0 0 0px;
+  width: 0;
+  opacity: 0;
+  overflow: hidden;
+  display: flex; justify-content: flex-end; align-items: center; gap: 15px;
+  transition: flex 0.4s ease, opacity 0.4s ease, width 0.4s ease;
+}
+.navbar.show-buy-btn .nav-right {
+  flex: 1 1 0;
+  width: auto;
+  opacity: 1;
+  overflow: visible;
 }
 .navbar.scrolled {
   background: rgba(0,0,0,0.72);
@@ -111,10 +138,11 @@ p {
 .nav-links { display: flex; gap: 1.6rem; }
 .nav-links a {
   position: relative;
-  font-family: 'CalSansText',sans-serif; font-size: 11px; letter-spacing: .08em;
-  text-transform: uppercase; opacity: .75; transition: opacity .3s, text-shadow .4s;
+  font-family: 'CalSansText',sans-serif; font-size: 12px; letter-spacing: .1em;
+  text-transform: uppercase; opacity: 1; transition: opacity .3s, text-shadow .4s;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8), 0 0 8px rgba(0, 0, 0, 0.4);
 }
-.nav-links a:hover { opacity: 1; }
+.nav-links a:hover { text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9), 0 0 12px rgba(0, 0, 0, 0.6); }
 
 /* Scroll-spy indicator (set via IntersectionObserver in app.js) — kept
    deliberately faint: a soft glow plus two tiny particles drifting off the
@@ -149,18 +177,20 @@ p {
 /* ═══ MOBILE MENU ═══ */
 .mobile-menu-btn {
   display: none; /* only shown once .scrolled, <=768px — see below */
-  /* Same circular-badge language as the cart/lightbox close buttons
-     elsewhere on the site, plus a barely-there drop shadow for a touch of
-     depth — reads as a real button instead of three bare floating lines. */
-  background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.14);
-  border-radius: 50%; box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  background-color: #aeb9c9;
+  background-image: linear-gradient(110deg, #abb7c7, #bac6d6, #a5b0c2, #bac6d6, #abb7c7);
+  background-size: 200% 200%;
+  animation: roving-gradient 14s linear infinite;
+  border: 1px solid rgba(255,255,255,0.4);
+  border-radius: 50%;
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.15), inset 0 0 10px rgba(255, 255, 255, 0.4);
   padding: 6px; margin: 0; cursor: pointer;
-  color: inherit; width: 36px; height: 36px;
+  color: #111827; width: 36px; height: 36px;
   align-items: center; justify-content: center;
   position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
-  transition: background 0.2s, box-shadow 0.2s;
+  transition: transform 0.2s, box-shadow 0.2s;
 }
-.mobile-menu-btn:active { background: rgba(0,0,0,0.55); }
+.mobile-menu-btn:active { transform: translate(-50%, -50%) scale(0.95); }
 .mobile-menu-btn svg { width: 20px; height: 20px; }
 .mobile-menu-btn .bar { transition: transform 0.3s ease, opacity 0.2s ease; transform-origin: center; }
 .mobile-menu-btn.is-active .bar-top { transform: translateY(5px) rotate(45deg); }
@@ -173,7 +203,7 @@ p {
   flex-direction: column;
   background: rgba(10,10,10,0.94);
   backdrop-filter: saturate(180%) blur(20px); -webkit-backdrop-filter: saturate(180%) blur(20px);
-  border-bottom: 1px solid rgba(255,255,255,0.08);
+  border-bottom: 0.5px solid rgba(255,255,255,0.04);
   max-height: 0; overflow: hidden;
   transition: max-height 0.35s ease;
 }
@@ -186,19 +216,32 @@ p {
 .mobile-nav-menu a:active { background: rgba(255,255,255,0.06); }
 
 @media (max-width: 768px) {
+  .hero-title { font-size: clamp(3.5rem, 14vw, 4.5rem); line-height: 1.05; }
+  .hero-tagline { 
+    max-width: 215px; 
+    margin-left: auto; 
+    margin-right: auto; 
+    line-height: 1.4;
+  }
+  .mobile-break { display: block; }
   .nav-links { display: none; }
-  .nav-logo img { height: 40px; }
-  /* Back to the original: full wordmark centered at rest, cross-fading to
-     the compact B mark once .scrolled — exactly like it was before the
-     hamburger existed. The hamburger now only appears once .scrolled too
-     (below), at which point the wordmark has already faded out, so there's
-     no collision between the two. */
+  .nav-logo .logo-white { width: 160px; height: 16px; }
+  .nav-logo .logo-icon { width: 35px; height: 28px; }
+  /* .nav-logo stacks both marks in one grid cell (see place-items rule below),
+     so the cell sizes itself to whichever is WIDER — the 160px wordmark, even
+     once .scrolled fades it to opacity:0. Invisible content still occupies
+     its box; that reserved-but-unseen 160px was squeezing BUY NOW right up
+     against (and on real, slightly-narrower devices, past) the screen edge.
+     Once scrolled only the 35px icon is actually showing, so shrink the
+     container to match it and give the rest of the bar room again. */
+  .navbar.scrolled .nav-logo { width: 35px; }
   .navbar { justify-content: center; }
   .navbar.scrolled { justify-content: space-between; }
+  .nav-left { justify-content: center; }
+  .navbar.scrolled .nav-left { justify-content: flex-start; }
   .navbar.scrolled .mobile-menu-btn { display: flex; }
   .mobile-nav-menu { display: flex; }
   #global-mute-btn { display: none !important; }
-  /* hero-center positioning now handled in the hero section's own media query */
 }
 
 /* ═══ HERO ═══ */
@@ -258,6 +301,10 @@ p {
   filter: drop-shadow(0 2px 12px rgba(0,0,0,0.5)) drop-shadow(0 1px 3px rgba(0,0,0,0.3));
 }
 
+.hero-title {
+  font-size: clamp(2.2rem, 5vw, 4rem);
+}
+
 /* Hero CTA (Apple AirPods Style) */
 .hero-tagline {
   font-family: 'CalSansText', sans-serif; font-size: clamp(1.1rem, 1.5vw, 1.5rem);
@@ -265,6 +312,8 @@ p {
   margin-top: 4px;
   text-shadow: 0 2px 12px rgba(0,0,0,0.5), 0 1px 3px rgba(0,0,0,0.3);
 }
+
+.mobile-break { display: none; }
 .hero-cta {
   display: inline-block; margin-top: 12px;
   background: rgba(255,255,255,0.95); color: var(--dark); padding: 16px 44px;
@@ -277,6 +326,56 @@ p {
   transform: scale(1.06); background: #fff;
   box-shadow: 0 6px 40px rgba(0,0,0,0.2), 0 2px 6px rgba(0,0,0,0.15);
 }
+
+@keyframes roving-gradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes sparkle-whirr {
+  0% { background-position: 0 0; }
+  100% { background-position: -200px -200px; }
+}
+
+.k-pop-text {
+  color: #ffffff;
+  text-shadow: 0 0 8px rgba(180, 200, 255, 0.2), 0 0 16px rgba(140, 160, 255, 0.1);
+  animation: pulse-glow 4s infinite alternate;
+  -webkit-background-clip: unset;
+  -webkit-text-fill-color: unset;
+  background-image: none;
+}
+@keyframes pulse-glow {
+  0% { text-shadow: 0 0 8px rgba(180, 200, 255, 0.2), 0 0 16px rgba(140, 160, 255, 0.1); }
+  100% { text-shadow: 0 0 12px rgba(180, 200, 255, 0.4), 0 0 24px rgba(140, 160, 255, 0.2), 0 0 32px rgba(180, 120, 255, 0.15); }
+}
+
+.k-pop-btn {
+  background-color: #aeb9c9;
+  background-image: linear-gradient(110deg, #abb7c7, #bac6d6, #a5b0c2, #bac6d6, #abb7c7);
+  background-size: 200% 200%;
+  animation: roving-gradient 14s linear infinite;
+  border: 1px solid rgba(255,255,255,0.4);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.15), inset 0 0 10px rgba(255, 255, 255, 0.4);
+  color: #111827;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+.k-pop-btn:hover {
+  transform: scale(1.06);
+  box-shadow: 0 6px 25px rgba(255, 255, 255, 0.25), inset 0 0 15px rgba(255, 255, 255, 0.6);
+  background-color: #e2e8f0;
+}
+
+.k-pop-btn span {
+  position: relative;
+  z-index: 2;
+}
+
 
 /* ═══ DUO GRID (Two Cushions + Full Experience) ═══ */
 .duo-grid {
@@ -842,7 +941,7 @@ p {
    gives plenty of contrast against the page behind it. */
 .cart-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.72); z-index: 9999; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; padding: 24px; }
 .cart-overlay.is-active { opacity: 1; pointer-events: all; }
-.cart-modal { background: rgba(15,15,15,0.97); border: 1px solid rgba(255,255,255,0.08); border-radius: 24px; width: 100%; max-width: 760px; box-shadow: 0 40px 100px rgba(0,0,0,0.8); position: relative; transform: scale(0.95) translateY(20px); transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); text-align: left; overflow: hidden; max-height: 92vh; overflow-y: auto; }
+.cart-modal { background: rgba(32,32,34,0.85); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border: 1px solid rgba(255,255,255,0.08); border-radius: 24px; width: 100%; max-width: 760px; box-shadow: 0 40px 100px rgba(0,0,0,0.8); position: relative; transform: scale(0.95) translateY(20px); transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); text-align: left; overflow: hidden; max-height: 92vh; overflow-y: auto; }
 .cart-overlay.is-active .cart-modal { transform: scale(1) translateY(0); }
 .cart-close { position: absolute; top: 16px; right: 16px; z-index: 10; width: 34px; height: 34px; border-radius: 50%; background: rgba(0,0,0,0.5); border: none; color: white; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s; }
 .cart-close svg { width: 18px; height: 18px; }
@@ -898,11 +997,13 @@ p {
    (a sibling, not a child) and pointer-events:none so it can't steal the
    button's tap target. */
 .cart-brand-icon {
-  position: absolute; top: 10px; left: 10px; z-index: 3; width: 34px; height: 34px; border-radius: 50%;
-  background: rgba(0,0,0,0.55); border: 1px solid rgba(255,255,255,0.15);
-  display: flex; align-items: center; justify-content: center; pointer-events: none;
+  position: absolute; top: 16px; left: 16px; z-index: 3; width: 26px; height: 26px;
+  background-color: rgba(0,0,0,0.12);
+  -webkit-mask: url('assets/images/logo-icon.png') no-repeat center / contain;
+  mask: url('assets/images/logo-icon.png') no-repeat center / contain;
+  pointer-events: none;
 }
-.cart-brand-icon img { width: 52%; height: auto; display: block; filter: invert(1); opacity: 0.9; }
+.cart-brand-icon img { display: none; }
 
 .cart-content-wrapper { position: relative; z-index: 2; flex: 1; min-width: 0; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; padding: 40px; }
 .cart-item-details { width: 100%; }
@@ -961,7 +1062,7 @@ p {
   /* No hover on touch, so the expand hint is always visible instead, and
      sized up a bit further for an easy tap target. */
   .cart-expand-icon { opacity: 1; width: 42px; height: 42px; }
-  .cart-brand-icon { width: 38px; height: 38px; }
+  .cart-brand-icon { width: 28px; height: 28px; }
 
   .cart-eyebrow { margin-bottom: 6px; }
   .cart-heading { font-size: 1.4rem; }
@@ -976,8 +1077,21 @@ p {
   .cart-content-wrapper .buy-btn, .cart-content-wrapper .btn-ghost { margin-top: 12px; padding: 13px; }
 }
 
-.btn-ruby { background: #E63946 !important; color: white !important; border: none !important; }
-.btn-ruby:hover { background: #d62828 !important; }
+.btn-ruby { 
+  background-color: #E63946 !important; 
+  background-image: linear-gradient(110deg, #E63946, #fa5a66, #d91c36, #E63946) !important;
+  background-size: 300% 300% !important;
+  animation: roving-gradient 6s linear infinite !important;
+  color: white !important; 
+  border: 1px solid rgba(255,255,255,0.15) !important;
+  box-shadow: 0 4px 15px rgba(230, 57, 70, 0.25) !important;
+  transition: transform .3s, box-shadow .3s !important;
+}
+.btn-ruby:hover { 
+  background-color: #d62828 !important; 
+  transform: scale(1.04);
+  box-shadow: 0 6px 20px rgba(230, 57, 70, 0.35) !important;
+}
 
 .btn-ghost { background: transparent; border: 1px solid rgba(255,255,255,0.2); color: var(--white); padding: 15px; border-radius: 40px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.3s; font-family: inherit; }
 .btn-ghost:hover { border-color: rgba(255,255,255,0.5); background: rgba(255,255,255,0.05); }
@@ -1092,10 +1206,9 @@ p {
 /* Soft scrim so both marks stay legible over whatever sits behind them — a
    white-background product shot as readily as a dark video frame. Mirrors the
    navbar's own scrim-over-hero treatment. */
+/* Scrim removed by user request to eliminate grey gradients. */
 .lightbox-chrome::before {
-  content: ''; position: absolute; inset: 0 0 auto 0; height: 118px;
-  background: linear-gradient(to bottom, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.2) 58%, rgba(0,0,0,0) 100%);
-  pointer-events: none; z-index: -1;
+  display: none;
 }
 .lightbox-chrome.is-active { opacity: 1; transform: translateX(-50%) translateY(0); }
 /* Container stays click-through so backdrop-to-close still works around them. */
@@ -1112,23 +1225,30 @@ p {
    and dims the mark's own natural dark tone instead, the same white-bar/
    dark-icon pairing the real navbar already uses once scrolled onto the
    light page below the hero. */
-.lightbox-chrome-logo img { height: 44px; display: block; filter: invert(1); opacity: 1; transition: opacity .3s, filter .3s; }
-.lightbox-chrome-logo:hover img { opacity: .8; }
-.lightbox-chrome.chrome-on-light .lightbox-chrome-logo img { filter: none; opacity: .38; }
-.lightbox-chrome.chrome-on-light .lightbox-chrome-logo:hover img { opacity: .6; }
+.lightbox-logo-icon { 
+  width: 55px; height: 44px; display: block; opacity: 1; transition: opacity .3s, filter .3s; 
+  -webkit-mask: url('assets/images/logo-icon.png') no-repeat left center / contain;
+  mask: url('assets/images/logo-icon.png') no-repeat left center / contain;
+  background-color: #ffffff;
+  background-image: linear-gradient(110deg, #ffffff, #ebf3ff, #ffffff, #fdf6fb, #ffffff);
+  background-size: 200% 200%;
+  animation: roving-gradient 14s linear infinite;
+}
+.lightbox-chrome-logo:hover .lightbox-logo-icon { opacity: .8; }
+.lightbox-chrome.chrome-on-light .lightbox-logo-icon { filter: brightness(0.75); opacity: 1; }
+.lightbox-chrome.chrome-on-light .lightbox-chrome-logo:hover .lightbox-logo-icon { opacity: .8; filter: brightness(0.75); }
 
 .lightbox-chrome-buy {
-  background: #fff; color: #1d1d1f; border: none; cursor: pointer;
-  padding: 10px 22px; border-radius: 20px;
-  font-family: inherit; font-size: 11px; font-weight: 700; letter-spacing: .06em;
+  cursor: pointer;
+  padding: 10px 22px; border-radius: 999px;
+  font-family: inherit; font-size: 11px;
   text-transform: uppercase; white-space: nowrap; text-decoration: none;
-  transition: transform .3s, opacity .3s;
+  display: inline-flex; align-items: center; justify-content: center;
 }
-.lightbox-chrome-buy:hover { transform: scale(1.05); opacity: .9; }
 
 @media (max-width: 768px) {
   .lightbox-chrome { padding: 10px 5%; }
-  .lightbox-chrome-logo img { height: 34px; }
+  .lightbox-logo-icon { width: 42px; height: 34px; }
   .lightbox-chrome-buy { padding: 9px 18px; font-size: 10px; }
 }
 
@@ -1140,8 +1260,7 @@ p {
 
 .doc-lightbox {
   position: fixed; inset: 0; z-index: 10000;
-  background: rgba(8,8,10,0.86);
-  backdrop-filter: blur(22px) saturate(130%); -webkit-backdrop-filter: blur(22px) saturate(130%);
+  background: #fdfdfd;
   opacity: 0; pointer-events: none; transition: opacity .28s ease;
 }
 .doc-lightbox.is-active { opacity: 1; pointer-events: all; }
@@ -1191,15 +1310,15 @@ p {
 /* Sits below the chrome bar rather than beside it — BUY NOW owns the top-right
    corner now, and stacking the two reads as one cluster instead of a collision. */
 .doc-lightbox-close {
-  position: absolute; top: 92px; right: 24px; z-index: 3;
+  position: absolute; top: 24px; right: 24px; z-index: 3;
   width: 40px; height: 40px; border-radius: 50%;
-  background: rgba(20,20,20,0.85); border: 1px solid rgba(255,255,255,0.2);
-  color: #fff; cursor: pointer;
+  background: rgba(0,0,0,0.05); border: 1px solid rgba(0,0,0,0.1);
+  color: #000; cursor: pointer;
   display: flex; align-items: center; justify-content: center;
-  box-shadow: 0 4px 14px rgba(0,0,0,0.4); transition: background .2s;
+  transition: background .2s;
 }
 .doc-lightbox-close svg { width: 20px; height: 20px; }
-.doc-lightbox-close:hover { background: rgba(40,40,40,0.95); }
+.doc-lightbox-close:hover { background: rgba(0,0,0,0.1); }
 
 /* Photoshop-style hand affordance. Fades out once they've actually dragged —
    it's an instruction, not persistent furniture. */
@@ -1433,32 +1552,49 @@ p {
    reflows the nav while the other fades. The icon sits at low opacity with a soft
    glass ring — present but discreet. */
 .nav-logo { display: grid !important; place-items: center start; }
-.nav-logo img { grid-area: 1 / 1; transition: opacity .45s ease, transform .45s ease; }
-.nav-logo .logo-white { height: 24px; opacity: 1; }
+.nav-logo > * { grid-area: 1 / 1; transition: opacity .45s ease, transform .45s ease; }
+.nav-logo .logo-white { 
+  width: 250px; height: 24px; opacity: 1; 
+  -webkit-mask: url('assets/images/logo-white.png') no-repeat left center / contain;
+  mask: url('assets/images/logo-white.png') no-repeat left center / contain;
+  background-color: #ffffff;
+  background-image: linear-gradient(110deg, #ffffff, #ebf3ff, #ffffff, #fdf6fb, #ffffff);
+  background-size: 200% 200%;
+  animation: roving-gradient 14s linear infinite;
+}
 /* Just the mark itself — no pill, no border, no blur (that read as a stray grey
    button). A light tint of the dark icon on the pale bar keeps it discreet. */
-.nav-logo .logo-icon { height: 44px; opacity: 0; transform: scale(.94); }
+.nav-logo .logo-icon { 
+  width: 55px; height: 44px; opacity: 0; transform: scale(.94); 
+  
+  -webkit-mask: url('assets/images/logo-icon.png') no-repeat left center / contain;
+  mask: url('assets/images/logo-icon.png') no-repeat left center / contain;
+  
+  background-color: #aeb9c9;
+  background-image: linear-gradient(110deg, #abb7c7, #bac6d6, #a5b0c2, #bac6d6, #abb7c7);
+  background-size: 200% 200%;
+  animation: roving-gradient 14s linear infinite;
+}
 .navbar.scrolled .logo-white { opacity: 0; }
-.navbar.scrolled .logo-icon { opacity: .28; transform: scale(1); }
-.navbar.scrolled .nav-logo:hover .logo-icon { opacity: .7; }
+.navbar.scrolled .logo-icon { opacity: 1; transform: scale(1); }
+.navbar.scrolled .nav-logo:hover .logo-icon { opacity: .8; }
 
 .navbar.scrolled {
   background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
   border-bottom: 1px solid rgba(0, 0, 0, 0.05); padding: 12px 6%;
 }
-.navbar.scrolled .nav-links a { color: #1d1d1f; }
+.navbar.scrolled .nav-links a { color: #1d1d1f; text-shadow: none; }
 .navbar.scrolled #global-mute-btn { color: #1d1d1f !important; }
 
-.navbar.scrolled .scroll-buy-btn {
-  display: inline-block !important;
-  background-color: #1d1d1f;
-  color: #fff;
-  border: none;
+.navbar .scroll-buy-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   text-decoration: none;
   white-space: nowrap;
   padding: 10px 22px;
 }
-.navbar.scrolled .scroll-buy-btn:hover {
+.navbar .scroll-buy-btn:hover {
   opacity: 0.85;
 }
 

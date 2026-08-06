@@ -12,13 +12,15 @@
 
 <!-- ═══ NAV ═══ -->
 <nav class="navbar">
-  <a href="#" class="nav-logo" id="nav-logo" style="display: flex; align-items: center; gap: 10px;">
-    <!-- Over the hero the full white wordmark shows. Once scrolled (.navbar.scrolled) the
-         wordmark cross-fades to just the B icon, held at low opacity so it reads as a
-         discreet glassy mark rather than competing with the content. -->
-    <img class="logo-white" src="assets/images/logo-white.png" alt="BASSCRAFT">
-    <img class="logo-icon" src="assets/images/logo-icon.png" alt="BASSCRAFT">
-  </a>
+  <div class="nav-left">
+    <a href="#" class="nav-logo" id="nav-logo" style="display: flex; align-items: center; gap: 10px;">
+      <!-- Over the hero the full white wordmark shows. Once scrolled (.navbar.scrolled) the
+           wordmark cross-fades to just the B icon, held at low opacity so it reads as a
+           discreet glassy mark rather than competing with the content. -->
+      <div class="logo-white" aria-label="BASSCRAFT" role="img"></div>
+      <div class="logo-icon" aria-label="BASSCRAFT" role="img"></div>
+    </a>
+  </div>
   <div class="nav-links">
     <a href="#home">HOME</a>
     <a href="#installation">INSTALLATION</a>
@@ -26,8 +28,8 @@
     <a href="#experience">EXPERIENCE</a>
     <a href="#order">ORDER</a>
   </div>
-  <div style="display: flex; gap: 15px; align-items: center;">
-    <a href="#order" class="nav-cta scroll-buy-btn" style="display: none;">BUY NOW</a>
+  <div class="nav-right">
+    <a href="#order" class="nav-cta scroll-buy-btn k-pop-btn"><span>BUY NOW</span></a>
   </div>
   <!-- Mobile only: .nav-links is display:none below 768px, so this is the
        only way to reach INSTALLATION/TECH SPECS/EXPERIENCE/ORDER there.
@@ -115,10 +117,10 @@
     <!-- Logo removed, now in nav. Text block anchored to the bottom edge (not centered over the
          product) per client feedback: graphics/buttons shouldn't sit on top of the hero video. -->
     <div class="hero-text-group">
-      <h1 class="hero-title glow" style="font-size: clamp(2.2rem, 5vw, 4rem);">Feel every frequency.</h1>
+      <h1 class="hero-title k-pop-text">Feel every frequency.</h1>
       <p class="hero-tagline">The vibrating cushion that turns your car seat into a subwoofer.</p>
     </div>
-    <a href="#order" class="hero-cta" id="hero-cta">BUY NOW</a>
+    <a href="#order" class="hero-cta k-pop-btn" id="hero-cta"><span>BUY NOW</span></a>
   </div>
 </section>
 
@@ -131,7 +133,7 @@
         <div class="install-step">
           <h3 class="glow" style="color: var(--black); margin-top: 0; margin-bottom: 8px;">1. Hook it</h3>
           <p style="color: var(--grey-dark); margin-bottom: 16px;">Simply slip the integrated hook under your driver or passenger headrest.</p>
-          <div class="vid-r" style="aspect-ratio: 1; background: #000; overflow: hidden; border-radius: 12px;">
+          <div class="vid-r vid-clickable" style="aspect-ratio: 1; background: #000; overflow: hidden; border-radius: 12px;" data-lightbox-src="assets/July 2026 website video exports/cushion/hero 2 cushions/hero 2 cushions - horizontal.mp4">
             <video poster="assets/July 2026 website video exports/cushion/hero 2 cushions/hero 2 cushions - square-poster.webp" preload="none" autoplay loop muted playsinline style="width: 100%; height: 100%; object-fit: cover;">
               <source src="assets/July 2026 website video exports/cushion/hero 2 cushions/hero 2 cushions - square.mp4" type="video/mp4">
             </video>
@@ -139,8 +141,8 @@
         </div>
         <div class="install-step">
           <h3 class="glow" style="color: var(--black); margin-top: 0; margin-bottom: 8px;">2. Mount it</h3>
-          <p style="color: var(--grey-dark); margin-bottom: 16px;">Place the compact Command Central controller in your center console.</p>
-          <div class="vid-r" style="aspect-ratio: 1; background: #000; overflow: hidden; border-radius: 12px;">
+          <p style="color: var(--grey-dark); margin-bottom: 16px;">Place the compact Basscraft controller in your center console.</p>
+          <div class="vid-r vid-clickable" style="aspect-ratio: 1; background: #000; overflow: hidden; border-radius: 12px;" data-lightbox-src="assets/July 2026 website video exports/controller/controller in reach/controller in reach - horizontal.mp4">
             <video poster="assets/July 2026 website video exports/controller/controller in reach/controller in reach - square-poster.webp" preload="none" autoplay loop muted playsinline style="width: 100%; height: 100%; object-fit: cover;">
               <source src="assets/July 2026 website video exports/controller/controller in reach/controller in reach - square.mp4" type="video/mp4">
             </video>
@@ -149,7 +151,7 @@
         <div class="install-step">
           <h3 class="glow" style="color: var(--black); margin-top: 0; margin-bottom: 8px;">3. Power it</h3>
           <p style="color: var(--grey-dark); margin-bottom: 16px;">Plug into any standard 12V cigarette lighter or a USB-C port.</p>
-          <div class="vid-r" style="aspect-ratio: 1; background: #000; overflow: hidden; border-radius: 12px;">
+          <div class="vid-r vid-clickable" style="aspect-ratio: 1; background: #000; overflow: hidden; border-radius: 12px;" data-lightbox-playlist='["assets/July 2026 website video exports/controller/controller ports/2 power options/2 power options - usb c power - square.mp4", "assets/July 2026 website video exports/controller/controller ports/2 power options/2 power options - cigarette dc power - square.mp4"]'>
             <video poster="assets/July 2026 website video exports/controller/controller ports/2 power options/2 power options - usb c power - square-poster.webp" preload="none" class="power-options-video" autoplay muted playsinline style="width: 100%; height: 100%; object-fit: cover;"
               data-power-sources="assets/July 2026 website video exports/controller/controller ports/2 power options/2 power options - usb c power - square.mp4,assets/July 2026 website video exports/controller/controller ports/2 power options/2 power options - cigarette dc power - square.mp4"
               src="assets/July 2026 website video exports/controller/controller ports/2 power options/2 power options - usb c power - square.mp4">
@@ -162,7 +164,7 @@
     <!-- Controller box placement diagrams (per July 24 meeting: 3-4 diagrams requested, 2 exist so far) -->
     <div class="controller-placement">
       <hr class="section-divider">
-      <h3 class="tc glow" style="color: var(--black); margin-bottom: 10px;">Where does the controller box go?</h3>
+      <h3 class="tc glow" style="color: var(--black); margin-bottom: 10px;">Where does your <br class="mobile-break">controller box go?</h3>
       <p class="tc controller-placement-desc" style="color: var(--grey-dark); max-width: 600px;">The controller tucks discreetly out of sight &mdash; drivers and passengers can each run their own.</p>
       <!-- Plays the animated walkthrough once, filling the frame completely. When it ends,
            the frame's own aspect-ratio morphs to match the still diagram exactly (see app.js),
@@ -234,35 +236,35 @@
 
       <!-- Right side: Image/Video frame -->
       <div class="tech-specs-visual" style="flex: 1; min-width: 300px; display: flex; justify-content: center;">
-        <div class="spec-visual-item active shape-vertical">
+        <div class="spec-visual-item active shape-vertical vid-clickable" data-lightbox-src="assets/July 2026 website video exports/cushion/haptic speakers inside/haptic speakers inside - horizontal.mp4">
           <video poster="assets/July 2026 website video exports/cushion/haptic speakers inside/haptic speakers inside - vertical-poster.webp" preload="none" class="play-once" autoplay muted playsinline style="width: 100%; height: 100%; object-fit: cover; border-radius: 24px;"
             data-h="assets/July 2026 website video exports/cushion/haptic speakers inside/haptic speakers inside - horizontal.mp4"
             data-v="assets/July 2026 website video exports/cushion/haptic speakers inside/haptic speakers inside - vertical.mp4">
             <source src="assets/July 2026 website video exports/cushion/haptic speakers inside/haptic speakers inside - vertical.mp4" type="video/mp4">
           </video>
         </div>
-        <div class="spec-visual-item shape-vertical">
+        <div class="spec-visual-item shape-vertical vid-clickable" data-lightbox-src="assets/July 2026 website video exports/cushion/cushion - exploded view/cushion - exploded view - horizontal.mp4">
           <video poster="assets/July 2026 website video exports/cushion/cushion - exploded view/cushion - exploded view - vertical-poster.webp" preload="none" class="play-once" autoplay muted playsinline style="width: 100%; height: 100%; object-fit: cover; border-radius: 24px;"
             data-h="assets/July 2026 website video exports/cushion/cushion - exploded view/cushion - exploded view - horizontal.mp4"
             data-v="assets/July 2026 website video exports/cushion/cushion - exploded view/cushion - exploded view - vertical.mp4">
             <source src="assets/July 2026 website video exports/cushion/cushion - exploded view/cushion - exploded view - vertical.mp4" type="video/mp4">
           </video>
         </div>
-        <div class="spec-visual-item shape-vertical">
+        <div class="spec-visual-item shape-vertical vid-clickable" data-lightbox-src="assets/July 2026 website video exports/controller/exploded view/exploded view - horizontal.mp4">
           <video poster="assets/July 2026 website video exports/controller/exploded view/exploded view - vertical-poster.webp" preload="none" class="play-once" data-rate="1.5" autoplay muted playsinline style="width: 100%; height: 100%; object-fit: cover; border-radius: 24px;"
             data-h="assets/July 2026 website video exports/controller/exploded view/exploded view - horizontal.mp4"
             data-v="assets/July 2026 website video exports/controller/exploded view/exploded view - vertical.mp4">
             <source src="assets/July 2026 website video exports/controller/exploded view/exploded view - vertical.mp4" type="video/mp4">
           </video>
         </div>
-        <div class="spec-visual-item shape-square-mobile">
+        <div class="spec-visual-item shape-square-mobile vid-clickable" data-lightbox-src="assets/July 2026 website video exports/controller/controller knobs/controller knobs - horizontal.mp4">
           <video poster="assets/July 2026 website video exports/controller/controller knobs/controller knobs - horizontal-poster.webp" preload="none" class="play-once" autoplay muted playsinline style="width: 100%; height: 100%; object-fit: cover; border-radius: 24px;"
             data-h="assets/July 2026 website video exports/controller/controller knobs/controller knobs - horizontal.mp4"
             data-sq="assets/July 2026 website video exports/controller/controller knobs/controller knobs - square.mp4">
             <source src="assets/July 2026 website video exports/controller/controller knobs/controller knobs - horizontal.mp4" type="video/mp4">
           </video>
         </div>
-        <div class="spec-visual-item shape-square-mobile">
+        <div class="spec-visual-item shape-square-mobile vid-clickable" data-lightbox-playlist='["assets/July 2026 website video exports/controller/controller ports/cable inputs reveal/cable inputs reveal - horizontal.mp4", "assets/July 2026 website video exports/controller/controller ports/familiar cable types/familiar cable types - horizontal.mp4"]'>
           <!-- Plays "cable inputs reveal" then "familiar cable types" back-to-back, each
                still respecting the horizontal/square responsive swap (see .playlist-video in app.js). -->
           <video poster="assets/July 2026 website video exports/controller/controller ports/cable inputs reveal/cable inputs reveal - horizontal-poster.webp" preload="none" class="playlist-video" autoplay muted playsinline style="width: 100%; height: 100%; object-fit: cover; border-radius: 24px;"
@@ -273,7 +275,7 @@
             ]'>
           </video>
         </div>
-        <div class="spec-visual-item shape-square-always">
+        <div class="spec-visual-item shape-square-always vid-clickable" data-lightbox-playlist='["assets/July 2026 website video exports/controller/controller ports/2 power options/2 power options - usb c power - square.mp4", "assets/July 2026 website video exports/controller/controller ports/2 power options/2 power options - cigarette dc power - square.mp4"]'>
           <video poster="assets/July 2026 website video exports/controller/controller ports/2 power options/2 power options - usb c power - square-poster.webp" preload="none" class="power-options-video" autoplay muted playsinline style="width: 100%; height: 100%; object-fit: cover; border-radius: 24px;"
             data-power-sources="assets/July 2026 website video exports/controller/controller ports/2 power options/2 power options - usb c power - square.mp4,assets/July 2026 website video exports/controller/controller ports/2 power options/2 power options - cigarette dc power - square.mp4"
             src="assets/July 2026 website video exports/controller/controller ports/2 power options/2 power options - usb c power - square.mp4">
@@ -504,9 +506,9 @@
      of it. One element reused by all three lightboxes (see app.js). -->
 <div class="lightbox-chrome" id="lightbox-chrome" aria-hidden="true">
   <a class="lightbox-chrome-logo" id="lightbox-chrome-logo" href="#home" aria-label="BASSCRAFT — back to top">
-    <img src="assets/images/logo-icon.png" alt="BASSCRAFT">
+    <div class="lightbox-logo-icon" aria-label="BASSCRAFT" role="img"></div>
   </a>
-  <a class="lightbox-chrome-buy" id="lightbox-chrome-buy" href="#order">BUY NOW</a>
+  <a class="lightbox-chrome-buy k-pop-btn" id="lightbox-chrome-buy" href="#order"><span>BUY NOW</span></a>
 </div>
 
 <!-- Pan/zoom viewer for the controller-placement documents. These are dense
