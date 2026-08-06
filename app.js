@@ -1253,6 +1253,7 @@ document.addEventListener('DOMContentLoaded', () => {
       hasEnded = true;
       vid.style.opacity = '0';
       matchImage();
+      img.style.opacity = '1';
     });
 
     // Replay whenever the block comes back into view, so anyone who scrolled past
@@ -1265,6 +1266,7 @@ document.addEventListener('DOMContentLoaded', () => {
             wasVisible = true;
             hasEnded = false;
             vid.style.opacity = '1';
+            img.style.opacity = '0';
             matchVideo();
             vid.currentTime = 0;
             vid.play().catch(() => {});

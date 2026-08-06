@@ -1300,6 +1300,10 @@ p {
 .diagram-frame-inner { position: relative; width: 100%; aspect-ratio: 16/9; border-radius: 8px; overflow: hidden; }
 .diagram-still, .diagram-anim { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
 .diagram-anim { transition: opacity 0.9s ease; }
+/* The still diagram fades in on its own once the intro video ends, instead of
+   just sitting there and getting "revealed" as the video on top of it fades
+   out — a real crossfade rather than a one-sided one. */
+.diagram-still { opacity: 0; transition: opacity 1.2s ease; }
 
 @media (max-width: 768px) {
   .controller-placement {
@@ -1318,12 +1322,7 @@ p {
     margin: 0 auto 20px auto; /* Reduced margin to bring it closer to the image */
     padding: 0 15px;
   }
-  /* Full-bleed: breaks out of .container's side padding so the diagram fills
-     the entire screen width edge-to-edge, like a real poster instead of a
-     card floating in the middle of the page. */
-  .diagram-card {
-    max-width: 100vw; width: 100vw; margin-left: calc(50% - 50vw); margin-right: calc(50% - 50vw);
-    background: transparent; border-radius: 0; padding: 0;
-  }
-  .diagram-frame-inner { border-radius: 0; }
+  /* Smaller card with rounded corners, same as desktop — full-bleed edge-to-edge
+     was tried and didn't read better, so this keeps the framed-card look. */
+  .diagram-card { max-width: 92vw; padding: 12px; }
 }
