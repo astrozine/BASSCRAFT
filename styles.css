@@ -141,13 +141,20 @@ p {
 .nav-cta:hover { transform: scale(1.05); opacity: .9; }
 /* ═══ MOBILE MENU ═══ */
 .mobile-menu-btn {
-  display: none; /* only shown <=768px, see below */
-  background: none; border: none; padding: 6px; margin: 0; cursor: pointer;
-  color: inherit; width: 34px; height: 34px;
+  display: none; /* only shown once .scrolled, <=768px — see below */
+  /* Same circular-badge language as the cart/lightbox close buttons
+     elsewhere on the site, plus a barely-there drop shadow for a touch of
+     depth — reads as a real button instead of three bare floating lines. */
+  background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.14);
+  border-radius: 50%; box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  padding: 6px; margin: 0; cursor: pointer;
+  color: inherit; width: 36px; height: 36px;
   align-items: center; justify-content: center;
   position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+  transition: background 0.2s, box-shadow 0.2s;
 }
-.mobile-menu-btn svg { width: 22px; height: 22px; }
+.mobile-menu-btn:active { background: rgba(0,0,0,0.55); }
+.mobile-menu-btn svg { width: 20px; height: 20px; }
 .mobile-menu-btn .bar { transition: transform 0.3s ease, opacity 0.2s ease; transform-origin: center; }
 .mobile-menu-btn.is-active .bar-top { transform: translateY(5px) rotate(45deg); }
 .mobile-menu-btn.is-active .bar-mid { opacity: 0; }
@@ -174,19 +181,14 @@ p {
 @media (max-width: 768px) {
   .nav-links { display: none; }
   .nav-logo img { height: 40px; }
-  /* The full "BASSCRAFT" wordmark is a very wide, flat lockup (~10:1) — no
-     legible height keeps it clear of the now-centered hamburger on a 390px
-     screen. Show the compact B mark instead, always (not just once
-     .scrolled cross-fades to it on desktop), same as a lot of mobile navs
-     drop down to an icon-only mark at narrow widths. */
-  .nav-logo .logo-white { opacity: 0 !important; }
-  .nav-logo .logo-icon { opacity: 1 !important; transform: scale(1) !important; height: 34px; }
-  /* Logo stays left (not centered like the original pre-scroll state) now
-     that the hamburger permanently owns the navbar's true center — the two
-     centered at once just collided into each other. Buy button keeps its
-     original hidden-until-scroll behavior on the right either way. */
-  .navbar { justify-content: space-between; }
-  .mobile-menu-btn { display: flex; }
+  /* Back to the original: full wordmark centered at rest, cross-fading to
+     the compact B mark once .scrolled — exactly like it was before the
+     hamburger existed. The hamburger now only appears once .scrolled too
+     (below), at which point the wordmark has already faded out, so there's
+     no collision between the two. */
+  .navbar { justify-content: center; }
+  .navbar.scrolled { justify-content: space-between; }
+  .navbar.scrolled .mobile-menu-btn { display: flex; }
   .mobile-nav-menu { display: flex; }
   #global-mute-btn { display: none !important; }
   /* hero-center positioning now handled in the hero section's own media query */
