@@ -26,7 +26,11 @@ document.querySelectorAll('video').forEach(vid => {
    ══════════════════════════════════════════════════════════════ */
 function setResponsiveVideoSources() {
   const isMobile = window.innerWidth <= 768;
-  document.querySelectorAll('video[data-h]').forEach(v => {
+  // #hero-video handles its own responsive source swap + load/play timing
+  // (inline script next to its markup) — this generic handler's speculative
+  // play()-then-pause()-if-not-autoplay would fight it now that it no longer
+  // autoplays natively.
+  document.querySelectorAll('video[data-h]:not(#hero-video)').forEach(v => {
     const h = v.dataset.h;
     const vert = v.dataset.v;
     const sq = v.dataset.sq;

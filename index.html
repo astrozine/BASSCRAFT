@@ -35,8 +35,17 @@
 <section class="hero" id="home">
   <div class="hero-bg">
     <!-- V4: Single looping hero — V4 4K clip for desktop, vertical for mobile.
-         Poster images show the first frame instantly while the video buffers. -->
-    <video id="hero-video" autoplay loop muted playsinline preload="auto"
+         No native autoplay/poster attribute: the browser's own poster→video
+         swap happens whenever it likes, which can be well after playback has
+         already advanced a few frames in the background — showing a poster
+         that doesn't quite match, then jump-cutting into the middle of a
+         clip instead of its first frame. Instead: hold on a JS-controlled
+         poster image (extracted directly from this clip's actual frame 0, so
+         it can never drift out of sync with it), explicitly rewind to 0 and
+         call play() ourselves once the video is truly ready, and only then
+         crossfade the poster out over ~2 frames. -->
+    <img id="hero-poster" class="hero-poster" alt="" aria-hidden="true">
+    <video id="hero-video" loop muted playsinline preload="auto"
       style="width: 100%; height: 100%; object-fit: contain;"
       data-poster-h="assets/July 2026 website video exports/v4 hero/v4-hero-poster-desktop-B.webp"
       data-poster-v="assets/July 2026 website video exports/v4 hero/v4-hero-poster-mobile-B.webp"
@@ -47,8 +56,34 @@
     <script>
       (function() {
         var hero = document.getElementById('hero-video');
+        var posterImg = document.getElementById('hero-poster');
         var isMob = window.innerWidth <= 768;
-        hero.setAttribute('poster', isMob ? hero.getAttribute('data-poster-v') : hero.getAttribute('data-poster-h'));
+
+        posterImg.src = isMob ? hero.getAttribute('data-poster-v') : hero.getAttribute('data-poster-h');
+
+        var targetSrc = isMob ? hero.getAttribute('data-v') : hero.getAttribute('data-h');
+        var sourceEl = hero.querySelector('source');
+        if (targetSrc && sourceEl && sourceEl.getAttribute('src') !== targetSrc) {
+          sourceEl.setAttribute('src', targetSrc);
+          hero.load();
+        }
+
+        function startFromZero() {
+          hero.currentTime = 0;
+          var p = hero.play();
+          if (p !== undefined) p.catch(function () {});
+        }
+
+        hero.addEventListener('playing', function onPlaying() {
+          hero.removeEventListener('playing', onPlaying);
+          posterImg.classList.add('is-hidden');
+        });
+
+        if (hero.readyState >= 2) {
+          startFromZero();
+        } else {
+          hero.addEventListener('loadeddata', startFromZero, { once: true });
+        }
       })();
     </script>
     <!-- Lighter scrim: gentle bottom fade for text readability without blocking the video.
