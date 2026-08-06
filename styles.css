@@ -1360,19 +1360,22 @@ p {
     background: rgba(0, 0, 0, 0.95);
     cursor: zoom-out !important;
   }
+  /* Was pinned near the top, which the shared chrome (B mark + BUY NOW) now
+     also occupies — moved to the bottom instead, as a frosted pill matching
+     the document viewer's own hint (.doc-hint), rather than bare text
+     competing with the chrome for the same strip. */
   .spec-visual-item.fullscreen-overlay::before {
     content: "TAP TO CLOSE";
     position: absolute;
-    top: 40px;
-    left: 50%;
+    left: 50%; bottom: max(30px, calc(env(safe-area-inset-bottom, 0px) + 20px));
     transform: translateX(-50%);
-    color: #fff;
-    font-size: 13px;
-    font-weight: 600;
-    letter-spacing: 1px;
+    padding: 9px 17px; border-radius: 100px;
+    background: rgba(20,20,20,0.74); border: 1px solid rgba(255,255,255,0.14);
+    color: rgba(255,255,255,0.92);
+    font-size: 12px; font-weight: 600; letter-spacing: .03em;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.35);
     z-index: 10000;
     pointer-events: none;
-    opacity: 0.8;
   }
   .spec-visual-item.fullscreen-overlay video {
     max-height: 90vh;
