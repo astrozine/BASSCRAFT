@@ -188,7 +188,7 @@ p {
   color: #111827; width: 36px; height: 36px;
   align-items: center; justify-content: center;
   position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition: transform 0.2s, box-shadow 0.2s, left 0.4s ease;
 }
 .mobile-menu-btn:active { transform: translate(-50%, -50%) scale(0.95); }
 .mobile-menu-btn svg { width: 20px; height: 20px; }
@@ -240,6 +240,15 @@ p {
   .nav-left { justify-content: center; }
   .navbar.scrolled .nav-left { justify-content: flex-start; }
   .navbar.scrolled .mobile-menu-btn { display: flex; }
+  /* Centering the hamburger on the whole bar (left:50%, the base rule) looks
+     right only while BUY NOW is still collapsed — logo on the left, nothing
+     on the right yet. Once BUY NOW actually appears (.show-buy-btn), true
+     50% sits past the true midpoint between the (narrow) icon and the
+     (wider) button, so the hamburger read as glued to BUY NOW with the logo
+     off on its own. Measured the gap on each side and shifted just the
+     hamburger to where they land equal — logo|33px|hamburger|33px|BUY NOW
+     at a 390px-wide screen, roughly balanced down to 320px too. */
+  .navbar.scrolled.show-buy-btn .mobile-menu-btn { left: 43.9%; }
   .mobile-nav-menu { display: flex; }
   #global-mute-btn { display: none !important; }
 }
