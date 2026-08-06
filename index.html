@@ -111,14 +111,13 @@
       <!-- Plays the animated walkthrough once, filling the frame completely. When it ends,
            the frame's own aspect-ratio morphs to match the still diagram exactly (see app.js),
            so the image is then shown in full with no cropping — one box, two assets, no letterboxing. -->
-      <div style="max-width: 700px; margin: 0 auto; background: #f5f5f7; border-radius: 16px; padding: 20px; overflow: hidden;">
-        <div class="diagram-frame-inner" style="position: relative; width: 100%; aspect-ratio: 16/9; border-radius: 8px; overflow: hidden;">
+      <div class="diagram-card">
+        <div class="diagram-frame-inner">
           <img class="diagram-still" alt="Possible controller box locations"
             data-h="assets/where to put the controller box/possible lcoations for boxes - wide.png"
             data-v="assets/where to put the controller box/possible lcoations for boxes - vertical.png"
-            src="assets/where to put the controller box/possible lcoations for boxes - wide.png"
-            style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block;">
-          <video poster="assets/July 2026 website video exports/controller/controller location diagram example/controller location diagram example - horizontal-poster.webp" preload="none" class="diagram-anim" autoplay muted playsinline style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: opacity 0.9s ease;"
+            src="assets/where to put the controller box/possible lcoations for boxes - wide.png">
+          <video poster="assets/July 2026 website video exports/controller/controller location diagram example/controller location diagram example - horizontal-poster.webp" preload="none" class="diagram-anim" autoplay muted playsinline
             data-h="assets/July 2026 website video exports/controller/controller location diagram example/controller location diagram example - horizontal.mp4"
             data-v="assets/July 2026 website video exports/controller/controller location diagram example/controller location diagrams - vertical.mp4"
             data-sq="assets/July 2026 website video exports/controller/controller location diagram example/controller location diagram example - square.mp4">
@@ -179,28 +178,28 @@
       <!-- Right side: Image/Video frame -->
       <div class="tech-specs-visual" style="flex: 1; min-width: 300px; display: flex; justify-content: center;">
         <div class="spec-visual-item active shape-vertical">
-          <video poster="assets/July 2026 website video exports/cushion/haptic speakers inside/haptic speakers inside - vertical-poster.webp" preload="none" autoplay loop muted playsinline style="width: 100%; height: 100%; object-fit: cover; border-radius: 24px;"
+          <video poster="assets/July 2026 website video exports/cushion/haptic speakers inside/haptic speakers inside - vertical-poster.webp" preload="none" class="play-once" autoplay muted playsinline style="width: 100%; height: 100%; object-fit: cover; border-radius: 24px;"
             data-h="assets/July 2026 website video exports/cushion/haptic speakers inside/haptic speakers inside - horizontal.mp4"
             data-v="assets/July 2026 website video exports/cushion/haptic speakers inside/haptic speakers inside - vertical.mp4">
             <source src="assets/July 2026 website video exports/cushion/haptic speakers inside/haptic speakers inside - vertical.mp4" type="video/mp4">
           </video>
         </div>
         <div class="spec-visual-item shape-vertical">
-          <video poster="assets/July 2026 website video exports/cushion/cushion - exploded view/cushion - exploded view - vertical-poster.webp" preload="none" autoplay loop muted playsinline style="width: 100%; height: 100%; object-fit: cover; border-radius: 24px;"
+          <video poster="assets/July 2026 website video exports/cushion/cushion - exploded view/cushion - exploded view - vertical-poster.webp" preload="none" class="play-once" autoplay muted playsinline style="width: 100%; height: 100%; object-fit: cover; border-radius: 24px;"
             data-h="assets/July 2026 website video exports/cushion/cushion - exploded view/cushion - exploded view - horizontal.mp4"
             data-v="assets/July 2026 website video exports/cushion/cushion - exploded view/cushion - exploded view - vertical.mp4">
             <source src="assets/July 2026 website video exports/cushion/cushion - exploded view/cushion - exploded view - vertical.mp4" type="video/mp4">
           </video>
         </div>
         <div class="spec-visual-item shape-vertical">
-          <video poster="assets/July 2026 website video exports/controller/exploded view/exploded view - vertical-poster.webp" preload="none" class="ping-pong" autoplay muted playsinline style="width: 100%; height: 100%; object-fit: cover; border-radius: 24px;"
+          <video poster="assets/July 2026 website video exports/controller/exploded view/exploded view - vertical-poster.webp" preload="none" class="play-once" data-rate="1.5" autoplay muted playsinline style="width: 100%; height: 100%; object-fit: cover; border-radius: 24px;"
             data-h="assets/July 2026 website video exports/controller/exploded view/exploded view - horizontal.mp4"
             data-v="assets/July 2026 website video exports/controller/exploded view/exploded view - vertical.mp4">
             <source src="assets/July 2026 website video exports/controller/exploded view/exploded view - vertical.mp4" type="video/mp4">
           </video>
         </div>
         <div class="spec-visual-item shape-square-mobile">
-          <video poster="assets/July 2026 website video exports/controller/controller knobs/controller knobs - horizontal-poster.webp" preload="none" autoplay loop muted playsinline style="width: 100%; height: 100%; object-fit: cover; border-radius: 24px;"
+          <video poster="assets/July 2026 website video exports/controller/controller knobs/controller knobs - horizontal-poster.webp" preload="none" class="play-once" autoplay muted playsinline style="width: 100%; height: 100%; object-fit: cover; border-radius: 24px;"
             data-h="assets/July 2026 website video exports/controller/controller knobs/controller knobs - horizontal.mp4"
             data-sq="assets/July 2026 website video exports/controller/controller knobs/controller knobs - square.mp4">
             <source src="assets/July 2026 website video exports/controller/controller knobs/controller knobs - horizontal.mp4" type="video/mp4">
@@ -261,17 +260,17 @@
     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px; max-width: 1000px; margin: 0 auto;">
       <div class="vid-r" style="aspect-ratio: 1;">
         <video poster="assets/July 2026 website video exports/sub cultural/amapiano - square-poster.webp" preload="none" autoplay loop muted playsinline style="width: 100%; height: 100%; object-fit: cover;">
-          <source src="assets/July 2026 website video exports/sub cultural/amapiano - square.mp4" type="video/mp4">
+          <source src="assets/July 2026 website video exports/sub cultural/amapiano - square - compressed.mp4" type="video/mp4">
         </video>
       </div>
       <div class="vid-r" style="aspect-ratio: 1;">
         <video poster="assets/July 2026 website video exports/sub cultural/hang drum - square-poster.webp" preload="none" autoplay loop muted playsinline style="width: 100%; height: 100%; object-fit: cover;">
-          <source src="assets/July 2026 website video exports/sub cultural/hang drum - square.mp4" type="video/mp4">
+          <source src="assets/July 2026 website video exports/sub cultural/hang drum - square - compressed.mp4" type="video/mp4">
         </video>
       </div>
       <div class="vid-r" style="aspect-ratio: 1;">
         <video poster="assets/July 2026 website video exports/sub cultural/phonk - square-poster.webp" preload="none" autoplay loop muted playsinline style="width: 100%; height: 100%; object-fit: cover;">
-          <source src="assets/July 2026 website video exports/sub cultural/phonk - square.mp4" type="video/mp4">
+          <source src="assets/July 2026 website video exports/sub cultural/phonk - square - compressed.mp4" type="video/mp4">
         </video>
       </div>
     </div>
@@ -338,13 +337,33 @@
      partway down the document instead of the visible screen. -->
 <div class="cart-overlay" id="cart-overlay">
   <div class="cart-modal">
-    <button class="cart-close" id="cart-close">&times;</button>
+    <button class="cart-close" id="cart-close" aria-label="Close cart">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </button>
 
     <!-- UPSELL VIEW -->
     <div class="cart-view" id="cart-upsell-view">
       <div class="cart-item">
+        <!-- Blurred, oversized copy of the same photo behind the whole card, so the
+             product feels like it's sitting in one continuous photographic scene
+             rather than a light image box bolted onto a flat dark panel. -->
+        <img class="cart-media-blur" src="assets/images/2 products one controller.webp" alt="" aria-hidden="true">
+        <div class="cart-media-scrim"></div>
         <div class="cart-item-media">
-          <img src="assets/images/2 products one controller.webp" alt="Double Kit">
+          <button class="cart-media-btn" type="button" aria-label="View product full screen" data-lightbox-src="assets/images/2 products one controller.webp">
+            <img class="cart-media-fg" src="assets/images/2 products one controller.webp" alt="Double Kit">
+            <span class="cart-expand-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="15 3 21 3 21 9"></polyline>
+                <polyline points="9 21 3 21 3 15"></polyline>
+                <line x1="21" y1="3" x2="14" y2="10"></line>
+                <line x1="3" y1="21" x2="10" y2="14"></line>
+              </svg>
+            </span>
+          </button>
         </div>
         <div class="cart-content-wrapper">
           <h3 class="cart-heading">Sharing the experience?</h3>
@@ -362,8 +381,20 @@
     <!-- CHECKOUT VIEW -->
     <div class="cart-view" id="cart-checkout-view" style="display: none;">
       <div class="cart-item">
+        <img class="cart-media-blur" src="" alt="" aria-hidden="true" id="cart-item-img-blur">
+        <div class="cart-media-scrim"></div>
         <div class="cart-item-media">
-          <img src="" alt="Kit" id="cart-item-img">
+          <button class="cart-media-btn" type="button" aria-label="View product full screen" id="cart-media-expand-btn">
+            <img class="cart-media-fg" src="" alt="Kit" id="cart-item-img">
+            <span class="cart-expand-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="15 3 21 3 21 9"></polyline>
+                <polyline points="9 21 3 21 3 15"></polyline>
+                <line x1="21" y1="3" x2="14" y2="10"></line>
+                <line x1="3" y1="21" x2="10" y2="14"></line>
+              </svg>
+            </span>
+          </button>
         </div>
         <div class="cart-content-wrapper">
           <h3 class="cart-eyebrow">Your Cart</h3>
@@ -404,6 +435,22 @@
         </div>
       </div>
     </div>
+  </div>
+</div>
+
+<!-- Full-screen product viewer, opened by tapping the cart's product photo.
+     The close button sits inside .cart-lightbox-inner (sized to hug the image
+     itself, not the full screen) so it lands right at the photo's corner
+     instead of floating off in a far corner of the viewport. -->
+<div class="cart-image-lightbox" id="cart-image-lightbox">
+  <div class="cart-lightbox-inner">
+    <img id="cart-lightbox-img" src="" alt="Product, full screen">
+    <button class="cart-lightbox-close" id="cart-lightbox-close" aria-label="Close full screen image">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </button>
   </div>
 </div>
 

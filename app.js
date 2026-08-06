@@ -50,28 +50,6 @@ function setResponsiveVideoSources() {
       v.appendChild(source);
       v.removeAttribute('preload'); // ensure preload=none doesn't block loading
       v.load();
-      // Ping-Pong Video Logic
-      document.addEventListener('DOMContentLoaded', () => {
-        document.querySelectorAll('video.ping-pong').forEach(vid => {
-          vid.removeAttribute('loop');
-          let direction = 1;
-          vid.addEventListener('ended', () => {
-            direction = -1;
-            vid.pause();
-            requestAnimationFrame(playBackward);
-          });
-          function playBackward() {
-            if (direction === 1) return;
-            vid.currentTime -= 0.025; // Ping-pong scrub speed
-            if (vid.currentTime <= 0) {
-              direction = 1;
-              vid.play();
-            } else {
-              requestAnimationFrame(playBackward);
-            }
-          }
-        });
-      });
       // Force metadata load for scrub videos on mobile
       const playPromise = v.play();
       if (playPromise !== undefined) {
@@ -839,6 +817,7 @@ const cartCheckoutView = document.getElementById('cart-checkout-view');
 const cartClose = document.getElementById('cart-close');
 
 const itemImg = document.getElementById('cart-item-img');
+const itemImgBlur = document.getElementById('cart-item-img-blur');
 const itemTitle = document.getElementById('cart-item-title');
 const itemDesc = document.getElementById('cart-item-desc');
 const itemPrice = document.getElementById('cart-item-price');
@@ -867,7 +846,9 @@ function updateCartUI() {
   const isPair = cartQty % 2 === 0;
   
   if (itemImg) {
-    itemImg.src = cartQty >= 2 ? 'assets/images/2 products one controller.webp' : 'assets/images/basscraft_studio_product.jpg';
+    const src = cartQty >= 2 ? 'assets/images/2 products one controller.webp' : 'assets/images/basscraft_studio_product.jpg';
+    itemImg.src = src;
+    if (itemImgBlur) itemImgBlur.src = src;
   }
   
   if (itemTitle) {
@@ -931,6 +912,32 @@ if (cartOverlay) {
     if (e.target === cartOverlay) closeCart();
   });
 }
+
+// Tap the product photo (either cart view) to see it full screen.
+const cartLightbox = document.getElementById('cart-image-lightbox');
+const cartLightboxImg = document.getElementById('cart-lightbox-img');
+function openCartLightbox(src) {
+  if (!cartLightbox || !cartLightboxImg || !src) return;
+  cartLightboxImg.src = src;
+  cartLightbox.classList.add('is-active');
+}
+function closeCartLightbox() {
+  if (cartLightbox) cartLightbox.classList.remove('is-active');
+}
+document.querySelectorAll('.cart-media-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const src = btn.id === 'cart-media-expand-btn' ? itemImg?.src : btn.dataset.lightboxSrc;
+    openCartLightbox(src);
+  });
+});
+document.getElementById('cart-lightbox-close')?.addEventListener('click', closeCartLightbox);
+cartLightboxImg?.addEventListener('click', closeCartLightbox);
+cartLightbox?.addEventListener('click', (e) => {
+  if (e.target === cartLightbox) closeCartLightbox();
+});
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') closeCartLightbox();
+});
 
 document.getElementById('upsell-accept-btn')?.addEventListener('click', () => {
   cartQty = 2;
@@ -1373,6 +1380,11 @@ document.addEventListener('DOMContentLoaded', () => {
         item.classList.add('active');
         if (visItems[index]) visItems[index].classList.add('active');
 
+        // Play-once videos (cushion + controller exploded views) don't loop
+        // on their own anymore — replay them from the start whenever their
+        // panel is reopened, so they don't just sit frozen from last time.
+        visItems[index]?.querySelectorAll('video.play-once').forEach(vid => vid.resetAndPlay?.());
+
         activeIndex = index;
         placeActiveVideo();
       }
@@ -1383,25 +1395,22 @@ document.addEventListener('DOMContentLoaded', () => {
   placeActiveVideo();
 });
 
-// Ping-Pong Video Logic
+// Plain play-once videos (no native loop, no reverse — just start to end and
+// stop there): gets a resetAndPlay() so the Tech Specs accordion below can
+// replay it from the start when reopened. An optional data-rate speeds
+// specific clips up (the controller exploded view played too slowly at 1x).
 document.addEventListener('DOMContentLoaded', () => {
-  document.querySelectorAll('video.ping-pong').forEach(vid => {
-    vid.removeAttribute('loop');
-    let direction = 1;
-    vid.addEventListener('ended', () => {
-      direction = -1;
-      vid.pause();
-      requestAnimationFrame(playBackward);
-    });
-    function playBackward() {
-      if (direction === 1) return;
-      vid.currentTime -= 0.025; // Ping-pong scrub speed
-      if (vid.currentTime <= 0) {
-        direction = 1;
-        vid.play();
-      } else {
-        requestAnimationFrame(playBackward);
-      }
-    }
+  document.querySelectorAll('video.play-once').forEach(vid => {
+    const rate = parseFloat(vid.dataset.rate) || 1;
+    vid.playbackRate = rate;
+    // Belt-and-suspenders: some browsers silently reset playbackRate back to
+    // 1 once real playback actually starts, even though it was set correctly
+    // beforehand — re-assert it every time so a custom rate actually sticks.
+    if (rate !== 1) vid.addEventListener('playing', () => { vid.playbackRate = rate; });
+    vid.resetAndPlay = () => {
+      vid.currentTime = 0;
+      vid.playbackRate = rate;
+      vid.play();
+    };
   });
 });

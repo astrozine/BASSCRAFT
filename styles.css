@@ -745,24 +745,59 @@ p {
 
 
 /* u2550u2550u2550u2550u2550 CART OVERLAY u2550u2550u2550u2550u2550 */
-.cart-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.65); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); z-index: 9999; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; padding: 24px; }
+/* No backdrop-filter here: combined with the heavy filter:blur() on the
+   product-photo backdrop inside the cart, it can make some browsers'
+   compositor fail to paint the whole overlay. The solid dark fill already
+   gives plenty of contrast against the page behind it. */
+.cart-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.72); z-index: 9999; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; padding: 24px; }
 .cart-overlay.is-active { opacity: 1; pointer-events: all; }
 .cart-modal { background: rgba(15,15,15,0.97); border: 1px solid rgba(255,255,255,0.08); border-radius: 24px; width: 100%; max-width: 760px; box-shadow: 0 40px 100px rgba(0,0,0,0.8); position: relative; transform: scale(0.95) translateY(20px); transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); text-align: left; overflow: hidden; max-height: 92vh; overflow-y: auto; }
 .cart-overlay.is-active .cart-modal { transform: scale(1) translateY(0); }
-.cart-close { position: absolute; top: 16px; right: 16px; z-index: 10; width: 34px; height: 34px; border-radius: 50%; background: rgba(0,0,0,0.5); border: none; color: white; font-size: 1.5rem; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center; padding-bottom: 2px; transition: background 0.2s; }
+.cart-close { position: absolute; top: 16px; right: 16px; z-index: 10; width: 34px; height: 34px; border-radius: 50%; background: rgba(0,0,0,0.5); border: none; color: white; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s; }
+.cart-close svg { width: 18px; height: 18px; }
 .cart-close:hover { background: rgba(0,0,0,0.7); }
 .cart-secondary-btn { background: transparent; border: none; color: var(--grey-light); font-size: 0.9rem; text-decoration: underline; cursor: pointer; margin-top: 10px; transition: color 0.2s; font-family: 'Inter', sans-serif; }
 .cart-secondary-btn:hover { color: white; }
 
-.cart-item { display: flex; align-items: stretch; text-align: left; gap: 0; background: transparent; }
+.cart-item { display: flex; align-items: stretch; text-align: left; gap: 0; background: transparent; position: relative; overflow: hidden; }
 
-/* Product "shelf": lets the tall product photo sit at full size, on its own
-   neutral-light backdrop (matching the studio shots' own background), instead
-   of being cropped to fill a box shaped nothing like the photo. */
-.cart-item-media { flex-shrink: 0; width: 300px; background: var(--bg-light); display: flex; align-items: center; justify-content: center; padding: 28px; }
-.cart-item-media img { width: 100%; height: 100%; object-fit: contain; }
+/* Blurred, oversized copy of the product photo sitting behind the ENTIRE card
+   (image zone + content zone both), with a scrim fading to dark toward the
+   text side. This is what makes it read as one photographic surface instead
+   of a light image box bolted onto a flat dark panel — the same idea as the
+   hero's video + .hero-dim scrim, just applied to a still photo here. */
+.cart-media-blur {
+  position: absolute; inset: -60px; width: calc(100% + 120px); height: calc(100% + 120px);
+  object-fit: cover; filter: blur(90px) brightness(1.35) saturate(0.85); transform: scale(1.1);
+  z-index: 0; pointer-events: none;
+}
+.cart-media-scrim {
+  position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  background: linear-gradient(to right, rgba(190,188,184,0.1) 0%, rgba(20,20,20,0.5) 42%, rgba(14,14,14,0.8) 68%);
+}
 
-.cart-content-wrapper { flex: 1; min-width: 0; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; padding: 40px 40px 40px 6px; }
+.cart-item-media { position: relative; z-index: 2; flex-shrink: 0; width: 300px; display: flex; align-items: center; justify-content: center; }
+/* The button fills the whole media zone (a big, forgiving tap target, and a
+   stable corner to anchor the expand icon to) while the photo inside sizes
+   itself off height with width left to auto-compute from aspect ratio —
+   that's what keeps it from stretching to fill the zone instead of just
+   sitting centered in it. */
+.cart-media-btn { all: unset; position: relative; display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; cursor: zoom-in; }
+/* Fills the zone edge-to-edge (cropping is fine here — the box's aspect ratio
+   is already close to the photo's own, so it costs very little of the image,
+   and it reads far more modern than a padded photo floating in a box). */
+.cart-media-fg { display: block; width: 100%; height: 100%; object-fit: cover; }
+.cart-expand-icon {
+  position: absolute; bottom: 10px; right: 10px; width: 38px; height: 38px; border-radius: 50%;
+  background: rgba(0,0,0,0.55); border: 1px solid rgba(255,255,255,0.15); color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; transition: opacity 0.2s, background 0.2s;
+}
+.cart-expand-icon svg { width: 52%; height: 52%; }
+.cart-media-btn:hover .cart-expand-icon, .cart-media-btn:focus-visible .cart-expand-icon { opacity: 1; }
+.cart-media-btn:hover .cart-expand-icon { background: rgba(0,0,0,0.7); }
+
+.cart-content-wrapper { position: relative; z-index: 2; flex: 1; min-width: 0; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; padding: 40px; }
 .cart-item-details { width: 100%; }
 
 .cart-eyebrow { font-size: 0.8rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--grey-light); margin: 0 0 10px; }
@@ -802,11 +837,23 @@ p {
   .cart-overlay.is-active .cart-modal { transform: translateY(0); }
 
   .cart-item { flex-direction: column; }
-  /* Kept modest on purpose: this view stacks image + price + CTA in one
-     screen with no scroll, so the image gets a fair share, not the lion's
-     share, of that budget. */
-  .cart-item-media { width: 100%; height: clamp(130px, 18vh, 170px); padding: 16px; border-radius: 24px 24px 0 0; }
+  /* Given real room to breathe (the product photo is the reason someone
+     opens the cart) — the sheet can scroll for the rest if a shorter phone
+     needs it, rather than keeping the photo small just to avoid that. */
+  .cart-item-media { width: 100%; height: clamp(220px, 34vh, 320px); }
+  /* Desktop's media zone is close enough to the photo's own aspect ratio that
+     cover crops almost nothing. Mobile's zone is landscape-shaped against a
+     strongly portrait photo, so the same cover crop zooms in to little more
+     than fabric texture — back to contain here, which is the whole reason
+     the "cut off on mobile" complaint got fixed in the first place. */
+  .cart-media-fg { width: auto; height: 100%; max-width: 100%; object-fit: contain; }
   .cart-content-wrapper { padding: 18px 20px 20px; align-items: stretch; text-align: left; }
+
+  /* Vertical instead of horizontal fade, since image and content stack. */
+  .cart-media-scrim { background: linear-gradient(to bottom, rgba(190,188,184,0.1) 0%, rgba(20,20,20,0.5) 50%, rgba(14,14,14,0.82) 78%); }
+  /* No hover on touch, so the expand hint is always visible instead, and
+     sized up a bit further for an easy tap target. */
+  .cart-expand-icon { opacity: 1; width: 42px; height: 42px; }
 
   .cart-eyebrow { margin-bottom: 6px; }
   .cart-heading { font-size: 1.4rem; }
@@ -829,6 +876,44 @@ p {
 
 .cart-upsell-link { background: transparent; border: none; color: var(--grey-light); font-weight: 600; font-size: 0.9rem; cursor: pointer; transition: opacity 0.2s; font-family: inherit; letter-spacing: 0.05em; text-decoration: underline; padding: 5px; }
 .cart-upsell-link:hover { opacity: 0.75; }
+
+/* ═════ CART IMAGE LIGHTBOX ═════ */
+/* Desktop: hugs the photo's own rendered footprint (height:100% + width:auto
+   off this definite-height wrapper), NOT the whole wide screen — a portrait
+   photo on a wide desktop viewport leaves big black bars on either side, and
+   anchoring the close button to the screen edge instead of the photo's own
+   corner put it nowhere near the photo. Mobile overrides this below to fill
+   the screen instead, since there the photo and screen are both portrait and
+   actually share roughly the same shape. */
+.cart-image-lightbox {
+  position: fixed; inset: 0; z-index: 10000;
+  background: rgba(0,0,0,0.96);
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; pointer-events: none; transition: opacity 0.25s ease;
+}
+.cart-image-lightbox.is-active { opacity: 1; pointer-events: all; }
+.cart-lightbox-inner { position: relative; height: 100%; width: auto; max-width: 100%; display: flex; align-items: center; justify-content: center; }
+.cart-image-lightbox img { display: block; height: 100%; width: auto; max-width: 100%; object-fit: contain; }
+.cart-lightbox-close {
+  position: absolute; top: 20px; right: 20px; z-index: 1;
+  width: 40px; height: 40px; border-radius: 50%;
+  background: rgba(20,20,20,0.85); border: 1px solid rgba(255,255,255,0.2);
+  color: #fff; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.4);
+  transition: background 0.2s;
+}
+.cart-lightbox-close svg { width: 20px; height: 20px; }
+.cart-lightbox-close:hover { background: rgba(40,40,40,0.95); }
+@media (max-width: 768px) {
+  /* Here the photo and the screen are both portrait, so filling the whole
+     viewport (rather than hugging just the photo) is the fuller, more
+     "really full screen" presentation — and the close button anchored to
+     the screen corner still lands right by the photo's own corner too. */
+  .cart-lightbox-inner { width: 100%; height: 100%; max-width: none; }
+  .cart-image-lightbox img { width: 100%; height: 100%; }
+  .cart-lightbox-close { top: max(20px, calc(env(safe-area-inset-top, 0px) + 12px)); right: 16px; }
+}
 
 /*  FLASHING PLAY INDICATOR  */
 .vid-status-indicator { position: absolute; bottom: 20px; right: 20px; width: 40px; height: 40px; border-radius: 50%; background: rgba(0,0,0,0.6); color: white; display: flex; align-items: center; justify-content: center; z-index: 50; pointer-events: auto; cursor: pointer; opacity: 0; transition: opacity 0.3s; font-size: 14px; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); }
@@ -1077,6 +1162,11 @@ p {
   margin: 0 auto 40px auto;
 }
 
+.diagram-card { max-width: 700px; margin: 0 auto; background: #f5f5f7; border-radius: 16px; padding: 20px; overflow: hidden; }
+.diagram-frame-inner { position: relative; width: 100%; aspect-ratio: 16/9; border-radius: 8px; overflow: hidden; }
+.diagram-still, .diagram-anim { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+.diagram-anim { transition: opacity 0.9s ease; }
+
 @media (max-width: 768px) {
   .controller-placement {
     margin-top: 50px;
@@ -1094,4 +1184,12 @@ p {
     margin: 0 auto 20px auto; /* Reduced margin to bring it closer to the image */
     padding: 0 15px;
   }
+  /* Full-bleed: breaks out of .container's side padding so the diagram fills
+     the entire screen width edge-to-edge, like a real poster instead of a
+     card floating in the middle of the page. */
+  .diagram-card {
+    max-width: 100vw; width: 100vw; margin-left: calc(50% - 50vw); margin-right: calc(50% - 50vw);
+    background: transparent; border-radius: 0; padding: 0;
+  }
+  .diagram-frame-inner { border-radius: 0; }
 }
