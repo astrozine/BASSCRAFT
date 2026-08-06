@@ -248,7 +248,7 @@ p {
      off on its own. Measured the gap on each side and shifted just the
      hamburger to where they land equal — logo|33px|hamburger|33px|BUY NOW
      at a 390px-wide screen, roughly balanced down to 320px too. */
-  .navbar.scrolled.show-buy-btn .mobile-menu-btn { left: 46.5%; }
+  .navbar.scrolled.show-buy-btn .mobile-menu-btn { left: 48.5%; }
   .mobile-nav-menu { display: flex; }
   #global-mute-btn { display: none !important; }
 }
@@ -1189,8 +1189,15 @@ p {
   .video-lightbox { padding: 20px; }
   /* Close button moves above the video (its own row, right-aligned) instead
      of overlapping it — keeps it clear of the tap area for native controls. */
-  .video-lightbox-inner { flex-direction: column; align-items: flex-end; gap: 12px; height: auto; width: 100%; }
-  .video-lightbox-close { position: static; }
+  /* align-items was flex-end so the close button (this row's only child at
+     the time) sat right-aligned above the video. Now that the video itself
+     is width:auto — sized to its own aspect ratio rather than forced full
+     width — flex-end also right-aligned the video's now-narrower box,
+     leaving it flush against the right edge with empty space to its left.
+     Center the row instead, and pin just the close button back to the
+     right with its own align-self. */
+  .video-lightbox-inner { flex-direction: column; align-items: center; gap: 12px; height: auto; width: 100%; }
+  .video-lightbox-close { position: static; align-self: flex-end; }
   /* width:100% (a definite value) forced the player's own box wider than a
      portrait video's actual rendered content once max-height clamped it
      down — the leftover space inside that box showed its own black

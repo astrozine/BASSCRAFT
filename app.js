@@ -1175,11 +1175,18 @@ document.addEventListener('keydown', (e) => {
     if (p !== undefined) p.catch(() => {});
   }
 
-  // Advances through the queue on 'ended'; once the last clip finishes,
-  // loop back to the start rather than stopping — leaving the player idle
-  // at the end swaps its native play button for a "replay" glyph, which
-  // read as an unwanted extra step instead of just continuing to loop.
+  // Multi-clip playlists still advance/loop via 'ended' — each clip is a
+  // genuinely different file, so a reload between them is unavoidable.
+  // Single clips use the native `loop` property instead (set in
+  // openVideoLightbox below): reassigning the SAME .src every cycle here
+  // forced a full reload each loop, which flashed the aspect ratio (box
+  // sizing depends on videoWidth/videoHeight, unknown again until
+  // 'loadedmetadata' re-fires) and the native play button, and was tied up
+  // with audio dropping on restart too. Native loop reloads nothing — the
+  // media element just seeks back to 0 and keeps playing, 'ended' never
+  // fires at all — which is what "as seamless as possible" actually needs.
   player.addEventListener('ended', () => {
+    if (queue.length <= 1) return;
     queueIdx = queueIdx < queue.length - 1 ? queueIdx + 1 : 0;
     playCurrent();
   });
@@ -1199,6 +1206,7 @@ document.addEventListener('keydown', (e) => {
     else player.removeAttribute('poster');
     queue = sources;
     queueIdx = 0;
+    player.loop = queue.length === 1;
     player.muted = false;
     playCurrent();
     lightbox.classList.add('is-active');
