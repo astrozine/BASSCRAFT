@@ -892,6 +892,18 @@ p {
 .cart-media-btn:hover .cart-expand-icon, .cart-media-btn:focus-visible .cart-expand-icon { opacity: 1; }
 .cart-media-btn:hover .cart-expand-icon { background: rgba(0,0,0,0.7); }
 
+/* Small brand mark on the product photo itself — same grey badge language as
+   the expand icon opposite it, just always-on rather than hover-revealed,
+   since it's a mark rather than an affordance. Sits outside .cart-media-btn
+   (a sibling, not a child) and pointer-events:none so it can't steal the
+   button's tap target. */
+.cart-brand-icon {
+  position: absolute; top: 10px; left: 10px; z-index: 3; width: 34px; height: 34px; border-radius: 50%;
+  background: rgba(0,0,0,0.55); border: 1px solid rgba(255,255,255,0.15);
+  display: flex; align-items: center; justify-content: center; pointer-events: none;
+}
+.cart-brand-icon img { width: 52%; height: auto; display: block; filter: invert(1); opacity: 0.9; }
+
 .cart-content-wrapper { position: relative; z-index: 2; flex: 1; min-width: 0; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; padding: 40px; }
 .cart-item-details { width: 100%; }
 
@@ -949,6 +961,7 @@ p {
   /* No hover on touch, so the expand hint is always visible instead, and
      sized up a bit further for an easy tap target. */
   .cart-expand-icon { opacity: 1; width: 42px; height: 42px; }
+  .cart-brand-icon { width: 38px; height: 38px; }
 
   .cart-eyebrow { margin-bottom: 6px; }
   .cart-heading { font-size: 1.4rem; }
