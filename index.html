@@ -72,9 +72,9 @@
       style="width: 100%; height: 100%; object-fit: contain;"
       data-poster-h="assets/July 2026 website video exports/v4 hero/v4-hero-poster-desktop-B.webp"
       data-poster-v="assets/July 2026 website video exports/v4 hero/v4-hero-poster-mobile-B.webp"
-      data-h="assets/July 2026 website video exports/v4 hero/v4 - hero - horizontal - B- compressed.mp4"
-      data-v="assets/July 2026 website video exports/v4 hero/v4 - hero - vertical - B - compressed.mp4">
-      <source src="assets/July 2026 website video exports/v4 hero/v4 - hero - horizontal - B- compressed.mp4" type="video/mp4">
+      data-h="assets/July 2026 website video exports/v4 hero/v4 - hero - horizontal - B - h264.mp4"
+      data-v="assets/July 2026 website video exports/v4 hero/v4 - hero - vertical - B - h264.mp4">
+      <source src="assets/July 2026 website video exports/v4 hero/v4 - hero - horizontal - B - h264.mp4" type="video/mp4">
     </video>
     <script>
       (function() {
@@ -129,7 +129,13 @@
   <div class="container">
     <div class="setup-card" style="box-sizing: border-box; background: #f2f2f7; border-radius: 24px; padding: 24px 16px;">
       <h2 class="tc mb-5 glow" style="color: var(--black); margin-top: 0;">Setup in seconds.</h2>
-      <div class="install-steps-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; margin-top: 20px;">
+      <!-- minmax(min(280px,100%), 1fr) rather than minmax(280px, 1fr): the plain
+           280px is a hard MINIMUM, so on a phone (this grid measures ~272px
+           inside the card) the column couldn't shrink to fit and stayed 280px —
+           overflowing ~8px past its container and leaving every step sitting a
+           few px right of centre. min(…,100%) lets that floor collapse to the
+           container's own width when it's the narrower of the two. -->
+      <div class="install-steps-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr)); gap: 30px; margin-top: 20px;">
         <div class="install-step">
           <h3 class="glow" style="color: var(--black); margin-top: 0; margin-bottom: 8px;">1. Hook it</h3>
           <p style="color: var(--grey-dark); margin-bottom: 16px;">Simply slip the integrated hook under your driver or passenger headrest.</p>
@@ -596,7 +602,12 @@
         <line x1="6" y1="6" x2="18" y2="18"></line>
       </svg>
     </button>
-    <video id="video-lightbox-player" playsinline controls></video>
+    <!-- No `controls`: these are short showcase clips, not something anyone
+         needs to scrub, pause or re-mix the volume on. The native control bar
+         (and the play/replay glyph it shows at either end of playback) was
+         just visual noise over the product. Dismissal is the X or a click on
+         any empty space around the video. -->
+    <video id="video-lightbox-player" playsinline></video>
   </div>
 </div>
 

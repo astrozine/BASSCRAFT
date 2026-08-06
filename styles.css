@@ -249,6 +249,10 @@ p {
      hamburger to where they land equal — logo|33px|hamburger|33px|BUY NOW
      at a 390px-wide screen, roughly balanced down to 320px too. */
   .navbar.scrolled.show-buy-btn .mobile-menu-btn { left: 48.5%; }
+  /* The B mark otherwise sits flush against the bar's 6% padding edge, which
+     left a much bigger gap between it and the (now nudged-right) hamburger
+     than between the hamburger and BUY NOW. Small inset to even that out. */
+  .navbar.scrolled .nav-logo { margin-left: 14px; }
   .mobile-nav-menu { display: flex; }
   #global-mute-btn { display: none !important; }
 }

@@ -1198,7 +1198,7 @@ document.addEventListener('keydown', (e) => {
   // visible) tears that down properly instead of leaving it running.
   let closeCleanupTimer = null;
 
-  function openVideoLightbox(sources, posterUrl) {
+  function openVideoLightbox(sources, posterUrl, playOnce) {
     if (!sources || !sources.length) return;
     clearTimeout(closeCleanupTimer);
     lightbox.style.display = '';
@@ -1206,7 +1206,10 @@ document.addEventListener('keydown', (e) => {
     else player.removeAttribute('poster');
     queue = sources;
     queueIdx = 0;
-    player.loop = queue.length === 1;
+    // playOnce mirrors the inline video's own .play-once behaviour (the first
+    // four Tech Specs panels — reveal/exploded-view animations that read as
+    // finished once they've run, rather than ambient loops).
+    player.loop = queue.length === 1 && !playOnce;
     player.muted = false;
     playCurrent();
     lightbox.classList.add('is-active');
@@ -1234,7 +1237,11 @@ document.addEventListener('keydown', (e) => {
       if (window.innerWidth <= 768 && vid) {
         src = vid.getAttribute('data-v') || vid.getAttribute('data-sq') || vid.getAttribute('data-h') || src;
       }
-      openVideoLightbox([src], vid ? vid.getAttribute('poster') : null);
+      // Reuse the inline video's own .play-once marker as the signal, so the
+      // expanded view matches what that panel already does on the page
+      // instead of tracking the same intent in two separate places.
+      openVideoLightbox([src], vid ? vid.getAttribute('poster') : null,
+        !!(vid && vid.classList.contains('play-once')));
     });
   });
   document.querySelectorAll('.vid-clickable[data-lightbox-playlist]').forEach(el => {
@@ -1254,8 +1261,15 @@ document.addEventListener('keydown', (e) => {
   });
 
   closeBtn.addEventListener('click', closeVideoLightbox);
+  // With no native controls there's nothing to interact with on the video
+  // itself, so all the empty space around it should dismiss. That includes
+  // the gap beside the video on mobile, which belongs to
+  // .video-lightbox-inner (the video is sized to its own aspect ratio, so
+  // it's narrower than that row) rather than to the backdrop element.
   lightbox.addEventListener('click', (e) => {
-    if (e.target === lightbox) closeVideoLightbox();
+    if (e.target === lightbox || e.target.classList.contains('video-lightbox-inner')) {
+      closeVideoLightbox();
+    }
   });
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && lightbox.classList.contains('is-active')) closeVideoLightbox();
@@ -1548,6 +1562,11 @@ document.querySelectorAll('video').forEach(vid => {
   if (vid.classList.contains('scrub-vid')) return; // Skip background scrub videos
   if (vid.hasAttribute('autoplay')) return; // Skip ambient loops
   if (vid.id === 'hero-video') return; // Skip hero video
+  // Skip the lightbox player too. It's the only element on the page that
+  // otherwise qualifies (everything inline is autoplay), and this appends a
+  // floating play/pause toggle into the lightbox — the same kind of playback
+  // chrome the native `controls` bar was removed for.
+  if (vid.id === 'video-lightbox-player') return;
 
   const indicator = document.createElement('div');
   indicator.className = 'vid-status-indicator';
