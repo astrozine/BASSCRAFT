@@ -103,10 +103,35 @@ p {
 .nav-logo img:hover { opacity: 0.7; }
 .nav-links { display: flex; gap: 1.6rem; }
 .nav-links a {
+  position: relative;
   font-family: 'CalSansText',sans-serif; font-size: 11px; letter-spacing: .08em;
-  text-transform: uppercase; opacity: .75; transition: opacity .3s;
+  text-transform: uppercase; opacity: .75; transition: opacity .3s, text-shadow .4s;
 }
 .nav-links a:hover { opacity: 1; }
+
+/* Scroll-spy indicator (set via IntersectionObserver in app.js) — kept
+   deliberately faint: a soft glow plus two tiny particles drifting off the
+   top of the letters, not a loud "you are here" badge. */
+.nav-links a.nav-active {
+  opacity: 1;
+  text-shadow: 0 0 4px rgba(180,225,255,0.5), 0 0 9px rgba(180,225,255,0.22);
+}
+.nav-links a.nav-active::before,
+.nav-links a.nav-active::after {
+  content: ''; position: absolute; top: 2px;
+  width: 2px; height: 2px; border-radius: 50%;
+  background: rgba(180,225,255,0.9);
+  opacity: 0; pointer-events: none;
+  animation: navParticleFloat 2.6s ease-in-out infinite;
+}
+.nav-links a.nav-active::before { left: 25%; animation-delay: 0s; }
+.nav-links a.nav-active::after { left: 70%; animation-delay: 1.3s; }
+@keyframes navParticleFloat {
+  0% { opacity: 0; transform: translateY(2px) scale(0.6); }
+  20% { opacity: 0.5; }
+  75% { opacity: 0.12; }
+  100% { opacity: 0; transform: translateY(-9px) scale(1); }
+}
 .nav-cta {
   background: var(--white); color: var(--dark); padding: 7px 18px;
   border-radius: 20px; font-size: 11px; font-weight: 700; letter-spacing: .06em;

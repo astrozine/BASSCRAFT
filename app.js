@@ -95,6 +95,33 @@ if (navbarEl) {
   window.addEventListener('scroll', toggleNavScrolled, { passive: true });
 }
 
+// Scroll-spy: subtly marks whichever nav link matches the section currently
+// centered in the viewport (.nav-active — see the glow/particle styling in
+// styles.css), so people can tell where they are on the page.
+(() => {
+  const navLinks = document.querySelectorAll('.nav-links a[href^="#"]');
+  const sections = Array.from(navLinks)
+    .map(a => document.querySelector(a.getAttribute('href')))
+    .filter(Boolean);
+  if (!sections.length) return;
+
+  const setActive = (id) => {
+    navLinks.forEach(a => a.classList.toggle('nav-active', a.getAttribute('href') === `#${id}`));
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    const visible = entries.filter(e => e.isIntersecting);
+    if (!visible.length) return;
+    // Whichever visible section's top is closest to the centered band wins.
+    const best = visible.reduce((a, b) =>
+      Math.abs(b.boundingClientRect.top) < Math.abs(a.boundingClientRect.top) ? b : a
+    );
+    setActive(best.target.id);
+  }, { rootMargin: '-45% 0px -45% 0px', threshold: 0 });
+
+  sections.forEach(s => observer.observe(s));
+})();
+
 document.getElementById('nav-logo').addEventListener('click', (e) => {
   e.preventDefault();
   window.scrollTo({ top: 0, behavior: 'smooth' });
