@@ -1127,13 +1127,20 @@ p {
 
 .doc-paper {
   position: absolute; top: 0; left: 0;
-  transform-origin: 0 0; will-change: transform;
+  transform-origin: 0 0;
   background: #fff;
   box-shadow: 0 30px 90px rgba(0,0,0,0.6);
   /* Isolate so the grain's multiply blend composites against the sheet itself
      rather than punching through to the backdrop behind the whole lightbox. */
   isolation: isolate;
 }
+/* GPU-promoted only while genuinely open and interactive — this element is a
+   full-resolution scan (up to ~3770x2936px) that can sit zoomed in well past
+   its own footprint, and an always-on `will-change` would keep that whole
+   layer composited in the background forever after first use, even while
+   invisible (see app.js: display:none + a transform reset on close handle
+   fully tearing the layer down once the fade-out ends). */
+.doc-lightbox.is-active .doc-paper { will-change: transform; }
 .doc-paper img { display: block; width: 100%; height: 100%; -webkit-user-drag: none; }
 /* The source scans are pure flat #ffffff with zero grain of their own (measured:
    stddev 0.00 across the background), so the paper feel is generated here —

@@ -57,6 +57,15 @@ const scrollLock = (() => {
   return { lock, unlock, reset };
 })();
 
+// The video-lightbox and doc-lightbox each define their real close function
+// (with its display:none-after-fade teardown) inside their own IIFE further
+// down — not reachable from the shared chrome's "close whatever's open"
+// logic otherwise. Each IIFE registers itself here once it runs; the chrome
+// calls through this rather than touching those overlays' DOM/classes
+// directly, so there's exactly one close path per overlay, not two that can
+// drift out of sync.
+const lightboxCloseFns = {};
+
 // Global UI sync for all video play buttons & Hero fade
 document.querySelectorAll('video').forEach(vid => {
   vid.addEventListener('play', function() {
@@ -1069,14 +1078,15 @@ const lightboxChrome = (() => {
   // Dismiss whichever viewer is open, without touching the cart — the two
   // controls disagree about what should happen to it next.
   const closeViewers = () => {
-    document.querySelectorAll('.cart-image-lightbox, .video-lightbox, .doc-lightbox')
-      .forEach(el => el.classList.remove('is-active'));
-    const player = document.getElementById('video-lightbox-player');
-    if (player) player.pause();
+    // Each of these already no-ops if it isn't the one currently open, and
+    // each already unlocks its own scrollLock claim and schedules its own
+    // display:none teardown — calling through them (rather than reaching
+    // into their DOM/classes directly) is what keeps that teardown firing
+    // no matter which control the user actually closed with.
+    closeCartLightbox();
+    lightboxCloseFns.video?.();
+    lightboxCloseFns.doc?.();
     lightboxChrome.closeAll();
-    // Only these three claims — the cart's own claim is deliberately left
-    // alone here; the two callers below decide separately what happens to it.
-    scrollLock.reset('cart-image', 'video', 'doc');
   };
   // Matches #nav-logo: back to the top of the page.
   logo?.addEventListener('click', (e) => {
@@ -1153,8 +1163,17 @@ document.addEventListener('keydown', (e) => {
     }
   });
 
+  // Same reasoning as the document viewer: this backdrop's blur(26px) is a
+  // continuous, real-time compositing cost, and opacity:0 + pointer-events:none
+  // alone don't stop the browser from still running it on an invisible layer
+  // forever after first use. display:none (delayed past the fade so it isn't
+  // visible) tears that down properly instead of leaving it running.
+  let closeCleanupTimer = null;
+
   function openVideoLightbox(sources) {
     if (!sources || !sources.length) return;
+    clearTimeout(closeCleanupTimer);
+    lightbox.style.display = '';
     queue = sources;
     queueIdx = 0;
     player.muted = false;
@@ -1172,7 +1191,10 @@ document.addEventListener('keydown', (e) => {
     player.pause();
     player.removeAttribute('src');
     player.load();
+    clearTimeout(closeCleanupTimer);
+    closeCleanupTimer = setTimeout(() => { lightbox.style.display = 'none'; }, 300);
   }
+  lightboxCloseFns.video = closeVideoLightbox;
 
   document.querySelectorAll('.vid-clickable[data-lightbox-src]').forEach(el => {
     el.addEventListener('click', () => openVideoLightbox([el.dataset.lightboxSrc]));
@@ -1284,8 +1306,23 @@ document.addEventListener('keydown', (e) => {
     apply();
   }
 
+  // The document is a full-resolution scan (up to ~3770x2936px) that can end
+  // up zoomed in well past its own footprint. .doc-lightbox only ever went
+  // opacity:0 + pointer-events:none when closed — never display:none — so
+  // that huge transformed layer, and its own GPU-promoted compositing layer
+  // (see .doc-paper's `will-change: transform`), stayed fully alive and
+  // composited behind the entire site indefinitely after first use, invisible
+  // but still costing the compositor on every subsequent scroll frame. That's
+  // what the reported post-close "layers flickering / rendering conflict"
+  // traced back to. display:none now tears the whole layer down once the
+  // fade-out finishes; the timer just gives the CSS opacity transition time
+  // to actually play first.
+  let closeCleanupTimer = null;
+
   function openDoc(src) {
     if (!src) return;
+    clearTimeout(closeCleanupTimer);
+    lb.style.display = '';
     hint?.classList.remove('is-hidden');
     const start = () => layout(true);
     if (img.getAttribute('src') !== src) {
@@ -1306,7 +1343,10 @@ document.addEventListener('keydown', (e) => {
     lb.classList.remove('is-active');
     scrollLock.unlock('doc');
     lightboxChrome.hide('doc');
+    clearTimeout(closeCleanupTimer);
+    closeCleanupTimer = setTimeout(() => { lb.style.display = 'none'; }, 320);
   }
+  lightboxCloseFns.doc = closeDoc;
 
   stage.addEventListener('pointerdown', (e) => {
     pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
