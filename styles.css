@@ -1082,10 +1082,20 @@ p {
 .lightbox-chrome > * { pointer-events: auto; }
 
 .lightbox-chrome-logo { display: flex; align-items: center; }
-/* Source mark is solid black with alpha; inverted to white here since this bar
-   only ever sits on dark/frosted lightbox backdrops. */
-.lightbox-chrome-logo img { height: 44px; display: block; filter: invert(1); opacity: .55; transition: opacity .3s; }
-.lightbox-chrome-logo:hover img { opacity: .9; }
+/* Source mark is solid black with alpha. Inverted to solid white by default —
+   every dark/frosted lightbox backdrop (video, document, cart, the in-place
+   Tech Specs fullscreen) reads fine against that. The one exception is the
+   cart's own product-photo viewer: on mobile the photo itself (shot on a
+   near-white background) fills the whole screen right up under this bar, so
+   a white mark there would nearly vanish — .chrome-on-light (toggled in
+   app.js only while that specific viewer is open) skips the invert entirely
+   and dims the mark's own natural dark tone instead, the same white-bar/
+   dark-icon pairing the real navbar already uses once scrolled onto the
+   light page below the hero. */
+.lightbox-chrome-logo img { height: 44px; display: block; filter: invert(1); opacity: 1; transition: opacity .3s, filter .3s; }
+.lightbox-chrome-logo:hover img { opacity: .8; }
+.lightbox-chrome.chrome-on-light .lightbox-chrome-logo img { filter: none; opacity: .38; }
+.lightbox-chrome.chrome-on-light .lightbox-chrome-logo:hover img { opacity: .6; }
 
 .lightbox-chrome-buy {
   background: #fff; color: #1d1d1f; border: none; cursor: pointer;

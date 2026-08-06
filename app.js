@@ -1061,6 +1061,10 @@ const lightboxChrome = (() => {
     if (!el) return;
     const any = openIds.size > 0;
     el.classList.toggle('is-active', any);
+    // The cart's product-photo viewer is the one lightbox whose background is
+    // the photo itself — shot on near-white — rather than a dark backdrop, so
+    // the mark needs the opposite treatment there (see .chrome-on-light in CSS).
+    el.classList.toggle('chrome-on-light', openIds.has('cart-image'));
     el.setAttribute('aria-hidden', any ? 'false' : 'true');
   };
   return {
@@ -1086,6 +1090,7 @@ const lightboxChrome = (() => {
     closeCartLightbox();
     lightboxCloseFns.video?.();
     lightboxCloseFns.doc?.();
+    lightboxCloseFns.specFullscreen?.();
     lightboxChrome.closeAll();
   };
   // Matches #nav-logo: back to the top of the page.
@@ -1849,6 +1854,29 @@ document.addEventListener('DOMContentLoaded', () => {
   const isMobile = () => window.innerWidth <= 768;
   let activeIndex = 0;
 
+  // The other Tech Specs panels (cushion/controller exploded views, cables,
+  // power options, etc.) had no chrome at all — the B mark and BUY NOW only
+  // showed up in the one panel ("No Bluetooth") that had already been moved
+  // to the newer video-lightbox. Routing this legacy in-place toggle through
+  // the same shared lightboxChrome/scrollLock (used everywhere else on the
+  // site) closes that gap without changing how this feature itself works.
+  const setSpecFullscreen = (el, on) => {
+    el.classList.toggle('fullscreen-overlay', on);
+    if (on) {
+      lightboxChrome.show('spec-fullscreen');
+      scrollLock.lock('spec-fullscreen');
+    } else {
+      lightboxChrome.hide('spec-fullscreen');
+      scrollLock.unlock('spec-fullscreen');
+    }
+  };
+  // So the chrome's own logo/BUY NOW controls can dismiss this too, same as
+  // the other three overlay types.
+  lightboxCloseFns.specFullscreen = () => {
+    document.querySelectorAll('.spec-visual-item.fullscreen-overlay')
+      .forEach(el => setSpecFullscreen(el, false));
+  };
+
   function placeActiveVideo() {
     visItems.forEach((vi, i) => {
       const targetParent = (isMobile() && i === activeIndex) ? techItems[i] : visualPanel;
@@ -1871,23 +1899,19 @@ document.addEventListener('DOMContentLoaded', () => {
         // the normal page. Exactly the "goes to a previous window, trips
         // between the 2 videos" report.
         if (clickedVideo && isMobile() && !clickedVideo.classList.contains('vid-clickable')) {
-          if (clickedVideo.classList.contains('fullscreen-overlay')) {
-            clickedVideo.classList.remove('fullscreen-overlay');
-          } else {
-            clickedVideo.classList.add('fullscreen-overlay');
-          }
+          setSpecFullscreen(clickedVideo, !clickedVideo.classList.contains('fullscreen-overlay'));
         } else if (!clickedVideo || !clickedVideo.classList.contains('vid-clickable')) {
           item.classList.remove('active');
           if (visItems[index]) {
             visItems[index].classList.remove('active');
-            visItems[index].classList.remove('fullscreen-overlay');
+            setSpecFullscreen(visItems[index], false);
           }
         }
       } else {
         techItems.forEach(i => i.classList.remove('active'));
         visItems.forEach(v => {
           v.classList.remove('active');
-          v.classList.remove('fullscreen-overlay');
+          setSpecFullscreen(v, false);
         });
 
         item.classList.add('active');
