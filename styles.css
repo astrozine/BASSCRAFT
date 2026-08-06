@@ -139,11 +139,46 @@ p {
   text-transform: uppercase; transition: transform .3s, opacity .3s; border: none; cursor: pointer;
 }
 .nav-cta:hover { transform: scale(1.05); opacity: .9; }
+/* ═══ MOBILE MENU ═══ */
+.mobile-menu-btn {
+  display: none; /* only shown <=768px, see below */
+  background: none; border: none; padding: 6px; margin: 0; cursor: pointer;
+  color: inherit; width: 34px; height: 34px;
+  align-items: center; justify-content: center;
+}
+.mobile-menu-btn svg { width: 22px; height: 22px; }
+.mobile-menu-btn .bar { transition: transform 0.3s ease, opacity 0.2s ease; transform-origin: center; }
+.mobile-menu-btn.is-active .bar-top { transform: translateY(5px) rotate(45deg); }
+.mobile-menu-btn.is-active .bar-mid { opacity: 0; }
+.mobile-menu-btn.is-active .bar-bot { transform: translateY(-5px) rotate(-45deg); }
+
+.mobile-nav-menu {
+  display: none; /* becomes flex only inside the media query below */
+  position: fixed; top: 90px; left: 0; right: 0; z-index: 9998;
+  flex-direction: column;
+  background: rgba(10,10,10,0.94);
+  backdrop-filter: saturate(180%) blur(20px); -webkit-backdrop-filter: saturate(180%) blur(20px);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  max-height: 0; overflow: hidden;
+  transition: max-height 0.35s ease;
+}
+.mobile-nav-menu.is-open { max-height: 400px; }
+.mobile-nav-menu a {
+  color: #fff; font-family: 'CalSansText',sans-serif; font-size: 0.95rem;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  padding: 16px 24px; border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.mobile-nav-menu a:active { background: rgba(255,255,255,0.06); }
+
 @media (max-width: 768px) {
   .nav-links { display: none; }
   .nav-logo img { height: 40px; }
-  .navbar { justify-content: center; }
-  .navbar.scrolled { justify-content: space-between; }
+  /* Always logo-left/hamburger-right now, rather than only once scrolled —
+     there's something on the right at rest now (the hamburger), where
+     before there was only the buy button that stayed hidden until scroll. */
+  .navbar { justify-content: space-between; }
+  .mobile-menu-btn { display: flex; }
+  .mobile-nav-menu { display: flex; }
   #global-mute-btn { display: none !important; }
   /* hero-center positioning now handled in the hero section's own media query */
 }

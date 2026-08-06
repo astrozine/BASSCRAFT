@@ -142,6 +142,45 @@ document.querySelectorAll('.nav-links a').forEach(link => {
   });
 });
 
+// Mobile hamburger menu — same destinations as .nav-links, just reachable
+// below the 768px breakpoint where that bar is hidden.
+(() => {
+  const btn = document.getElementById('mobile-menu-btn');
+  const menu = document.getElementById('mobile-nav-menu');
+  if (!btn || !menu) return;
+
+  const closeMenu = () => {
+    menu.classList.remove('is-open');
+    btn.classList.remove('is-active');
+    btn.setAttribute('aria-expanded', 'false');
+  };
+
+  btn.addEventListener('click', () => {
+    const willOpen = !menu.classList.contains('is-open');
+    menu.classList.toggle('is-open', willOpen);
+    btn.classList.toggle('is-active', willOpen);
+    btn.setAttribute('aria-expanded', String(willOpen));
+  });
+
+  menu.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', (e) => {
+      const href = link.getAttribute('href');
+      closeMenu();
+      if (href.startsWith('#')) {
+        e.preventDefault();
+        const target = document.querySelector(href);
+        if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
+
+  document.addEventListener('click', (e) => {
+    if (menu.classList.contains('is-open') && !menu.contains(e.target) && !btn.contains(e.target)) {
+      closeMenu();
+    }
+  });
+})();
+
 /* ══════════════════════════════════════════════════════════════
    3. HERO — Logo + CTA fades out on scroll
    ══════════════════════════════════════════════════════════════ */

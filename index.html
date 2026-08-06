@@ -28,8 +28,26 @@
   </div>
   <div style="display: flex; gap: 15px; align-items: center;">
     <a href="#order" class="nav-cta scroll-buy-btn" style="display: none;">BUY NOW</a>
+    <!-- Mobile only: .nav-links is display:none below 768px, so this is the
+         only way to reach INSTALLATION/TECH SPECS/EXPERIENCE/ORDER there. -->
+    <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Open menu" aria-expanded="false">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <line class="bar bar-top" x1="4" y1="7" x2="20" y2="7"></line>
+        <line class="bar bar-mid" x1="4" y1="12" x2="20" y2="12"></line>
+        <line class="bar bar-bot" x1="4" y1="17" x2="20" y2="17"></line>
+      </svg>
+    </button>
   </div>
 </nav>
+
+<!-- Mobile nav drawer: the same links as .nav-links, just reachable on mobile. -->
+<div class="mobile-nav-menu" id="mobile-nav-menu">
+  <a href="#home">HOME</a>
+  <a href="#installation">INSTALLATION</a>
+  <a href="#specs">TECH SPECS</a>
+  <a href="#experience">EXPERIENCE</a>
+  <a href="#order">ORDER</a>
+</div>
 
 <!-- ═══ 1. HERO ═══ -->
 <section class="hero" id="home">
