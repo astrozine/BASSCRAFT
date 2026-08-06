@@ -5,6 +5,58 @@
 
 gsap.registerPlugin(ScrollTrigger);
 
+/* ══════════════════════════════════════════════════════════════
+   0. SCROLL LOCK — shared by every full-screen overlay
+   ══════════════════════════════════════════════════════════════
+   `overflow: hidden` on <body> alone does NOT stop the page scrolling
+   behind a fixed overlay on mobile Safari — a swipe over the backdrop
+   still scrolls the real page underneath it. The fix that actually holds
+   there is pinning <body> itself with position:fixed and restoring the
+   saved scrollY on release.
+
+   Keyed by owner (not a bare counter) so nested overlays — the cart, then
+   its product-photo viewer opened on top of it — hold independent claims:
+   the inner one closing doesn't unlock the page while the cart is still
+   open underneath, and re-locking with a key that's already held is just
+   a no-op instead of requiring every call site to track "did I already
+   lock this?" itself. `reset(...keys)` releases specific claims at once —
+   the chrome's own nav/buy controls use it to drop every VIEWER on top of
+   the cart without touching the cart's own claim, since the two disagree
+   about what should happen to the cart next. */
+const scrollLock = (() => {
+  const holders = new Set();
+  let savedY = 0;
+  const apply = () => {
+    savedY = window.scrollY;
+    document.body.style.position = 'fixed';
+    document.body.style.top = `-${savedY}px`;
+    document.body.style.left = '0';
+    document.body.style.right = '0';
+    document.body.style.width = '100%';
+  };
+  const release = () => {
+    document.body.style.position = '';
+    document.body.style.top = '';
+    document.body.style.left = '';
+    document.body.style.right = '';
+    document.body.style.width = '';
+    window.scrollTo(0, savedY);
+  };
+  const lock = (key) => {
+    if (holders.size === 0) apply();
+    holders.add(key);
+  };
+  const unlock = (key) => {
+    holders.delete(key);
+    if (holders.size === 0) release();
+  };
+  const reset = (...keys) => {
+    keys.forEach(k => holders.delete(k));
+    if (holders.size === 0) release();
+  };
+  return { lock, unlock, reset };
+})();
+
 // Global UI sync for all video play buttons & Hero fade
 document.querySelectorAll('video').forEach(vid => {
   vid.addEventListener('play', function() {
@@ -895,7 +947,10 @@ const cartSubtotal = document.getElementById('cart-subtotal');
 
 function openCart(view) {
   if (!cartOverlay) return;
+  // Also called to switch views (upsell -> checkout) on an already-open
+  // cart — re-locking with the same key is a no-op, so no need to guard it.
   cartOverlay.classList.add('is-active');
+  scrollLock.lock('cart');
   if (view === 'upsell') {
     cartUpsellView.style.display = 'block';
     cartCheckoutView.style.display = 'none';
@@ -906,7 +961,9 @@ function openCart(view) {
 }
 
 function closeCart() {
-  if (cartOverlay) cartOverlay.classList.remove('is-active');
+  if (!cartOverlay || !cartOverlay.classList.contains('is-active')) return;
+  cartOverlay.classList.remove('is-active');
+  scrollLock.unlock('cart');
 }
 
 let cartQty = 1;
@@ -1017,7 +1074,9 @@ const lightboxChrome = (() => {
     const player = document.getElementById('video-lightbox-player');
     if (player) player.pause();
     lightboxChrome.closeAll();
-    document.body.style.overflow = '';
+    // Only these three claims — the cart's own claim is deliberately left
+    // alone here; the two callers below decide separately what happens to it.
+    scrollLock.reset('cart-image', 'video', 'doc');
   };
   // Matches #nav-logo: back to the top of the page.
   logo?.addEventListener('click', (e) => {
@@ -1045,10 +1104,13 @@ function openCartLightbox(src) {
   cartLightboxImg.src = src;
   cartLightbox.classList.add('is-active');
   lightboxChrome.show('cart-image');
+  scrollLock.lock('cart-image');
 }
 function closeCartLightbox() {
-  if (cartLightbox) cartLightbox.classList.remove('is-active');
+  if (!cartLightbox || !cartLightbox.classList.contains('is-active')) return;
+  cartLightbox.classList.remove('is-active');
   lightboxChrome.hide('cart-image');
+  scrollLock.unlock('cart-image');
 }
 document.querySelectorAll('.cart-media-btn').forEach(btn => {
   btn.addEventListener('click', () => {
@@ -1099,11 +1161,14 @@ document.addEventListener('keydown', (e) => {
     playCurrent();
     lightbox.classList.add('is-active');
     lightboxChrome.show('video');
+    scrollLock.lock('video');
   }
 
   function closeVideoLightbox() {
+    if (!lightbox.classList.contains('is-active')) return;
     lightbox.classList.remove('is-active');
     lightboxChrome.hide('video');
+    scrollLock.unlock('video');
     player.pause();
     player.removeAttribute('src');
     player.load();
@@ -1232,13 +1297,14 @@ document.addEventListener('keydown', (e) => {
       img.addEventListener('load', start, { once: true });
     }
     lb.classList.add('is-active');
-    document.body.style.overflow = 'hidden';
+    scrollLock.lock('doc');
     lightboxChrome.show('doc');
   }
 
   function closeDoc() {
+    if (!lb.classList.contains('is-active')) return;
     lb.classList.remove('is-active');
-    document.body.style.overflow = '';
+    scrollLock.unlock('doc');
     lightboxChrome.hide('doc');
   }
 
@@ -1755,13 +1821,22 @@ document.addEventListener('DOMContentLoaded', () => {
       const clickedVideo = e.target.closest('.spec-visual-item');
       
       if (item.classList.contains('active')) {
-        if (clickedVideo && isMobile()) {
+        // .vid-clickable panels (the "no bluetooth" demo) now open the real
+        // video-lightbox instead — that binds its own click handler directly
+        // on this element. Without this guard both fired on the same tap:
+        // the lightbox opened (z-index 10000) ON TOP of this legacy in-place
+        // fullscreen (z-index 9999), which stayed alive underneath — still
+        // full-viewport, still cycling its own separate copy of the same
+        // clips — so closing the lightbox dropped you into THAT instead of
+        // the normal page. Exactly the "goes to a previous window, trips
+        // between the 2 videos" report.
+        if (clickedVideo && isMobile() && !clickedVideo.classList.contains('vid-clickable')) {
           if (clickedVideo.classList.contains('fullscreen-overlay')) {
             clickedVideo.classList.remove('fullscreen-overlay');
           } else {
             clickedVideo.classList.add('fullscreen-overlay');
           }
-        } else {
+        } else if (!clickedVideo || !clickedVideo.classList.contains('vid-clickable')) {
           item.classList.remove('active');
           if (visItems[index]) {
             visItems[index].classList.remove('active');
