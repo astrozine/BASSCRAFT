@@ -275,7 +275,8 @@
             src="assets/July 2026 website video exports/controller/controller ports/2 power options/2 power options - usb c power - square.mp4">
           </video>
         </div>
-        <div class="spec-visual-item media-with-caption">
+        <div class="spec-visual-item media-with-caption vid-clickable"
+          data-lightbox-playlist='["assets/July 2026 website video exports/no bluetooth/full product demo with actor - square.mp4","assets/July 2026 website video exports/no bluetooth/no bluetooth skit - square.mp4"]'>
           <!-- Same character across both clips (from v1): the actor demo plays first,
                then the guitar-smash "no bluetooth" skit follows — per client request.
                Both clips use their SQUARE export so the panel fills the 2-column space.
@@ -311,17 +312,17 @@
 
     <!-- Sub-cultural clips: different people/genres feeling it -->
     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px; max-width: 1000px; margin: 0 auto;">
-      <div class="vid-r" style="aspect-ratio: 1;">
+      <div class="vid-r vid-clickable" style="aspect-ratio: 1;" data-lightbox-src="assets/July 2026 website video exports/sub cultural/amapiano - square - compressed.mp4">
         <video poster="assets/July 2026 website video exports/sub cultural/amapiano - square-poster.webp" preload="none" autoplay loop muted playsinline style="width: 100%; height: 100%; object-fit: cover;">
           <source src="assets/July 2026 website video exports/sub cultural/amapiano - square - compressed.mp4" type="video/mp4">
         </video>
       </div>
-      <div class="vid-r" style="aspect-ratio: 1;">
+      <div class="vid-r vid-clickable" style="aspect-ratio: 1;" data-lightbox-src="assets/July 2026 website video exports/sub cultural/hang drum - square - compressed.mp4">
         <video poster="assets/July 2026 website video exports/sub cultural/hang drum - square-poster.webp" preload="none" autoplay loop muted playsinline style="width: 100%; height: 100%; object-fit: cover;">
           <source src="assets/July 2026 website video exports/sub cultural/hang drum - square - compressed.mp4" type="video/mp4">
         </video>
       </div>
-      <div class="vid-r" style="aspect-ratio: 1;">
+      <div class="vid-r vid-clickable" style="aspect-ratio: 1;" data-lightbox-src="assets/July 2026 website video exports/sub cultural/phonk - square - compressed.mp4">
         <video poster="assets/July 2026 website video exports/sub cultural/phonk - square-poster.webp" preload="none" autoplay loop muted playsinline style="width: 100%; height: 100%; object-fit: cover;">
           <source src="assets/July 2026 website video exports/sub cultural/phonk - square - compressed.mp4" type="video/mp4">
         </video>
@@ -504,6 +505,24 @@
         <line x1="6" y1="6" x2="18" y2="18"></line>
       </svg>
     </button>
+  </div>
+</div>
+
+<!-- Shared video viewer for the sub-cultural genre clips and the "no
+     bluetooth" demo — bigger + with sound on a frosted backdrop, not a true
+     full-screen takeover. Desktop: close button sits at the video's own
+     top-right corner (sized to hug the video, same trick as the image
+     lightbox above). Mobile: it moves above the video instead, in its own
+     row, so it's not sitting on top of the video's tap area. -->
+<div class="video-lightbox" id="video-lightbox">
+  <div class="video-lightbox-inner">
+    <button class="video-lightbox-close" id="video-lightbox-close" aria-label="Close video">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </button>
+    <video id="video-lightbox-player" playsinline controls></video>
   </div>
 </div>
 

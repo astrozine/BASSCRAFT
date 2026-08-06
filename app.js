@@ -1009,6 +1009,68 @@ document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') closeCartLightbox();
 });
 
+// Video lightbox: the sub-cultural genre clips + "no bluetooth" demo open
+// bigger, with sound, on a frosted backdrop instead of their small muted
+// autoplay loop. [data-lightbox-playlist] plays multiple clips back-to-back
+// (the "no bluetooth" demo-then-skit pair); [data-lightbox-src] is just one.
+(() => {
+  const lightbox = document.getElementById('video-lightbox');
+  const player = document.getElementById('video-lightbox-player');
+  const closeBtn = document.getElementById('video-lightbox-close');
+  if (!lightbox || !player || !closeBtn) return;
+
+  let queue = [];
+  let queueIdx = 0;
+
+  function playCurrent() {
+    player.src = queue[queueIdx];
+    const p = player.play();
+    if (p !== undefined) p.catch(() => {});
+  }
+
+  player.addEventListener('ended', () => {
+    if (queueIdx < queue.length - 1) {
+      queueIdx++;
+      playCurrent();
+    }
+  });
+
+  function openVideoLightbox(sources) {
+    if (!sources || !sources.length) return;
+    queue = sources;
+    queueIdx = 0;
+    player.muted = false;
+    playCurrent();
+    lightbox.classList.add('is-active');
+  }
+
+  function closeVideoLightbox() {
+    lightbox.classList.remove('is-active');
+    player.pause();
+    player.removeAttribute('src');
+    player.load();
+  }
+
+  document.querySelectorAll('[data-lightbox-src]').forEach(el => {
+    el.addEventListener('click', () => openVideoLightbox([el.dataset.lightboxSrc]));
+  });
+  document.querySelectorAll('[data-lightbox-playlist]').forEach(el => {
+    el.addEventListener('click', () => {
+      try {
+        openVideoLightbox(JSON.parse(el.dataset.lightboxPlaylist));
+      } catch (e) {}
+    });
+  });
+
+  closeBtn.addEventListener('click', closeVideoLightbox);
+  lightbox.addEventListener('click', (e) => {
+    if (e.target === lightbox) closeVideoLightbox();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && lightbox.classList.contains('is-active')) closeVideoLightbox();
+  });
+})();
+
 document.getElementById('upsell-accept-btn')?.addEventListener('click', () => {
   cartQty = 2;
   updateCartUI();

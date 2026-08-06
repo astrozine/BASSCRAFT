@@ -988,6 +988,52 @@ p {
   .cart-lightbox-close { top: max(20px, calc(env(safe-area-inset-top, 0px) + 12px)); right: 16px; }
 }
 
+/* ═════ VIDEO LIGHTBOX ═════ */
+/* For the sub-cultural genre clips + the "no bluetooth" demo: bigger and
+   with sound on a frosted backdrop — not a true full-screen takeover like
+   the cart's product-photo viewer, since these are short square clips that
+   don't need to fill the whole screen to read clearly. */
+.vid-clickable { cursor: pointer; }
+
+.video-lightbox {
+  position: fixed; inset: 0; z-index: 10000;
+  background: rgba(8,8,10,0.7);
+  backdrop-filter: blur(26px) saturate(140%); -webkit-backdrop-filter: blur(26px) saturate(140%);
+  display: flex; align-items: center; justify-content: center;
+  padding: 40px;
+  opacity: 0; pointer-events: none; transition: opacity 0.25s ease;
+}
+.video-lightbox.is-active { opacity: 1; pointer-events: all; }
+.video-lightbox-inner {
+  position: relative; display: flex; align-items: center; justify-content: center;
+  height: min(78vh, 720px); max-width: 100%;
+}
+#video-lightbox-player {
+  display: block; height: 100%; width: auto; max-width: 100%;
+  border-radius: 16px; background: #000;
+  box-shadow: 0 30px 90px rgba(0,0,0,0.55);
+}
+.video-lightbox-close {
+  position: absolute; top: 14px; right: 14px; z-index: 1;
+  width: 40px; height: 40px; border-radius: 50%;
+  background: rgba(20,20,20,0.85); border: 1px solid rgba(255,255,255,0.2);
+  color: #fff; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.4);
+  transition: background 0.2s;
+}
+.video-lightbox-close svg { width: 20px; height: 20px; }
+.video-lightbox-close:hover { background: rgba(40,40,40,0.95); }
+
+@media (max-width: 768px) {
+  .video-lightbox { padding: 20px; }
+  /* Close button moves above the video (its own row, right-aligned) instead
+     of overlapping it — keeps it clear of the tap area for native controls. */
+  .video-lightbox-inner { flex-direction: column; align-items: flex-end; gap: 12px; height: auto; width: 100%; }
+  .video-lightbox-close { position: static; }
+  #video-lightbox-player { height: auto; width: 100%; max-height: 65vh; }
+}
+
 /*  FLASHING PLAY INDICATOR  */
 .vid-status-indicator { position: absolute; bottom: 20px; right: 20px; width: 40px; height: 40px; border-radius: 50%; background: rgba(0,0,0,0.6); color: white; display: flex; align-items: center; justify-content: center; z-index: 50; pointer-events: auto; cursor: pointer; opacity: 0; transition: opacity 0.3s; font-size: 14px; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); }
 .vid-status-indicator.show { opacity: 1; }
