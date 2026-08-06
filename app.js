@@ -47,10 +47,19 @@ const scrollLock = (() => {
     holders.add(key);
   };
   const unlock = (key) => {
+    // Bail before touching anything if this key was never actually held —
+    // callers that unlock defensively/unconditionally (setSpecFullscreen(el,
+    // false) runs on every tab switch whether or not fullscreen was ever
+    // entered) would otherwise still see holders.size hit 0 and fire
+    // release(), which unconditionally scrollTo(0, savedY)'s the page —
+    // savedY being 0 (or stale) since nothing genuinely locked it. That's
+    // what caused desktop Tech Specs clicks to jump the page to the top.
+    if (!holders.has(key)) return;
     holders.delete(key);
     if (holders.size === 0) release();
   };
   const reset = (...keys) => {
+    if (holders.size === 0) return; // nothing held — same guard as unlock()
     keys.forEach(k => holders.delete(k));
     if (holders.size === 0) release();
   };
