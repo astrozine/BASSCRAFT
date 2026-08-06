@@ -1000,7 +1000,9 @@ p {
      the screen corner still lands right by the photo's own corner too. */
   .cart-lightbox-inner { width: 100%; height: 100%; max-width: none; }
   .cart-image-lightbox img { width: 100%; height: 100%; }
-  .cart-lightbox-close { top: max(20px, calc(env(safe-area-inset-top, 0px) + 12px)); right: 16px; }
+  /* Dropped below the shared chrome bar: BUY NOW now occupies the top-right
+     corner here, and at this width the two would otherwise overlap outright. */
+  .cart-lightbox-close { top: max(84px, calc(env(safe-area-inset-top, 0px) + 76px)); right: 16px; }
 }
 
 /* ═════ VIDEO LIGHTBOX ═════ */
@@ -1047,6 +1049,152 @@ p {
   .video-lightbox-inner { flex-direction: column; align-items: flex-end; gap: 12px; height: auto; width: 100%; }
   .video-lightbox-close { position: static; }
   #video-lightbox-player { height: auto; width: 100%; max-height: 65vh; }
+}
+
+/* ═════ SHARED LIGHTBOX CHROME ═════ */
+/* The nav's two anchors — the B mark and BUY NOW — float into every expanded
+   viewer on the site (product photos, genre clips, the placement document) at
+   the same coordinates they hold in the real nav, so opening a lightbox never
+   feels like it dropped you out of the site. Deliberately ONE shared element
+   rather than a copy per lightbox: identical geometry everywhere, one place to
+   change it. Lives outside #site-wrapper — overflow:hidden there clips
+   position:fixed descendants (the same trap documented on the cart modal). */
+.lightbox-chrome {
+  position: fixed; top: 0; left: 50%;
+  transform: translateX(-50%) translateY(-14px);
+  width: 100%; max-width: 1600px;
+  padding: 12px 6%;
+  display: flex; justify-content: space-between; align-items: center;
+  z-index: 10001;
+  opacity: 0; pointer-events: none;
+  transition: opacity .32s ease, transform .32s cubic-bezier(.2,.8,.2,1);
+}
+/* Soft scrim so both marks stay legible over whatever sits behind them — a
+   white-background product shot as readily as a dark video frame. Mirrors the
+   navbar's own scrim-over-hero treatment. */
+.lightbox-chrome::before {
+  content: ''; position: absolute; inset: 0 0 auto 0; height: 118px;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.2) 58%, rgba(0,0,0,0) 100%);
+  pointer-events: none; z-index: -1;
+}
+.lightbox-chrome.is-active { opacity: 1; transform: translateX(-50%) translateY(0); }
+/* Container stays click-through so backdrop-to-close still works around them. */
+.lightbox-chrome > * { pointer-events: auto; }
+
+.lightbox-chrome-logo { display: flex; align-items: center; }
+/* Source mark is solid black with alpha; inverted to white here since this bar
+   only ever sits on dark/frosted lightbox backdrops. */
+.lightbox-chrome-logo img { height: 44px; display: block; filter: invert(1); opacity: .55; transition: opacity .3s; }
+.lightbox-chrome-logo:hover img { opacity: .9; }
+
+.lightbox-chrome-buy {
+  background: #fff; color: #1d1d1f; border: none; cursor: pointer;
+  padding: 10px 22px; border-radius: 20px;
+  font-family: inherit; font-size: 11px; font-weight: 700; letter-spacing: .06em;
+  text-transform: uppercase; white-space: nowrap; text-decoration: none;
+  transition: transform .3s, opacity .3s;
+}
+.lightbox-chrome-buy:hover { transform: scale(1.05); opacity: .9; }
+
+@media (max-width: 768px) {
+  .lightbox-chrome { padding: 10px 5%; }
+  .lightbox-chrome-logo img { height: 34px; }
+  .lightbox-chrome-buy { padding: 9px 18px; font-size: 10px; }
+}
+
+/* ═════ DOCUMENT LIGHTBOX (pan + zoom) ═════ */
+/* The placement diagrams are dense multi-panel documents — at page size you can
+   see there are three options but not read any of them. This opens the full-res
+   scan on a pannable stage so they can actually be explored. */
+.doc-clickable { cursor: zoom-in; }
+
+.doc-lightbox {
+  position: fixed; inset: 0; z-index: 10000;
+  background: rgba(8,8,10,0.86);
+  backdrop-filter: blur(22px) saturate(130%); -webkit-backdrop-filter: blur(22px) saturate(130%);
+  opacity: 0; pointer-events: none; transition: opacity .28s ease;
+}
+.doc-lightbox.is-active { opacity: 1; pointer-events: all; }
+
+/* The pannable surface. touch-action:none so a drag pans the document instead
+   of scrolling the page still sitting behind the overlay. */
+.doc-stage {
+  position: absolute; inset: 0; overflow: hidden;
+  touch-action: none; cursor: grab;
+  user-select: none; -webkit-user-select: none;
+}
+.doc-stage.is-grabbing { cursor: grabbing; }
+
+.doc-paper {
+  position: absolute; top: 0; left: 0;
+  transform-origin: 0 0; will-change: transform;
+  background: #fff;
+  box-shadow: 0 30px 90px rgba(0,0,0,0.6);
+  /* Isolate so the grain's multiply blend composites against the sheet itself
+     rather than punching through to the backdrop behind the whole lightbox. */
+  isolation: isolate;
+}
+.doc-paper img { display: block; width: 100%; height: 100%; -webkit-user-drag: none; }
+/* The source scans are pure flat #ffffff with zero grain of their own (measured:
+   stddev 0.00 across the background), so the paper feel is generated here —
+   fine desaturated fractal-noise fibre multiplied over the sheet. It rides
+   INSIDE the transformed element on purpose: zoom in and the fibres enlarge
+   with the page, the way real paper does under a loupe. */
+.doc-paper::after {
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  /* feTurbulence emits noise on the ALPHA channel too, which would make the
+     sheet blotchily transparent — feFuncA pins it opaque. The RGB transfer
+     then compresses the noise into a narrow band just under white (0.88–1.0),
+     so this reads as fibre rather than a grey wash over the artwork. */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='p' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.5' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeComponentTransfer%3E%3CfeFuncR type='linear' slope='0.12' intercept='0.88'/%3E%3CfeFuncG type='linear' slope='0.12' intercept='0.88'/%3E%3CfeFuncB type='linear' slope='0.12' intercept='0.88'/%3E%3CfeFuncA type='linear' slope='0' intercept='1'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23p)'/%3E%3C/svg%3E");
+  background-size: 140px 140px;
+  mix-blend-mode: multiply; opacity: 1;
+}
+
+/* Sits below the chrome bar rather than beside it — BUY NOW owns the top-right
+   corner now, and stacking the two reads as one cluster instead of a collision. */
+.doc-lightbox-close {
+  position: absolute; top: 92px; right: 24px; z-index: 3;
+  width: 40px; height: 40px; border-radius: 50%;
+  background: rgba(20,20,20,0.85); border: 1px solid rgba(255,255,255,0.2);
+  color: #fff; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.4); transition: background .2s;
+}
+.doc-lightbox-close svg { width: 20px; height: 20px; }
+.doc-lightbox-close:hover { background: rgba(40,40,40,0.95); }
+
+/* Photoshop-style hand affordance. Fades out once they've actually dragged —
+   it's an instruction, not persistent furniture. */
+.doc-hint {
+  position: absolute; left: 50%; bottom: 30px; transform: translateX(-50%);
+  display: flex; align-items: center; gap: 9px; white-space: nowrap;
+  padding: 9px 17px; border-radius: 100px;
+  background: rgba(20,20,20,0.74); border: 1px solid rgba(255,255,255,0.14);
+  color: rgba(255,255,255,0.92); font-size: 12px; letter-spacing: .03em;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.35);
+  pointer-events: none; z-index: 3; transition: opacity .5s ease;
+}
+.doc-hint svg { width: 17px; height: 17px; flex-shrink: 0; }
+.doc-hint.is-hidden { opacity: 0; }
+
+.doc-zoom { position: absolute; right: 24px; bottom: 30px; display: flex; gap: 8px; z-index: 3; }
+.doc-zoom button {
+  width: 40px; height: 40px; border-radius: 50%;
+  background: rgba(20,20,20,0.85); border: 1px solid rgba(255,255,255,0.2);
+  color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.4); transition: background .2s, opacity .2s;
+}
+.doc-zoom button:hover { background: rgba(40,40,40,0.95); }
+.doc-zoom button:disabled { opacity: .35; cursor: default; }
+.doc-zoom svg { width: 18px; height: 18px; }
+
+@media (max-width: 768px) {
+  .doc-lightbox-close { top: max(84px, calc(env(safe-area-inset-top, 0px) + 76px)); right: 16px; }
+  /* Stacked so the hint pill and the zoom cluster don't fight for the same
+     strip on a narrow screen. */
+  .doc-hint { bottom: max(84px, calc(env(safe-area-inset-bottom, 0px) + 84px)); font-size: 11px; }
+  .doc-zoom { right: 16px; bottom: max(24px, calc(env(safe-area-inset-bottom, 0px) + 16px)); }
 }
 
 /*  FLASHING PLAY INDICATOR  */

@@ -983,6 +983,60 @@ if (cartOverlay) {
   });
 }
 
+/* Shared lightbox chrome — the nav's B mark + BUY NOW, floated into whichever
+   expanded viewer is open so the site's two anchors stay reachable instead of
+   vanishing behind a full-screen overlay. Tracked as a set rather than a
+   boolean: the cart's photo viewer opens on top of the cart modal, so "is
+   anything still open?" has to survive one of them closing. */
+const lightboxChrome = (() => {
+  const el = document.getElementById('lightbox-chrome');
+  const openIds = new Set();
+  const sync = () => {
+    if (!el) return;
+    const any = openIds.size > 0;
+    el.classList.toggle('is-active', any);
+    el.setAttribute('aria-hidden', any ? 'false' : 'true');
+  };
+  return {
+    show: (id) => { openIds.add(id); sync(); },
+    hide: (id) => { openIds.delete(id); sync(); },
+    closeAll: () => { openIds.clear(); sync(); },
+  };
+})();
+
+// Both chrome controls behave exactly like their navbar counterparts, after
+// first dismissing whatever viewer (and the cart) is covering the page.
+(() => {
+  const logo = document.getElementById('lightbox-chrome-logo');
+  const buy = document.getElementById('lightbox-chrome-buy');
+  // Dismiss whichever viewer is open, without touching the cart — the two
+  // controls disagree about what should happen to it next.
+  const closeViewers = () => {
+    document.querySelectorAll('.cart-image-lightbox, .video-lightbox, .doc-lightbox')
+      .forEach(el => el.classList.remove('is-active'));
+    const player = document.getElementById('video-lightbox-player');
+    if (player) player.pause();
+    lightboxChrome.closeAll();
+    document.body.style.overflow = '';
+  };
+  // Matches #nav-logo: back to the top of the page.
+  logo?.addEventListener('click', (e) => {
+    e.preventDefault();
+    closeViewers();
+    closeCart();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+  // Matches the navbar's own BUY NOW, which opens the cart straight at checkout
+  // on the Double Kit rather than scrolling to the order section.
+  buy?.addEventListener('click', (e) => {
+    e.preventDefault();
+    closeViewers();
+    cartQty = 2;
+    updateCartUI();
+    openCart('checkout');
+  });
+})();
+
 // Tap the product photo (either cart view) to see it full screen.
 const cartLightbox = document.getElementById('cart-image-lightbox');
 const cartLightboxImg = document.getElementById('cart-lightbox-img');
@@ -990,9 +1044,11 @@ function openCartLightbox(src) {
   if (!cartLightbox || !cartLightboxImg || !src) return;
   cartLightboxImg.src = src;
   cartLightbox.classList.add('is-active');
+  lightboxChrome.show('cart-image');
 }
 function closeCartLightbox() {
   if (cartLightbox) cartLightbox.classList.remove('is-active');
+  lightboxChrome.hide('cart-image');
 }
 document.querySelectorAll('.cart-media-btn').forEach(btn => {
   btn.addEventListener('click', () => {
@@ -1042,10 +1098,12 @@ document.addEventListener('keydown', (e) => {
     player.muted = false;
     playCurrent();
     lightbox.classList.add('is-active');
+    lightboxChrome.show('video');
   }
 
   function closeVideoLightbox() {
     lightbox.classList.remove('is-active');
+    lightboxChrome.hide('video');
     player.pause();
     player.removeAttribute('src');
     player.load();
@@ -1071,6 +1129,209 @@ document.addEventListener('keydown', (e) => {
   });
 })();
 
+/* ══════════════════════════════════════════════════════════════
+   DOCUMENT LIGHTBOX — drag-to-pan / pinch-to-zoom viewer
+   ══════════════════════════════════════════════════════════════
+   The controller-placement scans are dense multi-panel documents: at page size
+   you can tell there are three options but can't read any of them. This opens
+   the full-resolution file on a pannable stage.
+
+   Pointer Events (not separate mouse/touch paths) so drag, pinch and pen all
+   run through one code path, with setPointerCapture keeping a drag alive if
+   the cursor leaves the stage mid-gesture. */
+(() => {
+  const lb = document.getElementById('doc-lightbox');
+  const stage = document.getElementById('doc-stage');
+  const paper = document.getElementById('doc-paper');
+  const img = document.getElementById('doc-lightbox-img');
+  const hint = document.getElementById('doc-hint');
+  const closeBtn = document.getElementById('doc-lightbox-close');
+  const zoomInBtn = document.getElementById('doc-zoom-in');
+  const zoomOutBtn = document.getElementById('doc-zoom-out');
+  if (!lb || !stage || !paper || !img) return;
+
+  let nw = 0, nh = 0;               // document's natural pixel size
+  let scale = 1, fitScale = 1, maxScale = 1;
+  let tx = 0, ty = 0;
+  const pointers = new Map();
+  let pinch = null;
+  let moved = false;
+
+  function apply() {
+    paper.style.transform = `translate(${tx}px, ${ty}px) scale(${scale})`;
+    if (zoomInBtn) zoomInBtn.disabled = scale >= maxScale - 0.0005;
+    if (zoomOutBtn) zoomOutBtn.disabled = scale <= fitScale + 0.0005;
+  }
+
+  // Centre on whichever axis the document is smaller than the stage; otherwise
+  // pin it so panning can never expose empty space past an edge.
+  function clampOffsets() {
+    const w = nw * scale, h = nh * scale;
+    const sw = stage.clientWidth, sh = stage.clientHeight;
+    tx = w <= sw ? (sw - w) / 2 : Math.min(0, Math.max(sw - w, tx));
+    ty = h <= sh ? (sh - h) / 2 : Math.min(0, Math.max(sh - h, ty));
+  }
+
+  function computeBounds() {
+    const sw = stage.clientWidth, sh = stage.clientHeight;
+    if (!nw || !nh || !sw || !sh) return;
+    // Slightly inset so the sheet reads as a sheet rather than a wall of paper.
+    fitScale = Math.min((sw * 0.92) / nw, (sh * 0.86) / nh);
+    // Always allow at least native 1:1 — that's the zoom where the fibre reads.
+    maxScale = Math.max(fitScale * 4, 1);
+  }
+
+  // Zoom about a focal point in stage coordinates, so the pixel under the
+  // cursor/pinch-centre stays put instead of the view lurching to the middle.
+  function zoomTo(next, fx, fy) {
+    const target = Math.min(maxScale, Math.max(fitScale, next));
+    const k = target / scale;
+    tx = fx - k * (fx - tx);
+    ty = fy - k * (fy - ty);
+    scale = target;
+    clampOffsets();
+    apply();
+  }
+
+  function zoomByStep(factor) {
+    zoomTo(scale * factor, stage.clientWidth / 2, stage.clientHeight / 2);
+    dismissHint();
+  }
+
+  function dismissHint() { hint?.classList.add('is-hidden'); }
+
+  function layout(initial) {
+    nw = img.naturalWidth; nh = img.naturalHeight;
+    if (!nw || !nh) return;
+    paper.style.width = nw + 'px';
+    paper.style.height = nh + 'px';
+    computeBounds();
+    if (initial) {
+      // Open already enlarged past fit, so panning is immediately meaningful
+      // and the hand affordance isn't lying about there being somewhere to go.
+      scale = Math.min(fitScale * 1.5, maxScale);
+      tx = (stage.clientWidth - nw * scale) / 2;
+      ty = (stage.clientHeight - nh * scale) / 2;
+    } else {
+      scale = Math.min(maxScale, Math.max(fitScale, scale));
+    }
+    clampOffsets();
+    apply();
+  }
+
+  function openDoc(src) {
+    if (!src) return;
+    hint?.classList.remove('is-hidden');
+    const start = () => layout(true);
+    if (img.getAttribute('src') !== src) {
+      img.addEventListener('load', start, { once: true });
+      img.src = src;
+    } else if (img.complete && img.naturalWidth) {
+      start();
+    } else {
+      img.addEventListener('load', start, { once: true });
+    }
+    lb.classList.add('is-active');
+    document.body.style.overflow = 'hidden';
+    lightboxChrome.show('doc');
+  }
+
+  function closeDoc() {
+    lb.classList.remove('is-active');
+    document.body.style.overflow = '';
+    lightboxChrome.hide('doc');
+  }
+
+  stage.addEventListener('pointerdown', (e) => {
+    pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    try { stage.setPointerCapture(e.pointerId); } catch (err) {}
+    moved = false;
+    if (pointers.size === 2) {
+      const [a, b] = [...pointers.values()];
+      pinch = { dist: Math.hypot(b.x - a.x, b.y - a.y) || 1, scale };
+    }
+    stage.classList.add('is-grabbing');
+  });
+
+  stage.addEventListener('pointermove', (e) => {
+    const p = pointers.get(e.pointerId);
+    if (!p) return;
+    const prevX = p.x, prevY = p.y;
+    p.x = e.clientX; p.y = e.clientY;
+
+    if (pointers.size >= 2 && pinch) {
+      const [a, b] = [...pointers.values()];
+      const dist = Math.hypot(b.x - a.x, b.y - a.y) || 1;
+      const rect = stage.getBoundingClientRect();
+      zoomTo(pinch.scale * (dist / pinch.dist),
+             (a.x + b.x) / 2 - rect.left,
+             (a.y + b.y) / 2 - rect.top);
+      moved = true;
+      dismissHint();
+      return;
+    }
+
+    const dx = e.clientX - prevX, dy = e.clientY - prevY;
+    if (Math.abs(dx) + Math.abs(dy) > 0) {
+      tx += dx; ty += dy;
+      clampOffsets(); apply();
+      if (Math.abs(dx) + Math.abs(dy) > 2) { moved = true; dismissHint(); }
+    }
+  });
+
+  const endPointer = (e) => {
+    pointers.delete(e.pointerId);
+    if (pointers.size < 2) pinch = null;
+    if (pointers.size === 0) stage.classList.remove('is-grabbing');
+  };
+  stage.addEventListener('pointerup', endPointer);
+  stage.addEventListener('pointercancel', endPointer);
+
+  stage.addEventListener('wheel', (e) => {
+    e.preventDefault();
+    const rect = stage.getBoundingClientRect();
+    zoomTo(scale * Math.exp(-e.deltaY * 0.0018), e.clientX - rect.left, e.clientY - rect.top);
+    dismissHint();
+  }, { passive: false });
+
+  stage.addEventListener('dblclick', (e) => {
+    const rect = stage.getBoundingClientRect();
+    const zoomedIn = scale > fitScale * 1.8;
+    zoomTo(zoomedIn ? fitScale : Math.min(maxScale, fitScale * 2.8),
+           e.clientX - rect.left, e.clientY - rect.top);
+    dismissHint();
+  });
+
+  // Clicking the empty margin around the sheet closes — but never when that
+  // "click" was the tail end of a drag that happened to finish off-sheet.
+  stage.addEventListener('click', (e) => {
+    if (!moved && e.target === stage) closeDoc();
+  });
+
+  zoomInBtn?.addEventListener('click', () => zoomByStep(1.4));
+  zoomOutBtn?.addEventListener('click', () => zoomByStep(1 / 1.4));
+  closeBtn?.addEventListener('click', closeDoc);
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && lb.classList.contains('is-active')) closeDoc();
+  });
+  window.addEventListener('resize', () => {
+    if (lb.classList.contains('is-active')) layout(false);
+  });
+
+  document.querySelectorAll('.doc-clickable').forEach(el => {
+    // Read the still's live src so the viewer opens whichever responsive
+    // variant is currently on screen, not a hardcoded one.
+    const srcOf = () => {
+      const still = el.querySelector('.diagram-still');
+      return still ? (still.currentSrc || still.src) : el.dataset.docSrc;
+    };
+    el.addEventListener('click', () => openDoc(srcOf()));
+    el.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openDoc(srcOf()); }
+    });
+  });
+})();
+
 document.getElementById('upsell-accept-btn')?.addEventListener('click', () => {
   cartQty = 2;
   updateCartUI();
@@ -1084,6 +1345,9 @@ document.getElementById('upsell-decline-btn')?.addEventListener('click', () => {
 
 document.querySelectorAll('a[href="#order"], .hero-cta, .buy-btn, .nav-cta').forEach(btn => {
   if (btn.closest('#cart-overlay')) return;
+  // The lightbox chrome's BUY NOW is also an a[href="#order"], but it has to
+  // dismiss the open viewer first — it runs its own handler instead of this one.
+  if (btn.closest('#lightbox-chrome')) return;
 
   btn.addEventListener('click', (e) => {
     e.preventDefault();

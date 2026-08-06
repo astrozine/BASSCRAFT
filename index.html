@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>BASSCRAFT — Haptic is the future</title>
   <meta name="description" content="Feel every frequency. BASSCRAFT transforms your seat into a full-body haptic experience. No Bluetooth. Zero latency.">
-  <link rel="stylesheet" href="styles.css?v=6">
+  <link rel="stylesheet" href="styles.css?v=7">
 </head>
 <body>
 <div id="site-wrapper">
@@ -167,7 +167,8 @@
       <!-- Plays the animated walkthrough once, filling the frame completely. When it ends,
            the frame's own aspect-ratio morphs to match the still diagram exactly (see app.js),
            so the image is then shown in full with no cropping — one box, two assets, no letterboxing. -->
-      <div class="diagram-card">
+      <div class="diagram-card doc-clickable" id="diagram-card" role="button" tabindex="0"
+        aria-label="Enlarge the controller placement document to explore it">
         <div class="diagram-frame-inner">
           <img class="diagram-still" alt="Possible controller box locations"
             data-h="assets/where to put the controller box/possible lcoations for boxes - wide.png"
@@ -493,6 +494,60 @@
       </div>
     </div>
   </div>
+</div>
+
+<!-- Shared chrome for every lightbox on the site: the nav's B mark and BUY NOW
+     button, floated in at the same coordinates they hold in the real navbar so
+     an expanded viewer still reads as part of the site rather than a detour out
+     of it. One element reused by all three lightboxes (see app.js). -->
+<div class="lightbox-chrome" id="lightbox-chrome" aria-hidden="true">
+  <a class="lightbox-chrome-logo" id="lightbox-chrome-logo" href="#home" aria-label="BASSCRAFT — back to top">
+    <img src="assets/images/logo-icon.png" alt="BASSCRAFT">
+  </a>
+  <a class="lightbox-chrome-buy" id="lightbox-chrome-buy" href="#order">BUY NOW</a>
+</div>
+
+<!-- Pan/zoom viewer for the controller-placement documents. These are dense
+     multi-panel scans — legible only once they can be enlarged and explored,
+     hence the drag-to-pan stage rather than a plain full-screen still. -->
+<div class="doc-lightbox" id="doc-lightbox">
+  <div class="doc-stage" id="doc-stage">
+    <div class="doc-paper" id="doc-paper">
+      <img id="doc-lightbox-img" alt="Controller box placement options, enlarged" draggable="false">
+    </div>
+  </div>
+
+  <div class="doc-hint" id="doc-hint">
+    <!-- Photoshop's hand tool, as the affordance for "this pans". -->
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M18 11V6.5a1.5 1.5 0 0 0-3 0V11"></path>
+      <path d="M15 10.5V4.5a1.5 1.5 0 0 0-3 0V11"></path>
+      <path d="M12 11V5.5a1.5 1.5 0 0 0-3 0V13"></path>
+      <path d="M9 12V8.5a1.5 1.5 0 0 0-3 0V14c0 3.9 2.6 7 6.5 7s6.5-3.1 6.5-7v-2"></path>
+    </svg>
+    <span>Drag to explore &middot; scroll or pinch to zoom</span>
+  </div>
+
+  <div class="doc-zoom">
+    <button type="button" id="doc-zoom-out" aria-label="Zoom out">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round">
+        <line x1="5" y1="12" x2="19" y2="12"></line>
+      </svg>
+    </button>
+    <button type="button" id="doc-zoom-in" aria-label="Zoom in">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round">
+        <line x1="12" y1="5" x2="12" y2="19"></line>
+        <line x1="5" y1="12" x2="19" y2="12"></line>
+      </svg>
+    </button>
+  </div>
+
+  <button class="doc-lightbox-close" id="doc-lightbox-close" aria-label="Close enlarged document">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="18" y1="6" x2="6" y2="18"></line>
+      <line x1="6" y1="6" x2="18" y2="18"></line>
+    </svg>
+  </button>
 </div>
 
 <!-- Full-screen product viewer, opened by tapping the cart's product photo.
