@@ -145,6 +145,7 @@ p {
   background: none; border: none; padding: 6px; margin: 0; cursor: pointer;
   color: inherit; width: 34px; height: 34px;
   align-items: center; justify-content: center;
+  position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
 }
 .mobile-menu-btn svg { width: 22px; height: 22px; }
 .mobile-menu-btn .bar { transition: transform 0.3s ease, opacity 0.2s ease; transform-origin: center; }
@@ -173,9 +174,17 @@ p {
 @media (max-width: 768px) {
   .nav-links { display: none; }
   .nav-logo img { height: 40px; }
-  /* Always logo-left/hamburger-right now, rather than only once scrolled —
-     there's something on the right at rest now (the hamburger), where
-     before there was only the buy button that stayed hidden until scroll. */
+  /* The full "BASSCRAFT" wordmark is a very wide, flat lockup (~10:1) — no
+     legible height keeps it clear of the now-centered hamburger on a 390px
+     screen. Show the compact B mark instead, always (not just once
+     .scrolled cross-fades to it on desktop), same as a lot of mobile navs
+     drop down to an icon-only mark at narrow widths. */
+  .nav-logo .logo-white { opacity: 0 !important; }
+  .nav-logo .logo-icon { opacity: 1 !important; transform: scale(1) !important; height: 34px; }
+  /* Logo stays left (not centered like the original pre-scroll state) now
+     that the hamburger permanently owns the navbar's true center — the two
+     centered at once just collided into each other. Buy button keeps its
+     original hidden-until-scroll behavior on the right either way. */
   .navbar { justify-content: space-between; }
   .mobile-menu-btn { display: flex; }
   .mobile-nav-menu { display: flex; }
