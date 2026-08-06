@@ -1175,11 +1175,13 @@ document.addEventListener('keydown', (e) => {
     if (p !== undefined) p.catch(() => {});
   }
 
+  // Advances through the queue on 'ended'; once the last clip finishes,
+  // loop back to the start rather than stopping — leaving the player idle
+  // at the end swaps its native play button for a "replay" glyph, which
+  // read as an unwanted extra step instead of just continuing to loop.
   player.addEventListener('ended', () => {
-    if (queueIdx < queue.length - 1) {
-      queueIdx++;
-      playCurrent();
-    }
+    queueIdx = queueIdx < queue.length - 1 ? queueIdx + 1 : 0;
+    playCurrent();
   });
 
   // Same reasoning as the document viewer: this backdrop's blur(26px) is a

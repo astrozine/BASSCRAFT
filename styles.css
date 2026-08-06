@@ -248,7 +248,7 @@ p {
      off on its own. Measured the gap on each side and shifted just the
      hamburger to where they land equal — logo|33px|hamburger|33px|BUY NOW
      at a 390px-wide screen, roughly balanced down to 320px too. */
-  .navbar.scrolled.show-buy-btn .mobile-menu-btn { left: 43.9%; }
+  .navbar.scrolled.show-buy-btn .mobile-menu-btn { left: 46.5%; }
   .mobile-nav-menu { display: flex; }
   #global-mute-btn { display: none !important; }
 }
@@ -1191,7 +1191,13 @@ p {
      of overlapping it — keeps it clear of the tap area for native controls. */
   .video-lightbox-inner { flex-direction: column; align-items: flex-end; gap: 12px; height: auto; width: 100%; }
   .video-lightbox-close { position: static; }
-  #video-lightbox-player { height: auto; width: 100%; max-height: 65vh; }
+  /* width:100% (a definite value) forced the player's own box wider than a
+     portrait video's actual rendered content once max-height clamped it
+     down — the leftover space inside that box showed its own black
+     background as bars down the sides. width:auto lets the box size itself
+     to the video's real aspect ratio instead (matching the desktop rule's
+     approach), so the box and the visible video are always the same shape. */
+  #video-lightbox-player { height: auto; width: auto; max-width: 100%; max-height: 65vh; }
 }
 
 /* ═════ SHARED LIGHTBOX CHROME ═════ */
