@@ -860,7 +860,11 @@ p {
   background: linear-gradient(to right, rgba(190,188,184,0.1) 0%, rgba(20,20,20,0.5) 42%, rgba(14,14,14,0.8) 68%);
 }
 
-.cart-item-media { position: relative; z-index: 2; flex-shrink: 0; width: 300px; display: flex; align-items: center; justify-content: center; }
+/* Product photos now ship on their own near-white studio background (#fdfdfd),
+   so the media zone matches that directly instead of leaning on the blurred
+   wash behind it to hide a seam — any letterboxed edge (mobile's `contain`)
+   reads as "sitting on the same shelf" rather than a mismatched box. */
+.cart-item-media { position: relative; z-index: 2; flex-shrink: 0; width: 300px; display: flex; align-items: center; justify-content: center; background: #fdfdfd; }
 /* The button fills the whole media zone (a big, forgiving tap target, and a
    stable corner to anchor the expand icon to) while the photo inside sizes
    itself off height with width left to auto-compute from aspect ratio —

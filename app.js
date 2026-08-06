@@ -916,7 +916,7 @@ function updateCartUI() {
   const isPair = cartQty % 2 === 0;
   
   if (itemImg) {
-    const src = cartQty >= 2 ? 'assets/images/2 products one controller.webp' : 'assets/images/basscraft_studio_product.jpg';
+    const src = cartQty >= 2 ? 'assets/images/hero-cart-dual-product.webp' : 'assets/images/hero-cart-single-product.webp';
     itemImg.src = src;
     if (itemImgBlur) itemImgBlur.src = src;
   }
@@ -1051,10 +1051,10 @@ document.addEventListener('keydown', (e) => {
     player.load();
   }
 
-  document.querySelectorAll('[data-lightbox-src]').forEach(el => {
+  document.querySelectorAll('.vid-clickable[data-lightbox-src]').forEach(el => {
     el.addEventListener('click', () => openVideoLightbox([el.dataset.lightboxSrc]));
   });
-  document.querySelectorAll('[data-lightbox-playlist]').forEach(el => {
+  document.querySelectorAll('.vid-clickable[data-lightbox-playlist]').forEach(el => {
     el.addEventListener('click', () => {
       try {
         openVideoLightbox(JSON.parse(el.dataset.lightboxPlaylist));
