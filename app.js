@@ -1739,7 +1739,7 @@ document.addEventListener('DOMContentLoaded', () => {
     powerVideo.addEventListener('ended', () => {
       idx = (idx + 1) % sources.length;
       powerVideo.src = sources[idx];
-      powerVideo.play();
+      powerVideo.play()?.catch(() => {});
     });
   });
 });
@@ -2025,7 +2025,9 @@ document.addEventListener('DOMContentLoaded', () => {
     vid.resetAndPlay = () => {
       vid.currentTime = 0;
       vid.playbackRate = rate;
-      vid.play();
+      // Swallow the "play() interrupted by a new load request" rejection —
+      // switching panels quickly replaces the source mid-play by design.
+      vid.play()?.catch(() => {});
     };
   });
 });
