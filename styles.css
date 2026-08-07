@@ -959,23 +959,26 @@ body.cart-open .nav-links { opacity: 0; pointer-events: none; }
 
 @media (max-width: 768px) {
   .video-lightbox { padding: 20px; }
-  /* Close button moves above the video (its own row, right-aligned) instead
-     of overlapping it — keeps it clear of the tap area for native controls. */
-  /* align-items was flex-end so the close button (this row's only child at
-     the time) sat right-aligned above the video. Now that the video itself
-     is width:auto — sized to its own aspect ratio rather than forced full
-     width — flex-end also right-aligned the video's now-narrower box,
-     leaving it flush against the right edge with empty space to its left.
-     Center the row instead, and pin just the close button back to the
-     right with its own align-self. */
   .video-lightbox-inner { flex-direction: column; align-items: center; gap: 16px; height: auto; width: 100%; }
-  /* Sits in its own row above the video (good), but that row starts right at
-     the modal's own 20px padding — almost exactly where the fixed
-     .lightbox-chrome bar (BUY NOW pill, z-index above this modal) also sits,
-     so the two visibly collided. Same clearance the doc/cart lightbox close
-     buttons already use to drop below that bar, adjusted for the 20px the
-     modal padding already contributes. */
-  .video-lightbox-close { position: static; align-self: flex-end; margin-top: max(64px, calc(env(safe-area-inset-top, 0px) + 56px)); }
+  /* Taken out of the flex flow entirely. As a static flex item it needed a
+     margin-top to clear BUY NOW, and that margin pushed the whole column —
+     title, caption and video — down the screen, which is what left the modal
+     sitting too low and spilling past its own bottom edge. Pinning it instead
+     means it contributes nothing to layout, so .video-lightbox-inner centres
+     in the viewport the way it should, while the button keeps a fixed, known
+     distance from the BUY NOW pill no matter how tall the clip or caption is.
+
+     84px is the same clearance the document and cart viewers already use: the
+     chrome bar's pill ends around y=45, so this leaves ~39px of air below it.
+     position:fixed resolves against .video-lightbox itself rather than the
+     viewport — its backdrop-filter makes it the containing block for fixed
+     descendants — but that element is inset:0, so the two coincide. */
+  .video-lightbox-close {
+    position: fixed;
+    top: max(84px, calc(env(safe-area-inset-top, 0px) + 76px));
+    right: 16px;
+    margin: 0;
+  }
   .video-lightbox-title { font-size: 1.5rem; }
   /* width:100% (a definite value) forced the player's own box wider than a
      portrait video's actual rendered content once max-height clamped it
@@ -1012,7 +1015,7 @@ body.cart-open .nav-links { opacity: 0; pointer-events: none; }
 }
 .lightbox-chrome.is-active { opacity: 1; transform: translateX(-50%) translateY(0); }
 /* Container stays click-through so backdrop-to-close still works around them. */
-.lightbox-chrome > *
+.lightbox-chrome > * { pointer-events: auto; }
 
 .lightbox-chrome-logo { display: flex; align-items: center; }
 /* Source mark is solid black with alpha. Inverted to solid white by default —
@@ -1131,15 +1134,7 @@ body.cart-open .nav-links { opacity: 0; pointer-events: none; }
 .doc-lightbox-close:hover { background: rgba(0,0,0,0.1); }
 
 /* Photoshop-style hand affordance. Fades out once they've actually dragged —
-   it's an instruction, not persistent furniture.
-
-   pointer-events:none is essential, not cosmetic. This sits centred over the
-   document at z-index 50 and is a sibling of .doc-stage, so while it accepted
-   pointers it swallowed the pointerdown that begins a pan — the drag never
-   reached the stage, .is-grabbing never applied, and the document simply
-   refused to move until you'd tapped the hint away first. Click-through means
-   the very first drag both pans and dismisses it (app.js dismisses on the
-   stage's own pointerdown). */
+   it's an instruction, not persistent furniture. */
 .doc-hint {
   position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
   display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 24px;
@@ -1147,8 +1142,15 @@ body.cart-open .nav-links { opacity: 0; pointer-events: none; }
   padding: 30px; text-align: center;
   font-family: 'CalSansText', sans-serif; font-size: 1.15rem; font-weight: 500; letter-spacing: 0;
   z-index: 50; transition: opacity .5s ease, visibility .5s ease;
-  pointer-events: none;
   width: min(90%, 480px); min-height: 200px;
+  /* pointer-events:none is essential, not cosmetic. This sits centred over the
+     document at z-index 50 and is a sibling of .doc-stage, so while it accepted
+     pointers it swallowed the pointerdown that begins a pan — the drag never
+     reached the stage, .is-grabbing never applied, and the document simply
+     refused to move until you'd tapped the hint away first. Click-through means
+     the first drag both pans and dismisses it (app.js dismisses on the stage's
+     own pointerdown). */
+  pointer-events: none;
 }
 .doc-hint::before {
   content: ""; position: absolute; inset: -20px; z-index: -1;
@@ -1374,7 +1376,7 @@ body.cart-open .nav-links { opacity: 0; pointer-events: none; }
    reflows the nav while the other fades. The icon sits at low opacity with a soft
    glass ring — present but discreet. */
 .nav-logo { display: grid !important; place-items: center start; }
-.nav-logo > *
+.nav-logo > * { grid-area: 1 / 1; transition: opacity .45s ease, transform .45s ease; }
 .nav-logo .logo-white { 
   width: 250px; height: 24px; opacity: 1; 
   -webkit-mask: url('assets/images/logo-white.png') no-repeat left center / contain;
