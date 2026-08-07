@@ -73,7 +73,6 @@ button { font-family: inherit; }
 
 /* ── Containers — 4K-ready with wider bounds ── */
 .container { max-width: min(1400px, 88vw); margin: 0 auto; padding: 0 5%; }
-.container-lg { max-width: min(1800px, 92vw); margin: 0 auto; padding: 0 4%; }
 
 /* ── Sections ── */
 .s-dark { background: var(--bg); color: var(--white); padding: clamp(80px,10vw,140px) 0; position: relative; }
@@ -240,12 +239,6 @@ p {
 
 @media (max-width: 768px) {
   .hero-title { font-size: clamp(3.5rem, 14vw, 4.5rem); line-height: 1.05; }
-  .hero-tagline { 
-    max-width: 215px; 
-    margin-left: auto; 
-    margin-right: auto; 
-    line-height: 1.4;
-  }
   .mobile-break { display: block; }
   .nav-links { display: none; }
   .nav-logo .logo-white { width: 160px; height: 16px; }
@@ -277,8 +270,7 @@ p {
      than between the hamburger and BUY NOW. Small inset to even that out. */
   .navbar.scrolled .nav-logo { margin-left: 14px; }
   .mobile-nav-menu { display: flex; }
-  #global-mute-btn { display: none !important; }
-}
+  #global-mute-btn { display: none !important; }}
 
 /* ═══ HERO ═══ */
 .hero { position: relative; height: 100vh; height: 100svh; max-height: 1200px; width: 100%; overflow: hidden; }
@@ -290,6 +282,13 @@ p {
   object-position: top;
   z-index: 0;
 }
+@media (max-width: 768px) {
+  .hero-bg video {
+    object-fit: cover;
+    object-position: center;
+    height: calc(100% + 30px);
+    top: -30px;
+  }}
 /* Sits above the video (hiding it) until playback has genuinely started, then
    crossfades out — see the inline script beside the hero video markup. */
 .hero-poster {
@@ -300,6 +299,11 @@ p {
   z-index: 1;
   transition: opacity 90ms linear;
 }
+@media (max-width: 768px) {
+  .hero-poster {
+    object-fit: cover;
+    object-position: center;
+  }}
 .hero-poster.is-hidden { opacity: 0; pointer-events: none; }
 .hero-dim { position: absolute; inset: 0; z-index: 2; background: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.15) 100%); }
 .hero-center h1 {
@@ -320,22 +324,21 @@ p {
     flex-direction: column;
     align-items: center;
     justify-content: flex-end;
-    padding-bottom: max(24px, env(safe-area-inset-bottom, 16px)); gap: 15px;
-    padding-left: 20px; padding-right: 20px;
+    padding-bottom: max(32px, env(safe-area-inset-bottom, 24px)); gap: 6px;
+    padding-left: 28px; padding-right: 28px;
     overflow: hidden;
   }
   .hero-text-group {
-    align-items: center; text-align: center; gap: 5px;
+    align-items: center; text-align: center; gap: 4px;
   }
-  .hero-center h1 { font-size: clamp(1.4rem, 4vw, 2rem) !important; }
-  .hero-center p { font-size: clamp(0.8rem, 2.8vw, 0.95rem); }
-  .hero-center h1, .hero-center p { max-width: min(90vw, 420px); }
-  .hero-cta { padding: 11px 28px; font-size: 0.88rem; margin-top: 5px; }
-}
-.hero-logo {
-  width: clamp(280px, 30vw, 460px); opacity: 1; transition: opacity .5s;
-  filter: drop-shadow(0 2px 12px rgba(0,0,0,0.5)) drop-shadow(0 1px 3px rgba(0,0,0,0.3));
-}
+  .hero-center h1 { font-size: clamp(1.25rem, 3.8vw, 1.8rem) !important; line-height: 1.1; max-width: min(85vw, 400px); margin-top: 0; margin-bottom: 0; }
+  .hero-center p { 
+    font-size: clamp(0.82rem, 3.4vw, 0.95rem); 
+    line-height: 1.3; 
+    max-width: 220px; 
+    margin-top: 0; margin-bottom: 0; 
+  }
+  .hero-cta { padding: 10px 26px; font-size: 0.84rem; margin-top: 2px; }}
 
 .hero-title {
   font-size: clamp(2.2rem, 5vw, 4rem);
@@ -414,15 +417,8 @@ p {
 
 
 /* ═══ DUO GRID (Two Cushions + Full Experience) ═══ */
-.duo-grid {
-  display: grid; grid-template-columns: 3fr 2fr; gap: clamp(1.5rem, 3vw, 3rem); align-items: start;
-}
-.duo-side h4 { color: var(--white); }
-@media (max-width: 768px) { .duo-grid { grid-template-columns: 1fr; } }
 
 /* ═══ GRID ═══ */
-.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(2rem,4vw,5rem); align-items: center; }
-@media (max-width: 768px) { .grid-2 { grid-template-columns: 1fr; gap: 2rem; } }
 
 /* ═══ MOBILE COMPACTNESS PASS ═══
    Section paddings and grid gaps below were authored as inline styles at desktop-friendly
@@ -446,286 +442,47 @@ p {
   box-shadow: inset 0 2px 10px rgba(0,0,0,0.5), inset 0 0 26px rgba(0,0,0,0.34);
 }
 .vid-r video { width: calc(100% + 2px); margin-left: -1px; display: block; }
-.vid-r-sm { border-radius: var(--r-sm); overflow: hidden; position: relative; }
-.vid-r-sm video { width: calc(100% + 2px); margin-left: -1px; display: block; }
 
-/* ═══ STICKY SCROLL SECTIONS ═══ */
-.sticky-wrap { position: relative; background: var(--bg); }
-.sticky-vp {
-  height: 100vh; width: 100%; position: relative; overflow: hidden; background: var(--bg);
-}
-.scrub-vid, #ctrl-hero-vid, #stealth-bg-vid, #nobt-bg-vid, #hand-bg-vid {
+/* ═══ STICKY SCROLL SECTIONS ═══ */ #ctrl-hero-vid, #stealth-bg-vid, #nobt-bg-vid, #hand-bg-vid {
   position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
   width: 100vw; height: 100vh; max-width: 1600px; max-height: 900px;
   object-fit: cover;
 }
 
 /* Command Central / Stealth text layer — positioned ABOVE the video */
-.cmd-text-layer {
-  position: absolute; top: 0; left: 0; right: 0;
-  z-index: 6; padding-top: clamp(100px, 12vh, 140px);
-  text-align: center; pointer-events: none;
-}
 
 /* ═══ NO BLUETOOTH ═══ */
-.nobt-graphic {
-  position: absolute; left: 50%; top: 0; width: clamp(400px, 60vw, 900px);
-  transform: translateX(-50%); z-index: 5; opacity: 0; pointer-events: none;
-}
 
 /* Hand sticky text layer */
-.hand-text-layer {
-  position: absolute; top: 22%; right: 5%; left: auto; text-align: right;
-  z-index: 6; pointer-events: none;
-}
 #hand-bg-vid {
   border-radius: 20px;
   transform: translate(-50%, -50%) scale(0.95);
 }
 
 /* "Always in Reach" overlay card */
-.reach-overlay {
-  position: absolute; left: 6%; top: 50%; 
-  transform: translateY(-50%) translateX(calc(-100% + 100% * var(--ease, 0)));
-  z-index: 7; width: clamp(340px, 38vw, 630px); pointer-events: none;
-  opacity: var(--rp, 0);
-}
-.reach-overlay .premium-card {
-  background: rgba(15,15,15,0.98);
-  backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
-  border-radius: 20px;
-  overflow: hidden;
-  box-shadow: 0 30px 80px rgba(0,0,0,0.8);
-  border: 1px solid rgba(255,255,255,0.12);
-  display: flex; flex-direction: column;
-}
-.reach-overlay .card-overlay-content {
-  padding: 16px 24px;
-}
-.reach-overlay .card-overlay-content h4 {
-  font-size: clamp(1.1rem, 1.8vw, 1.6rem);
-  margin-bottom: 4px;
-  font-weight: 600;
-  color: #fff;
-  font-family: 'Syne', sans-serif;
-  letter-spacing: -0.2px;
-}
-.reach-overlay .card-overlay-content p {
-  color: var(--grey-light);
-  font-size: clamp(0.85rem, 1vw, 1rem);
-  opacity: 0.8;
-  margin: 0;
-}
 
 /* Callout cards */
-.callout-layer { position: absolute; inset: 0; pointer-events: none; z-index: 5; }
-.callout {
-  position: absolute; width: clamp(340px, 28vw, 480px); padding: 26px 32px;
-  background: rgba(0,0,0,0.55); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255,255,255,0.1); border-radius: var(--r-sm);
-  transform: translateY(var(--y, 0px));
-}
-.callout h3 { color: var(--white); margin-bottom: 6px; font-size: clamp(1.6rem, 2vw, 2rem); }
-.callout p { color: var(--grey-light); font-size: clamp(1.2rem, 1.4vw, 1.4rem); line-height: 1.5; }
-.callout.c1 { top: 18%; left: 5%; }
-.callout.c2 { top: 48%; right: 4%; left: auto; }
-.callout.c3 { bottom: 16%; left: 6%; top: auto; }
-.callout.x1 { bottom: 18%; right: 5%; left: auto; top: auto; }
-.callout.x2 { bottom: 5%; left: 50%; right: auto; top: auto; transform: translateX(-50%) translateY(var(--y, 0px)); }
-.callout.x3 { bottom: 18%; left: 5%; right: auto; top: auto; }
-
-@media (max-width: 768px) {
-  .callout {
-    width: 85vw; padding: 10px 15px; text-align: center;
-  }
-  .callout h3 { font-size: 1rem; margin-bottom: 2px; }
-  .callout p { font-size: 0.85rem; line-height: 1.3; }
-  
-
-
-  .hand-text-layer { right: auto; left: 50%; width: 90%; text-align: center; transform: translateX(-50%); top: 15%; }
-  
-  .reach-overlay { 
-    left: 50%; top: auto; bottom: 8%;
-    transform: translateX(-50%) translateY(calc(120% - 120% * var(--ease, 0)));
-    width: 85vw; 
-  }
-}
 
 /* ═══ SKIT CARD (No BT / Command Central / Stealth) ═══ */
-.skit-card {
-  position: absolute; left: 50%; top: 50%; 
-  transform: translate(-50%, calc(120% - 170% * var(--ease, 0)));
-  width: 92%; max-width: min(800px, 70vw); background: #0a0a0a;
-  border-radius: var(--r); overflow: hidden;
-  box-shadow: 0 40px 100px rgba(0,0,0,0.8); border: 1px solid rgba(255,255,255,0.06); z-index: 10;
-}
-.skit-card .vid-holder { position: relative; overflow: hidden; cursor: pointer; display: flex; align-items: center; justify-content: center; background: #000; }
-.skit-card .vid-holder video { width: 100%; height: auto; max-height: 60vh; object-fit: contain; display: block; }
-.skit-card .card-body { padding: clamp(20px, 2.5vw, 30px); text-align: center; }
-.skit-card .card-body h3 { margin-bottom: 6px; }
-.skit-card .card-body p { font-size: .9rem; }
 
 
 /* ═══ COMMAND CENTRAL EXTRA ═══ */
-.fade-overlay { position: absolute; left: 0; right: 0; height: 25vh; z-index: 5; pointer-events: none; }
-.fade-overlay.top { top: 0; background: linear-gradient(to bottom, var(--bg) 0%, transparent 100%); }
-.fade-overlay.bottom { bottom: 0; background: linear-gradient(to top, var(--bg) 0%, transparent 100%); }
-.ctrl-top-copy {
-  position: absolute;
-  top: 14%;
-  left: 50%; transform: translateX(-50%);
-  z-index: 8; text-align: center; width: 90%; max-width: 600px;
-}
-.ctrl-top-copy h2 { font-size: clamp(2rem, 4vw, 3.5rem); margin-bottom: 0.5rem; }
-.ctrl-top-copy p { font-size: clamp(1.1rem, 1.5vw, 1.5rem); color: var(--grey-light); }
 
 /* ═══ SOUND TOGGLE BUTTON ═══ */
-.sound-toggle {
-  position: absolute; bottom: 16px; right: 16px;
-  width: 44px; height: 44px; border-radius: 50%;
-  background: rgba(0,0,0,0.5); backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border: 1px solid rgba(255,255,255,0.2); color: white; font-size: 18px;
-  cursor: pointer; display: flex; align-items: center; justify-content: center;
-  transition: background .3s; z-index: 20;
-}
-.sound-toggle:hover { background: rgba(0,0,0,0.7); }
 
 /* ═══ PLAY BUTTON ═══ */
-.play-btn {
-  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-  width: 72px; height: 72px;
-  border-radius: 50%; background: rgba(255,255,255,0.15);
-  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255,255,255,0.3); color: white; font-size: 20px;
-  cursor: pointer; display: flex; align-items: center; justify-content: center;
-  transition: background .3s, transform .2s; z-index: 20;
-}
-.play-btn:hover { background: rgba(255,255,255,0.3); transform: translate(-50%, -50%) scale(1.1); }
 
 /* ═══ WHITE VIDEO STACK (Universal I/O + Cables) ═══ */
-.white-vid-stack { display: flex; flex-direction: column; gap: clamp(60px, 8vw, 100px); }
-.white-vid-item h2 { color: var(--dark); }
-.white-vid-item p { color: var(--grey-dark); }
 
 /* ═══ GLASS CARD (Power Options) ═══ */
-.glass-card {
-  max-width: min(1000px, 85vw); margin: 0 auto;
-  background: rgba(255,255,255,0.04); backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1.5px solid rgba(255,255,255,0.1); border-radius: 28px;
-  padding: clamp(30px, 4vw, 50px); overflow: hidden;
-}
-.glass-card-grid {
-  display: grid; grid-template-columns: 1fr auto 1fr; gap: clamp(20px, 3vw, 40px); align-items: center;
-}
-.glass-card-item { text-align: center; }
-.glass-card-divider {
-  width: 1px; height: 80%; min-height: 100px; background: rgba(255,255,255,0.1);
-  align-self: center;
-}
-@media (max-width: 768px) {
-  .glass-card-grid { grid-template-columns: 1fr; }
-  .glass-card-divider { width: 80%; height: 1px; min-height: auto; margin: 10px auto; }
-}
 
 /* ═══ GENRE CARDS ═══ */
-.genre-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(1.5rem,2.5vw,3rem); }
-.genre-card {
-  background: #0a0a0a; border-radius: var(--r); overflow: hidden;
-  transition: transform .3s; cursor: default;
-}
-.genre-card:hover { transform: translateY(-4px); }
-.genre-card .vid-wrap { position: relative; aspect-ratio: 1/1; overflow: hidden; }
-.genre-card .vid-wrap video { width: 100%; height: 100%; object-fit: cover; cursor: pointer; }
-.genre-bar {
-  padding: clamp(14px,1.2vw,20px) clamp(16px,1.5vw,24px);
-  display: flex; justify-content: space-between; align-items: center;
-}
-.genre-bar h4 { font-size: clamp(0.95rem,1.2vw,1.2rem); color: var(--white); }
-.genre-play {
-  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-  width: 56px; height: 56px; border-radius: 50%;
-  background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3);
-  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
-  color: white; font-size: 16px; cursor: pointer; display: flex;
-  align-items: center; justify-content: center; transition: background .3s, transform .2s;
-  z-index: 10;
-}
-.genre-play:hover { background: rgba(255,255,255,0.25); transform: translate(-50%, -50%) scale(1.1); }
-@media (max-width: 768px) { .genre-grid { grid-template-columns: 1fr; max-width: 500px; margin: 0 auto; } }
 
 /* ═══ INTERACTIVE CONTROLLER DEMO (v2) ═══ */
-.controller-demo { display: flex; justify-content: center; }
-.controller-box {
-  background: #1a1a1a; border-radius: 20px; padding: 30px 40px 20px;
-  border: 2px solid #2a2a2a; position: relative;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05);
-  max-width: 500px; width: 100%;
-}
-.controller-logo { text-align: center; margin-bottom: 20px; }
-.knobs-row-v2 { display: flex; justify-content: space-between; gap: 20px; }
-.knob-unit-v2 { display: flex; flex-direction: column; align-items: center; gap: 10px; flex: 1; }
-.dial-v2 {
-  width: 70px; height: 70px; border-radius: 50%;
-  background: linear-gradient(145deg, #2a2a2a, #1a1a1a);
-  border: 2px solid #3a3a3a; position: relative; cursor: grab;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.4), inset 0 2px 4px rgba(255,255,255,0.05);
-  transition: border-color .3s;
-}
-.dial-v2:hover { border-color: rgba(180,225,255,0.4); }
-.dial-v2:active { cursor: grabbing; }
-.dial-indicator {
-  position: absolute; top: 8px; left: 50%; transform: translateX(-50%);
-  width: 3px; height: 12px; background: rgba(180,225,255,0.7); border-radius: 2px;
-  transform-origin: bottom center;
-}
-.knob-unit-v2 label {
-  font-size: .7rem; color: var(--grey); letter-spacing: .1em;
-  text-transform: uppercase; white-space: nowrap;
-}
-@media (max-width: 768px) {
-  .controller-box { padding: 25px 15px 15px; }
-  .knobs-row-v2 { gap: 10px; }
-  .dial-v2 { width: 55px; height: 55px; }
-  .knob-unit-v2 label { font-size: 0.6rem; letter-spacing: 0.05em; }
-}
-.audio-activate-btn {
-  display: block; width: 100%; margin-top: 20px; padding: 10px;
-  background: rgba(180,225,255,0.1); border: 1px solid rgba(180,225,255,0.2);
-  border-radius: 10px; color: rgba(180,225,255,0.8); cursor: pointer;
-  font-size: .85rem; transition: background .3s;
-}
-.audio-activate-btn:hover { background: rgba(180,225,255,0.2); }
-.audio-activate-btn.active {
-  background: rgba(180,225,255,0.15); border-color: rgba(180,225,255,0.4);
-  color: rgba(180,225,255,1);
-}
-
-.canvas-wrap { border-radius: var(--r-sm); overflow: hidden; }
-.canvas-wrap canvas { display: block; width: 100%; }
 
 /* ═══ SPECS ═══ */
-.specs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: start; }
-.specs-tbl { border-top: 1px solid #d2d2d7; }
-.spec-row {
-  display: flex; justify-content: space-between; padding: 1.2rem 0;
-  border-bottom: 1px solid #d2d2d7; font-size: clamp(0.9rem,1vw,1rem);
-}
-.spec-label { font-weight: 600; color: var(--dark); }
-.spec-val { color: var(--grey-dark); }
-@media (max-width: 768px) { .specs-grid { grid-template-columns: 1fr; } }
 
 /* ═══ SALES / ORDER ═══ */
-.sales-flex { display: flex; align-items: center; gap: clamp(3rem,5vw,6rem); }
-.sales-flex .prod-img {
-  flex: 1; border-radius: var(--r); overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.1);
-}
-.sales-flex .prod-img img { width: 100%; display: block; }
-.sales-info { flex: 1; }
-.sales-info h2 { font-size: clamp(2rem,4vw,3.5rem); margin-bottom: .5rem; }
-.sales-info .price { font-size: clamp(1.6rem,3vw,2.5rem); color: var(--grey-dark); margin-bottom: 2rem; font-weight: 300; }
 .buy-btn {
   background: var(--bg); color: var(--white); border: none;
   padding: 16px 40px; border-radius: 30px; font-size: 1rem; font-weight: 700;
@@ -733,7 +490,6 @@ p {
   transition: opacity .3s, transform .3s;
 }
 .buy-btn:hover { opacity: .85; transform: scale(1.03); }
-@media (max-width: 768px) { .sales-flex { flex-direction: column; gap: 2.5rem; } }
 
 /* ═══ PRICING GRID ═══ */
 .pricing-grid {
@@ -781,9 +537,6 @@ p {
 /* Price-secondary tone (v3): the "was" price is a quiet reference, not competing with
    the real price — v2 had this at 4rem in alarm red, larger than the price itself. */
 .pricing-was { font-size: 1.4rem; text-decoration: line-through; color: var(--grey); font-weight: 400; }
-.pricing-features { list-style: none; margin-bottom: 2.5rem; flex-grow: 1; }
-.pricing-features li { padding: 0.8rem 0; border-bottom: 1px solid rgba(0,0,0,0.05); color: var(--dark); font-size: 1.05rem; }
-.pricing-features li:last-child { border-bottom: none; }
 /* Secondary (Starter Kit): hairline silver outline instead of a 2px black one.
    Label stays dark — silver-on-white would be unreadable. */
 .pricing-card .buy-btn { width: 100%; border: 1px solid var(--silver); background: transparent; color: var(--dark); }
@@ -807,7 +560,6 @@ p {
   .pricing-card-image { max-width: 260px; margin: 0 auto 1.5rem; }
   .pricing-card-inner { flex-direction: column; text-align: center; gap: 1rem; }
   .pricing-card-info { text-align: center; }
-  .pricing-features { text-align: left; }
   .pricing-price { justify-content: center; }
 
   /* Keep a whole kit card within one phone screen. The product shots are portrait,
@@ -823,70 +575,32 @@ p {
   .pricing-price { font-size: 1.9rem; margin-bottom: 0.9rem; gap: 10px; }
   .pricing-was { font-size: 1.05rem; }
   .pricing-card .buy-btn { padding: 12px 24px; font-size: 0.9rem; }
-  .pricing-badge { top: -11px; font-size: 0.72rem; padding: 5px 14px; }
-}
+  .pricing-badge { top: -11px; font-size: 0.72rem; padding: 5px 14px; }}
 
 /* ═══ FOOTER ═══ */
 .footer { background: var(--bg); border-top: 1px solid rgba(255,255,255,0.06); padding: 60px 0; }
-.footer-logo { height: 20px; margin: 0 auto 1rem; opacity: .35; }
 .footer p { text-align: center; font-size: .85rem; color: var(--grey-dark); }
 .footer-links { display: flex; justify-content: center; gap: 2rem; margin-top: 1rem; }
 .footer-links a { color: var(--grey-dark); font-size: .85rem; transition: color .3s; }
 .footer-links a:hover { color: white; }
 
+/* ═══ INSTALLATION ═══ */
+.setup-card { background: var(--grey-light); border-radius: 24px; padding: 48px; }
+.install-step-vid { aspect-ratio: 1/1; background: #000; overflow: hidden; border-radius: 12px; }
+
 /* ═══ DIAGRAM ═══ */
-.diagram-img { background: white; border-radius: var(--r); padding: clamp(1rem, 3vw, 3rem); overflow: hidden; }
-.diagram-img img { width: 100%; display: block; }
 
 /* ═══ FULL-BLEED VIDEO ═══ */
-.full-vid { padding: 0; background: var(--bg); }
-.full-vid video { width: 100%; display: block; }
 
 /* ═══ BRANDING MOTION ═══ */
-.brand-motion { padding: 80px 0; background: var(--bg); }
-.brand-motion video { max-width: min(500px, 50vw); margin: 0 auto; display: block; }
 
 /* ═══ SECTION FADE BOTTOM ═══ */
-.fade-bottom::after {
-  content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 250px;
-  background: linear-gradient(to bottom, transparent, var(--bg)); pointer-events: none; z-index: 2;
-}
 
 /* ═══ PAUSED VIDEO OVERLAY ═══ */
 .vid-paused video { filter: brightness(0.6) contrast(0.8) opacity(0.7); transition: filter .4s; }
 .vid-paused.is-playing video { filter: brightness(1) contrast(1) opacity(1); }
-.vid-paused.is-playing .play-btn { opacity: 0; pointer-events: none; }
-.genre-card .is-playing .genre-play { opacity: 0; pointer-events: none; }
 
 /* ═══ FLOATING BUY WIDGET ═══ */
-.buy-widget {
-  position: fixed; right: -300px; top: 60%; transform: translateY(-50%);
-  display: flex; align-items: center; z-index: 999;
-  transition: right 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
-}
-.buy-widget::before {
-  content: ''; position: absolute;
-  top: -50px; bottom: -50px; left: -110px; right: 0;
-}
-.buy-widget.peek { right: -250px; }
-.buy-widget.is-open { right: 0; }
-.buy-widget.is-hidden { opacity: 0; pointer-events: none; }
-
-.buy-widget-inner {
-  background: rgba(20,20,20,0.95); padding: 16px;
-  border-radius: 16px 0 0 16px; color: var(--white);
-  display: flex; align-items: center; gap: 16px;
-  box-shadow: -10px 10px 40px rgba(0,0,0,0.4);
-  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-  width: 300px; border: 1px solid rgba(255,255,255,0.1);
-  border-right: none;
-}
-
-.buy-widget-img {
-  width: 70px; height: 90px; border-radius: 8px; overflow: hidden;
-  transform: rotate(-5deg); box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-}
-.buy-widget-img img { width: 100%; height: 100%; object-fit: cover; }
 
 @keyframes wiggle {
   0%, 100% { transform: translateY(-50%) rotate(0deg); }
@@ -896,30 +610,12 @@ p {
   40% { transform: translateY(-50%) rotate(0deg); }
 }
 
-.buy-widget-tab {
-  position: absolute; left: -150px; top: -60px; 
-  width: 160px; height: 210px; background: transparent;
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer; 
-  animation: wiggle 4s infinite ease-in-out;
-}
-
-.buy-widget-tab .buy-widget-img {
-  width: 150px; height: 200px; border-radius: 12px; overflow: hidden;
-  transform: rotate(-10deg); box-shadow: -5px 15px 40px rgba(0,0,0,0.7);
-  border: 1px solid rgba(255,255,255,0.1);
-}
-.buy-widget-tab .buy-widget-img img { width: 100%; height: 100%; object-fit: cover; }
-
 #ctrl-intro-wrap { aspect-ratio: 16/9; }
 
 @media (max-width: 768px) {
   /* Disable Sticky Scrub Viewports */
-  .sticky-vp { position: relative !important; height: auto !important; }
-  .sticky-wrap { height: auto !important; padding-bottom: 0 !important; margin-top: 0 !important; padding-top: 2rem !important; padding-bottom: 2rem !important; }
 
-  /* Make background videos flow naturally so cards sit cleanly right under them */
-  .scrub-vid, #ctrl-hero-vid, #stealth-bg-vid, #nobt-bg-vid, #hand-bg-vid {
+  /* Make background videos flow naturally so cards sit cleanly right under them */ #ctrl-hero-vid, #stealth-bg-vid, #nobt-bg-vid, #hand-bg-vid {
     position: relative !important;
     top: auto !important; left: auto !important;
     transform: none !important;
@@ -932,7 +628,7 @@ p {
   }
 
   /* Force Text Overlays and Skit Cards to stack cleanly on Mobile */
-  #command-central-text, #hand-text, #stealth-text, .skit-card { 
+  #command-central-text, #hand-text, #stealth-text{ 
     opacity: 1 !important; 
     transform: none !important; 
     position: relative !important;
@@ -951,55 +647,18 @@ p {
     margin: 0 !important;
     width: 80vw !important;
   }
-  .callout { transform: none !important; position: relative !important; width: 100% !important; max-width: 90vw !important; margin: 10px auto !important; left: auto !important; right: auto !important; top: auto !important; bottom: auto !important; }
-  .callout-layer { pointer-events: none; position: relative !important; display: flex; flex-direction: column; align-items: center; padding: 20px 0; }
-
-  .buy-widget { top: auto; bottom: 30px; transform: none; }
-  .buy-widget-tab { 
-    top: auto; bottom: 0; transform: none; 
-    left: -50px; width: 80px; height: 110px;
-  }
-  .buy-widget-tab .buy-widget-img { width: 75px; height: 100px; }
-  #ctrl-intro-wrap { aspect-ratio: 9/16 !important; }
-}
+  #ctrl-intro-wrap { aspect-ratio: 9/16 !important; }}
 /* Icy Blue Badge for Pricing */
-.icy-badge {
-  position: absolute; top: -15px; right: -15px; 
-  background: radial-gradient(circle, rgba(0,212,255,0.2) 0%, rgba(0,30,60,0.95) 100%);
-  border: 2px solid rgba(0, 212, 255, 0.5);
-  color: #ffffff; /* White hot text */
-  padding: 15px; border-radius: 50%; font-weight: 800; 
-  font-size: 1.2rem; line-height: 1; text-align: center; 
-  box-shadow: 0 0 15px #00d4ff, inset 0 0 15px #00d4ff;
-  transform: rotate(12deg); z-index: 10;
-  text-shadow: 0 0 10px #00d4ff, 0 0 20px #00d4ff, 0 0 30px #00d4ff;
-  animation: icyPulse 2s infinite alternate;
-}
 @keyframes icyPulse {
   0% { box-shadow: 0 0 15px #00d4ff, inset 0 0 15px #00d4ff; }
   100% { box-shadow: 0 0 25px #00d4ff, inset 0 0 25px #00d4ff, 0 0 40px rgba(0,212,255,0.5); }
 }
 
 /* Icy Particles */
-.icy-particle {
-  position: absolute;
-  width: 4px; height: 4px;
-  background: #ffffff;
-  border-radius: 50%;
-  box-shadow: 0 0 6px #00d4ff, 0 0 12px #00d4ff;
-  pointer-events: none;
-  animation: floatUp 2.5s linear infinite;
-  opacity: 0;
-}
 @keyframes floatUp {
   0% { transform: translateY(0) translateX(0) scale(1); opacity: 1; }
   100% { transform: translateY(-40px) translateX(var(--x-dir)) scale(0); opacity: 0; }
 }
-.icy-badge .p1 { top: 20%; left: 20%; --x-dir: -15px; animation-delay: 0s; }
-.icy-badge .p2 { top: 50%; left: 10%; --x-dir: -25px; animation-delay: 0.5s; width: 6px; height: 6px; }
-.icy-badge .p3 { top: 10%; left: 70%; --x-dir: 20px; animation-delay: 1.2s; }
-.icy-badge .p4 { top: 70%; left: 80%; --x-dir: 30px; animation-delay: 0.8s; width: 3px; height: 3px; }
-.icy-badge .p5 { top: 80%; left: 40%; --x-dir: 10px; animation-delay: 1.7s; }
 
 
 /* u2550u2550u2550u2550u2550 CART OVERLAY u2550u2550u2550u2550u2550 */
@@ -1007,7 +666,7 @@ p {
    product-photo backdrop inside the cart, it can make some browsers'
    compositor fail to paint the whole overlay. The solid dark fill already
    gives plenty of contrast against the page behind it. */
-.cart-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.72); z-index: 9999; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; padding: 24px; }
+.cart-overlay { position: fixed; inset: 0; background: rgba(30,30,40,0.45); backdrop-filter: blur(16px) saturate(20%) brightness(170%); -webkit-backdrop-filter: blur(16px) saturate(20%) brightness(170%); z-index: 9999; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; padding: 24px; overflow: hidden; }
 .cart-overlay.is-active { opacity: 1; pointer-events: all; }
 /* Opening the cart scroll-locks the page at 0, which drops .scrolled off the
    navbar — so it falls back to its over-hero look and shows the full BASSCRAFT
@@ -1016,9 +675,16 @@ p {
    the DOM, so it painted on top and knocked the white wordmark down to a murky
    grey. Lift the bar above that scrim so it stays properly white. */
 body.cart-open .navbar { z-index: 10001; }
+body.lightbox-active .navbar { opacity: 0; pointer-events: none; }
 /* The section links would otherwise sit crisply above the scrim while pointing
    at a page that's locked behind the modal. */
 body.cart-open .nav-links { opacity: 0; pointer-events: none; }
+@media (max-width: 768px) {
+  /* Desktop only. On mobile the cart is a near-full-height bottom sheet, so a
+     nav lifted above it overlapped the sheet and its BUY NOW / hamburger
+     swallowed taps meant for the cart. Put the bar back under the scrim here,
+     where the overlay both dims it and takes the pointer events itself. */
+  body.cart-open .navbar { z-index: 9999; }}
 
 .cart-modal { background: rgba(32,32,34,0.85); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border: 1px solid rgba(255,255,255,0.08); border-radius: 24px; width: 100%; max-width: 912px; box-shadow: 0 40px 100px rgba(0,0,0,0.8); position: relative; transform: scale(0.95) translateY(20px); transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); text-align: left; overflow: hidden; max-height: 92vh; overflow-y: auto; }
 .cart-overlay.is-active .cart-modal { transform: scale(1) translateY(0); }
@@ -1122,6 +788,8 @@ body.cart-open .nav-links { opacity: 0; pointer-events: none; }
   .cart-overlay { padding: 0; align-items: flex-end; }
   .cart-modal { max-width: 480px; border-radius: 24px 24px 0 0; max-height: 90vh; transform: translateY(30px); }
   .cart-overlay.is-active .cart-modal { transform: translateY(0); }
+  
+  body.cart-open .navbar { opacity: 0; pointer-events: none; }
 
   .cart-item { flex-direction: column; }
   /* Given real room to breathe (the product photo is the reason someone
@@ -1153,8 +821,7 @@ body.cart-open .nav-links { opacity: 0; pointer-events: none; }
   .cart-summary { margin-top: 12px; padding-top: 12px; }
   .cart-summary-row { margin-bottom: 6px; }
 
-  .cart-content-wrapper .buy-btn, .cart-content-wrapper .btn-ghost { margin-top: 12px; padding: 13px; }
-}
+  .cart-content-wrapper .buy-btn, .cart-content-wrapper .btn-ghost { margin-top: 12px; padding: 13px; }}
 
 .btn-ruby { 
   background-color: #E63946 !important; 
@@ -1188,9 +855,11 @@ body.cart-open .nav-links { opacity: 0; pointer-events: none; }
    actually share roughly the same shape. */
 .cart-image-lightbox {
   position: fixed; inset: 0; z-index: 10000;
-  background: rgba(0,0,0,0.96);
+  background: rgba(30,30,40,0.45);
+  backdrop-filter: blur(26px) saturate(20%) brightness(170%); -webkit-backdrop-filter: blur(26px) saturate(20%) brightness(170%);
   display: flex; align-items: center; justify-content: center;
   opacity: 0; pointer-events: none; transition: opacity 0.25s ease;
+  overflow: hidden;
 }
 .cart-image-lightbox.is-active { opacity: 1; pointer-events: all; }
 .cart-lightbox-inner { position: relative; height: 100%; width: auto; max-width: 100%; display: flex; align-items: center; justify-content: center; }
@@ -1215,8 +884,7 @@ body.cart-open .nav-links { opacity: 0; pointer-events: none; }
   .cart-image-lightbox img { width: 100%; height: 100%; }
   /* Dropped below the shared chrome bar: BUY NOW now occupies the top-right
      corner here, and at this width the two would otherwise overlap outright. */
-  .cart-lightbox-close { top: max(84px, calc(env(safe-area-inset-top, 0px) + 76px)); right: 16px; }
-}
+  .cart-lightbox-close { top: max(84px, calc(env(safe-area-inset-top, 0px) + 76px)); right: 16px; }}
 
 /* ═════ VIDEO LIGHTBOX ═════ */
 /* For the sub-cultural genre clips + the "no bluetooth" demo: bigger and
@@ -1227,17 +895,51 @@ body.cart-open .nav-links { opacity: 0; pointer-events: none; }
 
 .video-lightbox {
   position: fixed; inset: 0; z-index: 10000;
-  background: rgba(8,8,10,0.7);
-  backdrop-filter: blur(26px) saturate(140%); -webkit-backdrop-filter: blur(26px) saturate(140%);
+  background: rgba(30,30,40,0.45);
+  backdrop-filter: blur(26px) saturate(20%) brightness(170%); -webkit-backdrop-filter: blur(26px) saturate(20%) brightness(170%);
   display: flex; align-items: center; justify-content: center;
   padding: 40px;
   opacity: 0; pointer-events: none; transition: opacity 0.25s ease;
+  overflow: hidden;
+}
+
+.cart-overlay::before,
+.cart-image-lightbox::before,
+.video-lightbox::before {
+  content: "";
+  position: absolute; inset: -50%; z-index: -1;
+  background: 
+    radial-gradient(circle at 30% 30%, rgba(255, 0, 100, 0.08), transparent 40%),
+    radial-gradient(circle at 70% 70%, rgba(0, 200, 255, 0.08), transparent 40%),
+    radial-gradient(circle at 40% 70%, rgba(100, 0, 255, 0.08), transparent 40%);
+  filter: blur(40px);
+  animation: chromatic-float 20s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes chromatic-float {
+  0% { transform: rotate(0deg) scale(1.1); }
+  50% { transform: rotate(180deg) scale(1.4); }
+  100% { transform: rotate(360deg) scale(1.1); }
 }
 .video-lightbox.is-active { opacity: 1; pointer-events: all; }
 .video-lightbox-inner {
-  position: relative; display: flex; align-items: center; justify-content: center;
-  height: min(78vh, 720px); max-width: 100%;
+  position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  height: min(78vh, 720px); max-width: 100%; gap: 16px;
 }
+.video-lightbox-text {
+  display: flex; flex-direction: column; align-items: center; gap: 8px; margin: 0;
+}
+.video-lightbox-title {
+  color: white; font-family: 'CalSansUI', sans-serif; font-size: 2rem; font-weight: 700; text-align: center;
+  display: none; margin: 0;
+}
+.video-lightbox-subtitle {
+  color: rgba(255,255,255,0.85); font-family: 'CalSansText', sans-serif; font-size: 1.1rem; font-weight: 400; text-align: center;
+  display: none; margin: 0; max-width: 600px; line-height: 1.4;
+}
+.video-lightbox-title:not(:empty) { display: block; }
+.video-lightbox-subtitle:not(:empty) { display: block; }
 #video-lightbox-player {
   display: block; height: 100%; width: auto; max-width: 100%;
   border-radius: 16px; background: #000;
@@ -1266,16 +968,22 @@ body.cart-open .nav-links { opacity: 0; pointer-events: none; }
      leaving it flush against the right edge with empty space to its left.
      Center the row instead, and pin just the close button back to the
      right with its own align-self. */
-  .video-lightbox-inner { flex-direction: column; align-items: center; gap: 12px; height: auto; width: 100%; }
-  .video-lightbox-close { position: static; align-self: flex-end; }
+  .video-lightbox-inner { flex-direction: column; align-items: center; gap: 16px; height: auto; width: 100%; }
+  /* Sits in its own row above the video (good), but that row starts right at
+     the modal's own 20px padding — almost exactly where the fixed
+     .lightbox-chrome bar (BUY NOW pill, z-index above this modal) also sits,
+     so the two visibly collided. Same clearance the doc/cart lightbox close
+     buttons already use to drop below that bar, adjusted for the 20px the
+     modal padding already contributes. */
+  .video-lightbox-close { position: static; align-self: flex-end; margin-top: max(64px, calc(env(safe-area-inset-top, 0px) + 56px)); }
+  .video-lightbox-title { font-size: 1.5rem; }
   /* width:100% (a definite value) forced the player's own box wider than a
      portrait video's actual rendered content once max-height clamped it
      down — the leftover space inside that box showed its own black
      background as bars down the sides. width:auto lets the box size itself
      to the video's real aspect ratio instead (matching the desktop rule's
      approach), so the box and the visible video are always the same shape. */
-  #video-lightbox-player { height: auto; width: auto; max-width: 100%; max-height: 65vh; }
-}
+  #video-lightbox-player { height: auto; width: auto; max-width: 100%; max-height: 65vh; }}
 
 /* ═════ SHARED LIGHTBOX CHROME ═════ */
 /* The nav's two anchors — the B mark and BUY NOW — float into every expanded
@@ -1304,7 +1012,7 @@ body.cart-open .nav-links { opacity: 0; pointer-events: none; }
 }
 .lightbox-chrome.is-active { opacity: 1; transform: translateX(-50%) translateY(0); }
 /* Container stays click-through so backdrop-to-close still works around them. */
-.lightbox-chrome > * { pointer-events: auto; }
+.lightbox-chrome > *
 
 .lightbox-chrome-logo { display: flex; align-items: center; }
 /* Source mark is solid black with alpha. Inverted to solid white by default —
@@ -1341,8 +1049,7 @@ body.cart-open .nav-links { opacity: 0; pointer-events: none; }
 @media (max-width: 768px) {
   .lightbox-chrome { padding: 10px 5%; }
   .lightbox-logo-icon { width: 42px; height: 34px; }
-  .lightbox-chrome-buy { padding: 9px 18px; font-size: 10px; }
-}
+  .lightbox-chrome-buy { padding: 9px 18px; font-size: 10px; }}
 
 /* ═════ DOCUMENT LIGHTBOX (pan + zoom) ═════ */
 /* The placement diagrams are dense multi-panel documents — at page size you can
@@ -1370,10 +1077,9 @@ body.cart-open .nav-links { opacity: 0; pointer-events: none; }
   position: absolute; top: 0; left: 0;
   transform-origin: 0 0;
   background: #fff;
-  box-shadow: 0 30px 90px rgba(0,0,0,0.6);
-  /* Isolate so the grain's multiply blend composites against the sheet itself
-     rather than punching through to the backdrop behind the whole lightbox. */
   isolation: isolate;
+  border-radius: 44px;
+  overflow: hidden;
 }
 /* GPU-promoted only while genuinely open and interactive — this element is a
    full-resolution scan (up to ~3770x2936px) that can sit zoomed in well past
@@ -1397,7 +1103,19 @@ body.cart-open .nav-links { opacity: 0; pointer-events: none; }
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='p' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.5' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeComponentTransfer%3E%3CfeFuncR type='linear' slope='0.12' intercept='0.88'/%3E%3CfeFuncG type='linear' slope='0.12' intercept='0.88'/%3E%3CfeFuncB type='linear' slope='0.12' intercept='0.88'/%3E%3CfeFuncA type='linear' slope='0' intercept='1'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23p)'/%3E%3C/svg%3E");
   background-size: 140px 140px;
   mix-blend-mode: multiply; opacity: 1;
+  border-radius: 24px;
+  box-shadow: inset 0 0 40px rgba(0,0,0,0.15);
+  transition: opacity .12s ease;
 }
+/* An isolated mix-blend-mode layer that's also rounded, clipped, and
+   transformed every pointermove frame (see .doc-paper) is a known trip
+   point for mobile GPU compositors — Android Chrome in particular will
+   drop/tear frames on that exact combination, reading as a flicker the
+   instant you start dragging. The fibre texture is decorative and the gap
+   is imperceptible mid-gesture, so drop the blend for the duration of the
+   drag/pinch (app.js toggles .is-grabbing on .doc-stage) and let it fade
+   back in the moment the pointer lifts. */
+.doc-stage.is-grabbing .doc-paper::after { opacity: 0; mix-blend-mode: normal; }
 
 /* Sits below the chrome bar rather than beside it — BUY NOW owns the top-right
    corner now, and stacking the two reads as one cluster instead of a collision. */
@@ -1413,18 +1131,38 @@ body.cart-open .nav-links { opacity: 0; pointer-events: none; }
 .doc-lightbox-close:hover { background: rgba(0,0,0,0.1); }
 
 /* Photoshop-style hand affordance. Fades out once they've actually dragged —
-   it's an instruction, not persistent furniture. */
+   it's an instruction, not persistent furniture.
+
+   pointer-events:none is essential, not cosmetic. This sits centred over the
+   document at z-index 50 and is a sibling of .doc-stage, so while it accepted
+   pointers it swallowed the pointerdown that begins a pan — the drag never
+   reached the stage, .is-grabbing never applied, and the document simply
+   refused to move until you'd tapped the hint away first. Click-through means
+   the very first drag both pans and dismisses it (app.js dismisses on the
+   stage's own pointerdown). */
 .doc-hint {
-  position: absolute; left: 50%; bottom: 30px; transform: translateX(-50%);
-  display: flex; align-items: center; gap: 9px; white-space: nowrap;
-  padding: 9px 17px; border-radius: 100px;
-  background: rgba(20,20,20,0.74); border: 1px solid rgba(255,255,255,0.14);
-  color: rgba(255,255,255,0.92); font-size: 12px; letter-spacing: .03em;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.35);
-  pointer-events: none; z-index: 3; transition: opacity .5s ease;
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 24px;
+  color: rgba(10,10,10,0.95); text-shadow: 0.5px 0 0 rgba(255,0,0,0.4), -0.5px 0 0 rgba(0,255,255,0.4);
+  padding: 30px; text-align: center;
+  font-family: 'CalSansText', sans-serif; font-size: 1.15rem; font-weight: 500; letter-spacing: 0;
+  z-index: 50; transition: opacity .5s ease, visibility .5s ease;
+  pointer-events: none;
+  width: min(90%, 480px); min-height: 200px;
 }
-.doc-hint svg { width: 17px; height: 17px; flex-shrink: 0; }
-.doc-hint.is-hidden { opacity: 0; }
+.doc-hint::before {
+  content: ""; position: absolute; inset: -20px; z-index: -1;
+  background: rgba(255,255,255,0.65);
+  background-image: linear-gradient(135deg, rgba(255,0,0,0.03) 0%, rgba(0,255,0,0.03) 50%, rgba(0,0,255,0.03) 100%);
+  backdrop-filter: blur(5px) saturate(1.1); -webkit-backdrop-filter: blur(5px) saturate(1.1);
+  mask-image: radial-gradient(ellipse at center, black 45%, transparent 80%);
+  -webkit-mask-image: radial-gradient(ellipse at center, black 45%, transparent 80%);
+  pointer-events: none;
+}
+.doc-hint-text { display: flex; flex-direction: column; gap: 12px; }
+.doc-hint-text strong { font-family: 'CalSansUI', sans-serif; font-weight: 700; font-size: 1.05em; }
+.doc-hint svg { width: clamp(48px, 10vw, 120px); height: clamp(48px, 10vw, 120px); flex-shrink: 0; opacity: 0.95; }
+.doc-hint.is-hidden { opacity: 0; pointer-events: none; visibility: hidden; }
 
 .doc-zoom { position: absolute; right: 24px; bottom: 30px; display: flex; gap: 8px; z-index: 3; }
 .doc-zoom button {
@@ -1438,28 +1176,22 @@ body.cart-open .nav-links { opacity: 0; pointer-events: none; }
 .doc-zoom svg { width: 18px; height: 18px; }
 
 @media (max-width: 768px) {
+  .doc-hint { gap: 40px; padding: 40px 20px; }
+  .doc-hint-text { gap: 20px; }
+  .doc-hint svg { width: clamp(80px, 20vw, 140px); height: clamp(80px, 20vw, 140px); }
   .doc-lightbox-close { top: max(84px, calc(env(safe-area-inset-top, 0px) + 76px)); right: 16px; }
-  /* Stacked so the hint pill and the zoom cluster don't fight for the same
-     strip on a narrow screen. */
-  .doc-hint { bottom: max(84px, calc(env(safe-area-inset-bottom, 0px) + 84px)); font-size: 11px; }
-  .doc-zoom { right: 16px; bottom: max(24px, calc(env(safe-area-inset-bottom, 0px) + 16px)); }
-}
+  .doc-zoom { right: 16px; bottom: max(24px, calc(env(safe-area-inset-bottom, 0px) + 16px)); }}
 
 /*  FLASHING PLAY INDICATOR  */
-.vid-status-indicator { position: absolute; bottom: 20px; right: 20px; width: 40px; height: 40px; border-radius: 50%; background: rgba(0,0,0,0.6); color: white; display: flex; align-items: center; justify-content: center; z-index: 50; pointer-events: auto; cursor: pointer; opacity: 0; transition: opacity 0.3s; font-size: 14px; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); }
-.vid-status-indicator.show { opacity: 1; }
-.vid-status-indicator.flashing { animation: indicatorFlash 1.5s infinite; }
 @keyframes indicatorFlash { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
-.global-muted-btn { opacity: 0.7; }
 
 
-@media (max-width: 768px) { .s-light { margin: 0; border-radius: 0; } }
+@media (max-width: 768px) { .s-light { margin: 0; border-radius: 0; }}
 
 
 
 /* Make Command Central card larger */
 #ctrl-intro-card { max-width: min(1000px, 85vw) !important; }
-#ctrl-intro-card .vid-holder video { max-height: 75vh !important; }
 /* ==========================================================================
    UI UX Pro Max & AirPods-Style Tech Specs
    ========================================================================== */
@@ -1519,8 +1251,7 @@ body.cart-open .nav-links { opacity: 0; pointer-events: none; }
 }
 .video-caption.is-visible { opacity: 1; transform: translate(-50%, 0); }
 @media (max-width: 768px) {
-  .video-caption { display: none !important; }
-}
+  .video-caption { display: none !important; }}
 
 /* Panels whose only footage is square (e.g. Power Options) stay square on every
    screen size, since the source never changes with breakpoint. */
@@ -1606,8 +1337,7 @@ body.cart-open .nav-links { opacity: 0; pointer-events: none; }
     max-width: 100vw;
     object-fit: contain !important;
     border-radius: 0 !important;
-  }
-}
+  }}
 
 @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes fadeInScale { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
@@ -1644,7 +1374,7 @@ body.cart-open .nav-links { opacity: 0; pointer-events: none; }
    reflows the nav while the other fades. The icon sits at low opacity with a soft
    glass ring — present but discreet. */
 .nav-logo { display: grid !important; place-items: center start; }
-.nav-logo > * { grid-area: 1 / 1; transition: opacity .45s ease, transform .45s ease; }
+.nav-logo > *
 .nav-logo .logo-white { 
   width: 250px; height: 24px; opacity: 1; 
   -webkit-mask: url('assets/images/logo-white.png') no-repeat left center / contain;
@@ -1691,11 +1421,6 @@ body.cart-open .nav-links { opacity: 0; pointer-events: none; }
 }
 
 /* Floating buy widget */
-.buy-widget-inner {
-  background: rgba(255,255,255,0.95); color: #1d1d1f;
-  border-color: rgba(0,0,0,0.08); box-shadow: -10px 10px 40px rgba(0,0,0,0.15);
-}
-.buy-widget-inner span:last-child { color: #6e6e73 !important; }
 
 /* ═══ CONTROLLER PLACEMENT ═══ */
 .controller-placement {
@@ -1740,5 +1465,4 @@ body.cart-open .nav-links { opacity: 0; pointer-events: none; }
   }
   /* Smaller card with rounded corners, same as desktop — full-bleed edge-to-edge
      was tried and didn't read better, so this keeps the framed-card look. */
-  .diagram-card { max-width: 92vw; padding: 12px; }
-}
+  .diagram-card { max-width: 92vw; padding: 12px; }}

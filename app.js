@@ -1,6 +1,6 @@
 /* ==========================================================================
-   BASSCRAFT — Scroll Engine v4
-   Responsive Video Swap · Sticky Scrub · Sound Toggles · Web Audio Knobs
+   BASSCRAFT — Front-end v4
+   Responsive media swap · Overlays & lightboxes · Video power management · Cart
    ========================================================================== */
 
 gsap.registerPlugin(ScrollTrigger);
@@ -94,6 +94,24 @@ document.querySelectorAll('video').forEach(vid => {
 /* ══════════════════════════════════════════════════════════════
    1. RESPONSIVE VIDEO SOURCE SWAP
    ══════════════════════════════════════════════════════════════ */
+/* Mobile browsers fire `resize` continuously while you scroll — collapsing and
+   re-expanding the URL bar changes innerHeight, which counts as a resize. Every
+   responsive handler here keys off innerWidth ONLY, so those height-only events
+   are pure waste: each one re-ran querySelectorAll over every video plus a
+   .closest() per video, and could re-enter the source-swap/appendChild paths,
+   all on the scroll thread. That's what made the videos stutter while scrolling.
+   Gate on a real width change and debounce the rest. */
+function onWidthResize(fn) {
+  let lastWidth = window.innerWidth;
+  let timer = null;
+  window.addEventListener('resize', () => {
+    if (window.innerWidth === lastWidth) return;   // URL-bar height change only
+    lastWidth = window.innerWidth;
+    clearTimeout(timer);
+    timer = setTimeout(fn, 150);
+  });
+}
+
 function setResponsiveVideoSources() {
   const isMobile = window.innerWidth <= 768;
   // #hero-video handles its own responsive source swap + load/play timing
@@ -122,23 +140,20 @@ function setResponsiveVideoSources() {
       source.src = target;
       source.type = 'video/mp4';
       v.appendChild(source);
-      v.removeAttribute('preload'); // ensure preload=none doesn't block loading
+      // Swap the source and stop there. This used to also strip preload="none"
+      // and call play() outright to "force metadata load for scrub videos" —
+      // but the scrub engine is long gone, and on mobile that fired at page
+      // load for clips sitting far below the fold, downloading and decoding
+      // them immediately and defeating the exact preload="none" the markup
+      // asks for. load() on an element carrying `autoplay` starts it by itself
+      // once it's genuinely on screen, and the observer owns it after that.
       v.load();
-      // Force metadata load for scrub videos on mobile
-      const playPromise = v.play();
-      if (playPromise !== undefined) {
-        playPromise.then(() => {
-          if (!v.hasAttribute('autoplay') || v.closest('.vid-paused')) {
-            v.pause();
-          }
-        }).catch(() => {});
-      }
     }
   });
 }
 
 setResponsiveVideoSources();
-window.addEventListener('resize', setResponsiveVideoSources);
+onWidthResize(setResponsiveVideoSources);
 
 /* Same idea as setResponsiveVideoSources, for plain <img data-h> elements
    (e.g. the controller diagram still) — kept JS-driven rather than a
@@ -153,7 +168,7 @@ function setResponsiveImageSources() {
   });
 }
 setResponsiveImageSources();
-window.addEventListener('resize', setResponsiveImageSources);
+onWidthResize(setResponsiveImageSources);
 
 /* ══════════════════════════════════════════════════════════════
    2. NAV
@@ -191,7 +206,11 @@ if (navbarEl) {
 
   const observer = new IntersectionObserver((entries) => {
     const visible = entries.filter(e => e.isIntersecting);
-    if (!visible.length) return;
+    if (!visible.length) {
+      const heroVid = document.getElementById('hero-video');
+      if (heroVid && heroVid.paused) heroVid.play().catch(e => {});
+      return;
+    }
     // Whichever visible section's top is closest to the centered band wins.
     const best = visible.reduce((a, b) =>
       Math.abs(b.boundingClientRect.top) < Math.abs(a.boundingClientRect.top) ? b : a
@@ -207,13 +226,24 @@ document.getElementById('nav-logo').addEventListener('click', (e) => {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 });
 
+/* Smooth-scroll a section into view, accounting for the fixed navbar height.
+   On mobile the drawer slides the content ~90px lower so an extra -16px nudge
+   keeps the heading from hiding behind the bar. */
+function scrollToSection(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const navH = document.querySelector('.navbar')?.offsetHeight || 90;
+  const offset = window.innerWidth <= 768 ? navH + 16 : navH;
+  const top = el.getBoundingClientRect().top + window.scrollY - offset;
+  window.scrollTo({ top, behavior: 'smooth' });
+}
+
 document.querySelectorAll('.nav-links a').forEach(link => {
   link.addEventListener('click', (e) => {
     const href = link.getAttribute('href');
-    if (href.startsWith('#')) {
+    if (href && href.startsWith('#')) {
       e.preventDefault();
-      const target = document.querySelector(href);
-      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      scrollToSection(href.slice(1));
     }
   });
 });
@@ -225,10 +255,16 @@ document.querySelectorAll('.nav-links a').forEach(link => {
   const menu = document.getElementById('mobile-nav-menu');
   if (!btn || !menu) return;
 
+  // The menu covers the page but nothing scrolls when it opens, so the
+  // IntersectionObserver never fires and every clip behind it keeps decoding.
+  // videoPower (defined further down) is the same machinery every overlay
+  // uses; the menu is just one more owner of a suspend claim.
   const closeMenu = () => {
+    if (!menu.classList.contains('is-open')) return;
     menu.classList.remove('is-open');
     btn.classList.remove('is-active');
     btn.setAttribute('aria-expanded', 'false');
+    videoPower.resume('menu');
   };
 
   btn.addEventListener('click', () => {
@@ -236,16 +272,16 @@ document.querySelectorAll('.nav-links a').forEach(link => {
     menu.classList.toggle('is-open', willOpen);
     btn.classList.toggle('is-active', willOpen);
     btn.setAttribute('aria-expanded', String(willOpen));
+    if (willOpen) videoPower.suspend('menu'); else videoPower.resume('menu');
   });
 
   menu.querySelectorAll('a').forEach(link => {
     link.addEventListener('click', (e) => {
       const href = link.getAttribute('href');
       closeMenu();
-      if (href.startsWith('#')) {
+      if (href && href.startsWith('#')) {
         e.preventDefault();
-        const target = document.querySelector(href);
-        if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        scrollToSection(href.slice(1));
       }
     });
   });
@@ -258,686 +294,25 @@ document.querySelectorAll('.nav-links a').forEach(link => {
 })();
 
 /* ══════════════════════════════════════════════════════════════
-   3. HERO — Logo + CTA fades out on scroll
+   3. HERO — CTA
    ══════════════════════════════════════════════════════════════ */
-const heroLogo = document.getElementById('hero-logo');
-const heroCta = document.getElementById('hero-cta');
-if (heroLogo) {
-  gsap.to([heroLogo, heroCta, '.hero-tagline'], {
-    opacity: 0,
-    scale: 0.92,
-    scrollTrigger: {
-      trigger: '.hero',
-      start: 'top top',
-      end: '50% top',
-      scrub: true,
-    }
-  });
-}
-
 // Hero CTA smooth scroll
+const heroCta = document.getElementById('hero-cta');
 if (heroCta) {
   heroCta.addEventListener('click', (e) => {
     e.preventDefault();
-    document.getElementById('order')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    scrollToSection('order');
   });
-}
-
-/* ══════════════════════════════════════════════════════════════
-   4. VIDEO SCROLL-SCRUB ENGINE
-   ══════════════════════════════════════════════════════════════ */
-let mm = gsap.matchMedia();
-
-mm.add("(max-width: 768px)", () => {
-  // MOBILE: Force background videos to autoplay naturally
-  // Exclude skit cards EXCEPT the three-knobs video which should autoplay
-  document.querySelectorAll('.sticky-vp video:not(.skit-card video), #ctrl-intro-vid').forEach(v => {
-    v.setAttribute('autoplay', '');
-    v.setAttribute('loop', '');
-    v.play().catch(e => console.log('Autoplay blocked'));
-  });
-});
-
-mm.add("(min-width: 769px)", () => {
-  // DESKTOP: Ensure videos are paused so GSAP can scrub them
-  document.querySelectorAll('.sticky-vp video').forEach(v => {
-    v.removeAttribute('autoplay');
-    v.removeAttribute('loop');
-    v.pause();
-  });
-const sequenceHandlers = {};
-document.querySelectorAll('.sticky-vp').forEach(vp => {
-  let scrubVid = vp.querySelector('.scrub-vid') || vp.querySelector('video');
-  if (scrubVid) scrubVid.pause();
-
-  let endVal = '+=100%';
-  if (vp.id === 'nobt-trigger') endVal = '+=250%';
-  if (vp.id === 'hand-trigger') endVal = '+=50%';
-  if (vp.id === 'stealth-trigger') endVal = '+=100%';
-
-  let st = ScrollTrigger.create({
-    trigger: vp.parentElement,
-    start: 'top top',
-    end: endVal,
-    pin: true,
-    scrub: 0.3,
-    onToggle: (self) => {
-      if (vp.id === 'hand-trigger') {
-        gsap.to(document.body, { backgroundColor: self.isActive ? '#d3bfb4' : '#0f0f0f', duration: 0.5 });
-      }
-    },
-    onUpdate: (self) => {
-      if (scrubVid && scrubVid.duration) {
-        // Exploded view sections: video completes at 50% scroll so cards have more time
-        const isExplode = vp.id === 'cush-explode-trigger' || vp.id === 'ctrl-explode-trigger';
-        const vidProg = isExplode ? Math.min(self.progress / 0.5, 1) : self.progress;
-        scrubVid.currentTime = vidProg * scrubVid.duration;
-      }
-      if (sequenceHandlers[vp.id]) {
-        sequenceHandlers[vp.id](self);
-      }
-    },
-    onLeave: () => pauseAllVideos(vp),
-    onLeaveBack: () => pauseAllVideos(vp)
-  });
-});
-
-function pauseAllVideos(container) {
-  container.querySelectorAll('video').forEach(v => {
-    if (!v.classList.contains('scrub-vid')) {
-      v.pause();
-      let btn = v.parentElement.querySelector('.play-btn');
-      if(btn) btn.style.opacity = '1';
-    }
-  });
-}
-
-sequenceHandlers['cush-explode-trigger'] = (self) => {
-  const cushCards = document.querySelectorAll('#cush-callouts .callout');
-  cushCards.forEach((card) => {
-    let pIn = Math.max(0, Math.min((self.progress - 0.5) / 0.1, 1));
-    let pOut = Math.max(0, Math.min((self.progress - 0.9) / 0.1, 1));
-    let op = pIn - pOut;
-    let y = (1 - Math.pow(pIn, 3)) * 50; // 50px slide up
-    card.style.opacity = op;
-    card.style.setProperty('--y', `${y}px`);
-  });
-};
-
-/* ══════════════════════════════════════════════════════════════
-   5. NO BLUETOOTH SEQUENCE
-   ══════════════════════════════════════════════════════════════ */
-sequenceHandlers['nobt-trigger'] = (self) => {
-    const vid = document.getElementById('nobt-bg-vid');
-    if (vid && vid.readyState >= 1 && vid.duration) {
-      let p = Math.min(self.progress / 0.20, 1);
-      vid.currentTime = vid.duration * (0.85 * p);
-    }
-
-    // 2. Graphic slides up
-    const graphic = document.getElementById('nobt-graphic');
-    if (graphic) {
-      let gp = Math.max(0, Math.min(self.progress / 0.10, 1));
-      let ease = 1 - Math.pow(1 - gp, 3);
-      graphic.style.opacity = gp;
-      graphic.style.transform = `translateY(${(1-ease)*100}vh)`;
-    }
-
-    const nobtCard = document.getElementById('nobt-skit-card');
-    const skitVid = document.getElementById('skit-video');
-    if (nobtCard) {
-      let spIn = Math.max(0, Math.min((self.progress - 0.15) / 0.10, 1));
-      let spOut = Math.max(0, Math.min((self.progress - 0.60) / 0.10, 1));
-      let easeIn = 1 - Math.pow(1 - spIn, 3);
-      let easeOut = Math.pow(spOut, 3);
-
-      nobtCard.style.opacity = easeIn - easeOut;
-      nobtCard.style.transform = `translate(-50%, ${120 - 170 * easeIn - 100 * easeOut}%)`;
-
-      if (skitVid) {
-        if (self.progress >= 0.20 && self.progress < 0.60) {
-          if (skitVid.paused) {
-            skitVid.muted = window.globalAudioMuted ? true : false;
-            skitVid.play().catch(e => { skitVid.muted = true; skitVid.play(); });
-          }
-        } else {
-          if (!skitVid.paused) {
-            skitVid.pause();
-          }
-        }
-      }
-    }
-
-    const demoCard = document.getElementById('demo-skit-card');
-    const demoVid = document.getElementById('demo-video');
-    if (demoCard) {
-      let dp = Math.max(0, Math.min((self.progress - 0.75) / 0.10, 1));
-      let ease = 1 - Math.pow(1 - dp, 3);
-
-      demoCard.style.opacity = ease;
-      demoCard.style.transform = `translate(${100 - 150 * ease}%, -50%)`;
-
-      if (demoVid) {
-        if (self.isActive && self.progress >= 0.85 && demoVid.paused) {
-          demoVid.muted = window.globalAudioMuted ? true : false;
-          demoVid.play().catch(e => { demoVid.muted = true; demoVid.play(); });
-        } else if (self.progress < 0.85 && !demoVid.paused) {
-          demoVid.pause();
-        }
-      }
-    }
-  };
-
-/* ══════════════════════════════════════════════════════════════
-   6. COMMAND CENTRAL SEQUENCE
-   ══════════════════════════════════════════════════════════════ */
-sequenceHandlers['ctrl-hero-trigger'] = (self) => {
-    const vid = document.getElementById('ctrl-hero-vid');
-    if (vid && vid.readyState >= 1 && vid.duration) {
-      let p = Math.min(self.progress / 0.95, 1);
-      vid.currentTime = vid.duration * (0.85 * p);
-    }
-
-    const txt = document.getElementById('command-central-text');
-    if (txt) {
-      let tp = Math.max(0, Math.min((self.progress - 0.10) / 0.25, 1));
-      txt.style.opacity = tp;
-    }
-
-    const ctrlCard = document.getElementById('ctrl-intro-card');
-    const ctrlVid = document.getElementById('ctrl-intro-vid');
-    if (ctrlCard) {
-      let cp = Math.max(0, Math.min((self.progress - 0.40) / 0.50, 1));
-      let ease = 1 - Math.pow(1 - cp, 3);
-      ctrlCard.style.opacity = ease;
-      ctrlCard.style.setProperty('--ease', ease);
-
-      if (ctrlVid) {
-        if (self.isActive && self.progress >= 0.70 && ctrlVid.paused && !ctrlVid.dataset.userPaused) {
-          ctrlVid.muted = window.globalAudioMuted ? true : false;
-          ctrlVid.play().catch(e => { ctrlVid.muted = true; ctrlVid.play(); });
-        } else if (self.progress < 0.70 && !ctrlVid.paused) {
-          ctrlVid.pause();
-          delete ctrlVid.dataset.userPaused;
-        }
-      }
-    }
-  };
-
-/* ══════════════════════════════════════════════════════════════
-   7. CONTROLLER EXPLODED VIEW
-   ══════════════════════════════════════════════════════════════ */
-sequenceHandlers['ctrl-explode-trigger'] = (self) => {
-  const topCopy = document.getElementById('ctrl-top-copy');
-  if (topCopy) {
-    let tpIn = Math.max(0, Math.min(self.progress / 0.05, 1));
-    let tpOut = Math.max(0, Math.min((self.progress - 0.9) / 0.1, 1));
-    topCopy.style.opacity = tpIn - tpOut;
-  }
-  
-  const ctrlCards = document.querySelectorAll('#ctrl-callouts .callout');
-  ctrlCards.forEach((card) => {
-    let pIn = Math.max(0, Math.min((self.progress - 0.5) / 0.1, 1));
-    let pOut = Math.max(0, Math.min((self.progress - 0.9) / 0.1, 1));
-    let op = pIn - pOut;
-    let y = (1 - Math.pow(pIn, 3)) * 50;
-    card.style.opacity = op;
-    card.style.setProperty('--y', `${y}px`);
-  });
-};
-
-/* ══════════════════════════════════════════════════════════════
-   8. FITS IN ONE HAND — Sticky + Always in Reach Overlay
-   ══════════════════════════════════════════════════════════════ */
-const handVid = document.getElementById('hand-bg-vid');
-if (handVid) {
-  handVid.pause();
-  handVid.currentTime = 0;
-}
-sequenceHandlers['hand-sticky-trigger'] = (self) => {
-  if (handVid && handVid.readyState >= 1 && handVid.duration) {
-        let p = Math.min(self.progress / 0.7, 1);
-        handVid.currentTime = handVid.duration * (0.85 * p);
-      }
-
-      const handText = document.getElementById('hand-text');
-      if (handText) {
-        let tp = Math.max(0, Math.min((self.progress - 0.4) / 0.2, 1));
-        handText.style.opacity = tp;
-      }
-
-      const reachCard = document.getElementById('reach-card');
-      if (reachCard) {
-        let rp = Math.max(0, Math.min((self.progress - 0.20) / 0.20, 1));
-        let ease = 1 - Math.pow(1 - rp, 3);
-        reachCard.style.opacity = ease;
-        reachCard.style.setProperty('--ease', ease);
-
-        const reachVid = reachCard.querySelector('video');
-        if (reachVid) {
-          if (ease >= 1 && reachVid.paused) {
-            reachVid.play().catch(e => console.log('Reach vid auto-play blocked', e));
-          } else if (ease < 1 && !reachVid.paused) {
-            reachVid.pause();
-          }
-        }
-      }
-  };
-
-/* ══════════════════════════════════════════════════════════════
-   9. STEALTH MODE — Sticky BG + Skit Overlay
-   ══════════════════════════════════════════════════════════════ */
-const stealthVid = document.getElementById('stealth-bg-vid');
-if (stealthVid) {
-  stealthVid.pause();
-  stealthVid.currentTime = 0;
-}
-sequenceHandlers['stealth-trigger'] = (self) => {
-  if (stealthVid && stealthVid.readyState >= 1 && stealthVid.duration) {
-        let p = Math.min(self.progress / 0.7, 1);
-        stealthVid.currentTime = stealthVid.duration * (0.85 * p);
-        const hideVid = document.getElementById('hide-skit-vid');
-      if (hideVid) {
-        if (self.isActive && self.progress >= 0.7 && hideVid.paused) {
-          hideVid.muted = window.globalAudioMuted ? true : false;
-          hideVid.play().catch(e => { hideVid.muted = true; hideVid.play(); });
-        } else if (self.progress < 0.7 && !hideVid.paused) {
-          hideVid.pause();
-        }
-      }
-    }
-
-      const stealthText = document.getElementById('stealth-text');
-      if (stealthText) {
-        let tp = Math.max(0, Math.min((self.progress - 0.05) / 0.3, 1));
-        stealthText.style.opacity = tp;
-      }
-
-      const stealthCard = document.getElementById('stealth-skit-card');
-      if (stealthCard) {
-        let sp = Math.max(0, Math.min((self.progress - 0.65) / 0.1, 1));
-        let ease = 1 - Math.pow(1 - sp, 3);
-        stealthCard.style.setProperty('--ease', ease);
-      }
-  };
-}); // end matchMedia
-
-/* ══════════════════════════════════════════════════════════════
-   10. PLAY BUTTONS — Click to Play/Unmute
-   ══════════════════════════════════════════════════════════════ */
-function setupPlayBtn(btnId, videoId, wrapId) {
-  const btn = document.getElementById(btnId);
-  const video = document.getElementById(videoId);
-  const wrap = wrapId ? document.getElementById(wrapId) : btn?.closest('.vid-paused');
-  if (!btn || !video) return;
-
-  video.pause();
-  video.currentTime = 0.001;
-
-  const togglePlay = (e) => {
-    if (e) e.stopPropagation();
-    if (video.paused) {
-      video.muted = window.globalAudioMuted ? true : false;
-      video.play().catch(err => console.log('Manual play blocked', err));
-    } else {
-      video.pause();
-      video.muted = true;
-    }
-  };
-
-  // Sync UI state natively
-  video.addEventListener('play', () => {
-    if (wrap) wrap.classList.add('is-playing');
-    if (btn) {
-      btn.style.opacity = '0';
-      btn.style.pointerEvents = 'none';
-    }
-  });
-  video.addEventListener('pause', () => {
-    if (wrap) wrap.classList.remove('is-playing');
-    if (btn) {
-      btn.style.opacity = '1';
-      btn.style.pointerEvents = 'auto';
-    }
-  });
-
-  if (btn) btn.addEventListener('click', togglePlay);
-  video.addEventListener('click', togglePlay);
-}
-
-setupPlayBtn('play-nobt', 'skit-video', 'skit-wrap');
-setupPlayBtn('play-demo', 'demo-video', 'demo-wrap');
-setupPlayBtn('play-hide', 'hide-skit-vid', 'hide-wrap');
-
-/* ══════════════════════════════════════════════════════════════
-   11. SOUND TOGGLE BUTTONS (Autoplay videos)
-   ══════════════════════════════════════════════════════════════ */
-function setupSoundToggle(btnId, videoId) {
-  const btn = document.getElementById(btnId);
-  const video = document.getElementById(videoId);
-  if (!btn || !video) return;
-
-  btn.addEventListener('click', (e) => {
-    e.stopPropagation();
-    if (video.muted) {
-      video.muted = window.globalAudioMuted ? true : false;
-      btn.textContent = '🔊';
-    } else {
-      video.muted = true;
-      btn.textContent = '🔇';
-    }
-  });
-}
-
-  const playPauseCtrl = document.getElementById('play-pause-ctrl-intro');
-  const ctrlIntroVid = document.getElementById('ctrl-intro-vid');
-  if (playPauseCtrl && ctrlIntroVid) {
-    playPauseCtrl.addEventListener('click', (e) => {
-      e.stopPropagation();
-      if (ctrlIntroVid.paused) {
-        ctrlIntroVid.play();
-        delete ctrlIntroVid.dataset.userPaused;
-      } else {
-        ctrlIntroVid.pause();
-        ctrlIntroVid.dataset.userPaused = 'true';
-      }
-    });
-    ctrlIntroVid.addEventListener('play', () => {
-      document.getElementById('icon-ctrl-play').style.display = 'none';
-      document.getElementById('icon-ctrl-pause').style.display = 'block';
-    });
-    ctrlIntroVid.addEventListener('pause', () => {
-      document.getElementById('icon-ctrl-play').style.display = 'block';
-      document.getElementById('icon-ctrl-pause').style.display = 'none';
-    });
-  }
-setupSoundToggle('sound-knobs', 'knobs-vid');
-
-/* ══════════════════════════════════════════════════════════════
-   12. GENRE CARDS — Still, Click to Play with Sound
-   ══════════════════════════════════════════════════════════════ */
-document.querySelectorAll('.genre-card').forEach(card => {
-  const video = card.querySelector('video');
-  const btn = card.querySelector('.genre-play');
-  const wrap = card.querySelector('.vid-wrap');
-  if (!video || !btn) return;
-
-  video.pause();
-  video.currentTime = 0.001;
-
-  btn.addEventListener('click', (e) => {
-    e.stopPropagation();
-    if (!video.paused && !video.muted) {
-      video.pause();
-      video.muted = true;
-      return;
-    }
-
-    document.querySelectorAll('.genre-card').forEach(otherCard => {
-      if (otherCard === card) return;
-      const otherVid = otherCard.querySelector('video');
-      const otherWrap = otherCard.querySelector('.vid-wrap');
-      if (otherVid) { otherVid.pause(); otherVid.muted = true; }
-    });
-
-    video.play();
-    video.muted = window.globalAudioMuted ? true : false;
-  });
-
-  if (video) {
-    video.addEventListener('click', (e) => {
-      e.stopPropagation();
-      if (!video.paused && !video.muted) {
-        video.pause();
-        video.muted = true;
-      } else {
-        video.play();
-        video.muted = window.globalAudioMuted ? true : false;
-      }
-    });
-  }
-});
-
-/* ══════════════════════════════════════════════════════════════
-   13. CANVAS VISUALIZERS
-   ══════════════════════════════════════════════════════════════ */
-
-// Acoustic spectrum
-const acCanvas = document.getElementById('acoustic-canvas');
-if (acCanvas) {
-  const ctx = acCanvas.getContext('2d');
-  function resizeAc() {
-    acCanvas.width = acCanvas.parentElement.clientWidth;
-    acCanvas.height = acCanvas.parentElement.clientHeight || 200;
-  }
-  resizeAc();
-  window.addEventListener('resize', resizeAc);
-  let t = 0;
-  function drawAc() {
-    const { width: w, height: h } = acCanvas;
-    ctx.clearRect(0, 0, w, h);
-    for (let layer = 0; layer < 3; layer++) {
-      ctx.beginPath();
-      ctx.moveTo(0, h / 2);
-      const amp = 30 - layer * 8;
-      const freq = 0.015 + layer * 0.005;
-      for (let x = 0; x < w; x++) {
-        ctx.lineTo(x, h / 2 + Math.sin(x * freq + t + layer) * amp * Math.sin(x * 0.003 + t * 0.3));
-      }
-      ctx.strokeStyle = `rgba(180,225,255,${0.5 - layer * 0.15})`;
-      ctx.lineWidth = 2.5 - layer * 0.5;
-      ctx.stroke();
-    }
-    t += 0.04;
-    requestAnimationFrame(drawAc);
-  }
-  drawAc();
-}
-
-/* ══════════════════════════════════════════════════════════════
-   14. INTERACTIVE CONTROLLER DEMO — Web Audio API
-   ══════════════════════════════════════════════════════════════ */
-const controllerDemo = document.getElementById('controller-demo');
-if (controllerDemo) {
-  let audioCtx = null;
-  let oscillator = null;
-  let gainNode = null;
-  let noiseFilter = null;
-  let noiseSource = null;
-  let isAudioActive = false;
-
-  // Knob values
-  const knobValues = {
-    freq: 0.3,
-    intensity: 0.5,
-    noise: 0.4,
-  };
-
-  // Map knob values to audio params
-  function getFreq() { return 20 + knobValues.freq * 100; } // 20-120 Hz
-  function getGain() { return knobValues.intensity * 0.4; } // 0-0.4
-  function getFilterCutoff() { return 100 + knobValues.noise * 1900; } // 100-2000 Hz
-
-  function startAudio() {
-    if (audioCtx) return;
-    audioCtx = new (window.AudioContext || window.webkitAudioContext)(); window.demoAudioCtx = audioCtx;
-
-    // Oscillator (sub-bass)
-    oscillator = audioCtx.createOscillator();
-    oscillator.type = 'sine';
-    oscillator.frequency.value = getFreq();
-
-    // Gain
-    gainNode = audioCtx.createGain();
-    gainNode.gain.value = getGain();
-
-    // Noise source
-    const bufferSize = audioCtx.sampleRate * 2;
-    const noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
-    const output = noiseBuffer.getChannelData(0);
-    for (let i = 0; i < bufferSize; i++) {
-      output[i] = Math.random() * 2 - 1;
-    }
-    noiseSource = audioCtx.createBufferSource();
-    noiseSource.buffer = noiseBuffer;
-    noiseSource.loop = true;
-
-    noiseFilter = audioCtx.createBiquadFilter();
-    noiseFilter.type = 'lowpass';
-    noiseFilter.frequency.value = getFilterCutoff();
-
-    const noiseGain = audioCtx.createGain();
-    noiseGain.gain.value = 0.05;
-
-    // Connect
-    oscillator.connect(gainNode);
-    gainNode.connect(audioCtx.destination);
-
-    noiseSource.connect(noiseFilter);
-    noiseFilter.connect(noiseGain);
-    noiseGain.connect(audioCtx.destination);
-
-    oscillator.start();
-    noiseSource.start();
-    isAudioActive = true; window.demoIsAudioActive = true;
-  }
-
-  function updateAudio() {
-    if (!isAudioActive || !audioCtx) return;
-    oscillator.frequency.setTargetAtTime(getFreq(), audioCtx.currentTime, 0.05);
-    gainNode.gain.setTargetAtTime(getGain(), audioCtx.currentTime, 0.05);
-    noiseFilter.frequency.setTargetAtTime(getFilterCutoff(), audioCtx.currentTime, 0.05);
-  }
-
-  // Audio Scroll Trigger (suspend/resume automatically)
-  ScrollTrigger.create({
-    trigger: '#controller-demo',
-    start: 'top bottom',
-    end: 'bottom top',
-    onLeave: () => {
-      if (isAudioActive && audioCtx && audioCtx.state === 'running') audioCtx.suspend();
-    },
-    onLeaveBack: () => {
-      if (isAudioActive && audioCtx && audioCtx.state === 'running') audioCtx.suspend();
-    },
-    onEnter: () => {
-      if (isAudioActive && audioCtx && audioCtx.state === 'suspended' && !window.globalAudioMuted) audioCtx.resume();
-    },
-    onEnterBack: () => {
-      if (isAudioActive && audioCtx && audioCtx.state === 'suspended' && !window.globalAudioMuted) audioCtx.resume();
-    }
-  });
-
-  // Knob interaction
-  document.querySelectorAll('.dial-v2').forEach(dial => {
-    let startY = 0;
-    let startValue = 0;
-    const knobId = dial.id;
-    const indicator = dial.querySelector('.dial-indicator');
-
-    function getKey() {
-      if (knobId === 'dial-freq') return 'freq';
-      if (knobId === 'dial-intensity') return 'intensity';
-      return 'noise';
-    }
-
-    function updateVisual() {
-      const val = knobValues[getKey()];
-      const angle = -135 + val * 270; // -135 to 135 degrees
-      if (indicator) indicator.style.transform = `translateX(-50%) rotate(${angle}deg)`;
-    }
-
-    // Initialize visual
-    updateVisual();
-
-    function onPointerDown(e) {
-      e.preventDefault();
-      startY = e.clientY || e.touches?.[0]?.clientY || 0;
-      startValue = knobValues[getKey()];
-
-      // Auto-start audio on interaction
-      if (!isAudioActive) {
-        startAudio();
-      } else if (audioCtx && audioCtx.state === 'suspended') {
-        audioCtx.resume();
-      }
-
-      function onPointerMove(e) {
-        const y = e.clientY || e.touches?.[0]?.clientY || 0;
-        const delta = (startY - y) / 150;
-        knobValues[getKey()] = Math.max(0, Math.min(1, startValue + delta));
-        updateVisual();
-        updateAudio();
-      }
-
-      function onPointerUp() {
-        window.removeEventListener('mousemove', onPointerMove);
-        window.removeEventListener('mouseup', onPointerUp);
-        window.removeEventListener('touchmove', onPointerMove);
-        window.removeEventListener('touchend', onPointerUp);
-      }
-
-      window.addEventListener('mousemove', onPointerMove);
-      window.addEventListener('mouseup', onPointerUp);
-      window.addEventListener('touchmove', onPointerMove, { passive: false });
-      window.addEventListener('touchend', onPointerUp);
-    }
-
-    dial.addEventListener('mousedown', onPointerDown);
-    dial.addEventListener('touchstart', onPointerDown, { passive: false });
-  });
-
-  // Interactive canvas visualizer (reacts to knob values)
-  const intCanvas = document.getElementById('interactive-canvas');
-  if (intCanvas) {
-    const ctx2 = intCanvas.getContext('2d');
-    function resizeInt() {
-      intCanvas.width = intCanvas.parentElement.clientWidth;
-      intCanvas.height = intCanvas.parentElement.clientHeight || 150;
-    }
-    resizeInt();
-    window.addEventListener('resize', resizeInt);
-    let t2 = 0;
-    function drawInt() {
-      const { width: w, height: h } = intCanvas;
-      ctx2.clearRect(0, 0, w, h);
-
-      const amp = 10 + knobValues.intensity * 50;
-      const freq = 0.01 + knobValues.freq * 0.04;
-      const noiseAmt = knobValues.noise * 15;
-
-      ctx2.beginPath();
-      ctx2.moveTo(0, h / 2);
-      for (let x = 0; x < w; x++) {
-        const noise = (Math.random() - 0.5) * noiseAmt;
-        ctx2.lineTo(x, h / 2 + Math.sin(x * freq + t2) * amp + noise);
-      }
-      ctx2.strokeStyle = `rgba(180,225,255,${0.5 + knobValues.intensity * 0.4})`;
-      ctx2.lineWidth = 2.5;
-      ctx2.stroke();
-
-      // Second layer
-      ctx2.beginPath();
-      ctx2.moveTo(0, h / 2);
-      for (let x = 0; x < w; x++) {
-        ctx2.lineTo(x, h / 2 + Math.sin(x * freq * 1.5 + t2 * 0.7) * amp * 0.5);
-      }
-      ctx2.strokeStyle = `rgba(180,225,255,0.2)`;
-      ctx2.lineWidth = 1.5;
-      ctx2.stroke();
-
-      t2 += 0.06 + knobValues.freq * 0.1;
-      requestAnimationFrame(drawInt);
-    }
-    drawInt();
-  }
 }
 
 /* --------------------------------------------------------------
-   15. SCROLL-TRIGGERED FADE-INS
+   4. SCROLL-TRIGGERED FADE-INS
    -------------------------------------------------------------- */
 document.querySelectorAll('.s-dark, .s-light').forEach(section => {
-  const targets = section.querySelectorAll('h2, p, .vid-r, .vid-grid, .genre-grid, .specs-tbl, .sales-flex, .diagram-img, .grid-2 > div, .feat-row > div, .vid-r-sm, .duo-grid, .glass-card, .white-vid-item, .controller-demo');
+  // Trimmed to the classes this page actually has — the list had accumulated a
+  // dozen selectors (.genre-grid, .specs-tbl, .duo-grid, .controller-demo …)
+  // belonging to sections that no longer exist in the markup.
+  const targets = section.querySelectorAll('h2, p, .vid-r');
   if (targets.length === 0) return;
   gsap.from(targets, {
     y: 30,
@@ -955,7 +330,7 @@ document.querySelectorAll('.s-dark, .s-light').forEach(section => {
 
 
 /* ══════════════════════════════════════════════════════════════
-   18. CART & UPSELL LOGIC
+   5. CART & UPSELL LOGIC
    ══════════════════════════════════════════════════════════════ */
 const cartOverlay = document.getElementById('cart-overlay');
 const cartUpsellView = document.getElementById('cart-upsell-view');
@@ -1079,6 +454,7 @@ const lightboxChrome = (() => {
     if (!el) return;
     const any = openIds.size > 0;
     el.classList.toggle('is-active', any);
+    document.body.classList.toggle('lightbox-active', any);
     // The cart's product-photo viewer is the one lightbox whose background is
     // the photo itself — shot on near-white — rather than a dark backdrop, so
     // the mark needs the opposite treatment there (see .chrome-on-light in CSS).
@@ -1209,10 +585,19 @@ document.addEventListener('keydown', (e) => {
   // visible) tears that down properly instead of leaving it running.
   let closeCleanupTimer = null;
 
-  function openVideoLightbox(sources, posterUrl, playOnce) {
+  const titleEl = document.getElementById('video-lightbox-title');
+  const subtitleEl = document.getElementById('video-lightbox-subtitle');
+
+  function openVideoLightbox(sources, posterUrl, playOnce, title, subtitle) {
     if (!sources || !sources.length) return;
     clearTimeout(closeCleanupTimer);
     lightbox.style.display = '';
+    if (titleEl) {
+      titleEl.textContent = title || '';
+    }
+    if (subtitleEl) {
+      subtitleEl.textContent = subtitle || '';
+    }
     if (posterUrl) player.poster = posterUrl;
     else player.removeAttribute('poster');
     queue = sources;
@@ -1251,8 +636,11 @@ document.addEventListener('keydown', (e) => {
       // Reuse the inline video's own .play-once marker as the signal, so the
       // expanded view matches what that panel already does on the page
       // instead of tracking the same intent in two separate places.
+      let title = el.getAttribute('data-title') || '';
+      let subtitle = el.getAttribute('data-subtitle') || '';
+
       openVideoLightbox([src], vid ? vid.getAttribute('poster') : null,
-        !!(vid && vid.classList.contains('play-once')));
+        !!(vid && vid.classList.contains('play-once')), title, subtitle);
     });
   });
   document.querySelectorAll('.vid-clickable[data-lightbox-playlist]').forEach(el => {
@@ -1266,7 +654,9 @@ document.addEventListener('keydown', (e) => {
             playlist = inlinePlaylist.map(item => item.v || item.sq || item.h || (typeof item === 'string' ? item : Object.values(item)[0]));
           }
         }
-        openVideoLightbox(playlist, vid ? vid.getAttribute('poster') : null);
+        let title = el.getAttribute('data-title') || '';
+        let subtitle = el.getAttribute('data-subtitle') || '';
+        openVideoLightbox(playlist, vid ? vid.getAttribute('poster') : null, false, title, subtitle);
       } catch (e) {}
     });
   });
@@ -1326,8 +716,9 @@ document.addEventListener('keydown', (e) => {
   function clampOffsets() {
     const w = nw * scale, h = nh * scale;
     const sw = stage.clientWidth, sh = stage.clientHeight;
-    tx = w <= sw ? (sw - w) / 2 : Math.min(0, Math.max(sw - w, tx));
-    ty = h <= sh ? (sh - h) / 2 : Math.min(0, Math.max(sh - h, ty));
+    const px = Math.min(sw * 0.3, 150), py = Math.min(sh * 0.3, 150); // breathing room
+    tx = w <= sw ? (sw - w) / 2 : Math.min(px, Math.max(sw - w - px, tx));
+    ty = h <= sh ? (sh - h) / 2 : Math.min(py, Math.max(sh - h - py, ty));
   }
 
   function computeBounds() {
@@ -1357,6 +748,9 @@ document.addEventListener('keydown', (e) => {
   }
 
   function dismissHint() { hint?.classList.add('is-hidden'); }
+  // The hint itself is pointer-events:none (it used to block the pan outright —
+  // see .doc-hint in the CSS), so it can't be clicked away directly. Touching
+  // the stage at all is the signal that the instruction has landed.
 
   function layout(initial) {
     nw = img.naturalWidth; nh = img.naturalHeight;
@@ -1422,6 +816,7 @@ document.addEventListener('keydown', (e) => {
     pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
     try { stage.setPointerCapture(e.pointerId); } catch (err) {}
     moved = false;
+    dismissHint();
     if (pointers.size === 2) {
       const [a, b] = [...pointers.values()];
       pinch = { dist: Math.hypot(b.x - a.x, b.y - a.y) || 1, scale };
@@ -1535,6 +930,9 @@ document.querySelectorAll('a[href="#order"], .hero-cta, .buy-btn, .nav-cta').for
   btn.addEventListener('click', (e) => {
     e.preventDefault();
     const isStarterBtn = btn.closest('.pricing-card') && !btn.closest('.featured');
+    // Scroll the page to the order section in the background so it's
+    // visible behind the cart overlay when it closes.
+    scrollToSection('order');
     if (isStarterBtn) {
       openCart('upsell');
     } else {
@@ -1544,120 +942,156 @@ document.querySelectorAll('a[href="#order"], .hero-cta, .buy-btn, .nav-cta').for
     }
   });
 });
-// Global Audio Mute
-let globalAudioMuted = false;
-const globalMuteBtn = document.getElementById('global-mute-btn');
-if (globalMuteBtn) {
-  const iconOn = document.getElementById('icon-audio-on');
-  const iconOff = document.getElementById('icon-audio-off');
-  globalMuteBtn.addEventListener('click', () => {
-    globalAudioMuted = !globalAudioMuted;
+/* ══════════════════════════════════════════════════════════════
+   6. VIDEO POWER MANAGEMENT
+   ══════════════════════════════════════════════════════════════
+   Every inline clip on this page is a muted, autoplaying ambient loop, so the
+   only thing keeping the page cheap is being strict about which of them is
+   allowed to decode at any moment. Mobile SoCs have a small number of hardware
+   video decoders (commonly 2-4); once you exceed that, the extra streams fall
+   back to software decode and EVERY video on the page turns choppy at once —
+   the reported "all the videos get slow and laggy".
 
-    if (iconOn && iconOff) {
-      iconOn.style.display = globalAudioMuted ? 'none' : 'block';
-      iconOff.style.display = globalAudioMuted ? 'block' : 'none';
-    }
-    globalMuteBtn.style.opacity = globalAudioMuted ? '0.6' : '1';
+   Three things can make a video unnecessary, and all three funnel through here:
+     1. it scrolled out of view          -> the IntersectionObserver below
+     2. something covers the page        -> suspend()/resume(), keyed by owner
+     3. the tab/app went to the background -> the visibilitychange hook
 
-    // Update currently playing playable videos
-    document.querySelectorAll('video:not(.scrub-vid)').forEach(vid => {
-      if (!vid.hasAttribute('autoplay')) {
-        vid.muted = globalAudioMuted;
-      }
+   (2) is keyed the same way scrollLock is, so nested owners — the cart with a
+   photo viewer opened on top of it — each hold an independent claim and the
+   inner one closing doesn't resume playback while the outer is still up. */
+// A clip has to be at least this much on screen to be worth decoding.
+const VISIBLE_ENOUGH = 0.25;
+
+const videoPower = (() => {
+  const suspenders = new Set();
+  let suspended = [];
+
+  // A video inside the thing that's covering the page is the whole point of
+  // that overlay — it must keep playing. Only what's *behind* gets suspended.
+  const isForeground = (v) =>
+    v.id === 'video-lightbox-player' || !!v.closest('.fullscreen-overlay');
+
+  const applySuspend = () => {
+    suspended = [...document.querySelectorAll('video')]
+      .filter(v => !v.paused && !isForeground(v));
+    suspended.forEach(v => v.pause());
+  };
+
+  // Same "is it worth decoding" rule the observer uses, measured directly —
+  // the observer can't answer for us here because nothing has scrolled, so it
+  // has no fresh entry to hand over.
+  const visibleEnough = (v) => {
+    const r = v.getBoundingClientRect();
+    if (!r.width || !r.height) return false;
+    const shown = Math.min(r.bottom, window.innerHeight) - Math.max(r.top, 0);
+    return shown / r.height >= VISIBLE_ENOUGH;
+  };
+
+  const applyResume = () => {
+    suspended.forEach(v => {
+      // The page can still move under an overlay, so something suspended may
+      // have left the viewport since. Restarting it would undo the observer's
+      // work — resume only what is genuinely still on screen.
+      if (v.isConnected && visibleEnough(v)) v.play().catch(() => {});
     });
-  });
-}
+    suspended = [];
+  };
 
-// Flashing Play/Pause Indicator
-document.querySelectorAll('video').forEach(vid => {
-  if (vid.classList.contains('scrub-vid')) return; // Skip background scrub videos
-  if (vid.hasAttribute('autoplay')) return; // Skip ambient loops
-  if (vid.id === 'hero-video') return; // Skip hero video
-  // Skip the lightbox player too. It's the only element on the page that
-  // otherwise qualifies (everything inline is autoplay), and this appends a
-  // floating play/pause toggle into the lightbox — the same kind of playback
-  // chrome the native `controls` bar was removed for.
-  if (vid.id === 'video-lightbox-player') return;
+  /* THE important guard.
 
-  const indicator = document.createElement('div');
-  indicator.className = 'vid-status-indicator';
-  indicator.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>';
+     `autoplay` is not a one-time instruction — the browser re-applies it every
+     time the element has enough data to start, which includes each load() from
+     the responsive source swap and each src change from the playlist/power
+     rotations. So a clip the observer had correctly paused would quietly start
+     itself again a moment later, and because nothing scrolled, no intersection
+     callback ever fired to stop it a second time.
 
-  const wrapper = vid.parentElement;
-  if (getComputedStyle(wrapper).position === 'static') {
-    wrapper.style.position = 'relative';
-  }
-  wrapper.appendChild(indicator);
+     Measured on a 390x844 viewport before this existed: 15 of the 16 videos on
+     the page were playing at once, most of them at intersection ratio 0 and
+     several inside display:none panels. That is the "all the videos get slow
+     and lag" report — every one of them downloading and decoding in parallel,
+     far past any mobile decoder budget.
 
-  indicator.addEventListener('click', (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (vid.paused) {
-      vid.muted = window.globalAudioMuted ? true : false;
-      vid.play();
-    } else {
-      vid.pause();
-    }
+     Catching it on the 'play' event is what makes this airtight: whatever
+     starts a video — autoplay, a stray play() call, a source swap — has to
+     pass the same test, and there's no path around it. */
+  const allowed = (v) =>
+    isForeground(v) || (suspenders.size === 0 && visibleEnough(v));
+
+  document.querySelectorAll('video').forEach(v => {
+    v.addEventListener('play', () => { if (!allowed(v)) v.pause(); });
   });
 
-  vid.addEventListener('play', () => {
-    indicator.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>';
-    indicator.classList.add('show', 'flashing');
-    if (globalAudioMuted) vid.muted = true;
-  });
-  vid.addEventListener('pause', () => {
-  indicator.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>';
-    indicator.classList.add('show', 'flashing');
-  });
+  return {
+    suspend(key) {
+      if (suspenders.size === 0) applySuspend();
+      suspenders.add(key);
+    },
+    resume(key) {
+      if (!suspenders.has(key)) return;
+      suspenders.delete(key);
+      if (suspenders.size === 0) applyResume();
+    },
+    // The observer must consult this before starting anything: locking the
+    // page shifts <body> to position:fixed, which is enough to make
+    // intersections recalculate, and an unguarded observer would then happily
+    // restart the very clips that were just suspended.
+    isSuspended: () => suspenders.size > 0,
+  };
+})();
+
+// Switching apps / locking the phone leaves every on-screen video decoding in
+// the background — the observer never fires because nothing scrolled.
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) videoPower.suspend('page-hidden');
+  else videoPower.resume('page-hidden');
 });
 
+/* Pause what's behind ANY full-screen overlay. Every one of them (cart, photo
+   viewer, video lightbox, document viewer, Tech Specs fullscreen) already
+   funnels through scrollLock, so wrapping it here covers all of them at once
+   and can't drift out of sync the way five separate call sites would. */
+(() => {
+  const { lock, unlock, reset } = scrollLock;
+  scrollLock.lock = (key) => { lock(key); videoPower.suspend('overlay:' + key); };
+  scrollLock.unlock = (key) => { unlock(key); videoPower.resume('overlay:' + key); };
+  scrollLock.reset = (...keys) => { reset(...keys); keys.forEach(k => videoPower.resume('overlay:' + k)); };
+})();
 
-// Global Intersection Observer to pause out-of-view videos
+/* Pause out-of-view videos.
+
+   A clip has to be a quarter visible to be worth decoding. The old rule was a
+   10% sliver, so a fast scroll past the sub-cultural grid spun up three of them
+   purely in transit; a quarter is roughly where a clip is actually being
+   looked at, and it also stands them down sooner on the way out.
+
+   The test is `intersectionRatio`, NOT `entry.isIntersecting` — those are not
+   the same question. isIntersecting is true for any overlap at all, however
+   slight, no matter what threshold the observer was given; the threshold only
+   decides when the callback fires. Keying off it would have played a video
+   sitting 10% on screen. The thresholds list needs the 0 as well as the 0.25,
+   so there's still a callback at the moment a clip fully leaves. */
 const videoObserver = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
-    if (!entry.isIntersecting) {
-      if (!entry.target.paused) {
-        entry.target.pause();
-        let btn = entry.target.parentElement.querySelector('.play-btn');
-        if (btn) btn.style.opacity = '1';
-      }
-    } else {
-      if (entry.target.hasAttribute('autoplay') && entry.target.paused) {
-        entry.target.play().catch(() => {});
-      }
+    const v = entry.target;
+    if (entry.intersectionRatio < VISIBLE_ENOUGH) {
+      if (!v.paused) v.pause();
+      return;
+    }
+    // Scrolling back into view is not permission to play while an overlay,
+    // the menu, or a backgrounded tab is holding everything down.
+    if (videoPower.isSuspended()) return;
+    if (v.paused && (v.hasAttribute('autoplay') || v.id === 'hero-video')) {
+      if (v.id === 'hero-video') v.currentTime = 0;
+      v.play().catch(() => {});
     }
   });
-}, { threshold: 0.1 });
-document.querySelectorAll('video').forEach(vid => {
-  if (!vid.classList.contains('scrub-vid')) {
-    videoObserver.observe(vid);
-  }
-});
-
-
-
-// Toggle interactive controller demo audio on mute button click
-const globalMuteBtnRef = document.getElementById('global-mute-btn');
-if (globalMuteBtnRef) {
-  globalMuteBtnRef.addEventListener('click', () => {
-    if (window.demoIsAudioActive && window.demoAudioCtx) {
-      if (globalAudioMuted && window.demoAudioCtx.state === 'running') {
-        window.demoAudioCtx.suspend();
-      } else if (!globalAudioMuted && window.demoAudioCtx.state === 'suspended') {
-        const demoNode = document.getElementById('controller-demo');
-        if (demoNode) {
-          const rect = demoNode.getBoundingClientRect();
-          if (rect.top < window.innerHeight && rect.bottom > 0) {
-            window.demoAudioCtx.resume();
-          }
-        }
-      }
-    }
-  });
-}
+}, { threshold: [0, VISIBLE_ENOUGH] });
+document.querySelectorAll('video').forEach(vid => videoObserver.observe(vid));
 
 /* ==========================================================================
-   13. MOBILE VERTICAL VIDEO SWAPS
+   7. MOBILE VERTICAL VIDEO SWAPS
    ========================================================================== */
 /* REMOVED: legacy updateVideoSources().
    It duplicated setResponsiveVideoSources() (top of this file) but ran AFTER it,
@@ -1875,7 +1309,7 @@ document.addEventListener('DOMContentLoaded', () => {
       setTimeout(startTransition, 2000);
     });
 
-    window.addEventListener('resize', applyCurrent);
+    onWidthResize(applyCurrent);
   });
 });
 
@@ -2006,7 +1440,10 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  window.addEventListener('resize', placeActiveVideo);
+  // Width-gated: this appendChild()s a <video> between two parents, which tears
+  // down and rebuilds its rendering. Only the mobile/desktop breakpoint changes
+  // where it belongs, so a URL-bar height change must never trigger it.
+  onWidthResize(placeActiveVideo);
   placeActiveVideo();
 });
 
