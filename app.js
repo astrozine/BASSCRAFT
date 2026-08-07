@@ -974,6 +974,8 @@ function openCart(view) {
   // Also called to switch views (upsell -> checkout) on an already-open
   // cart — re-locking with the same key is a no-op, so no need to guard it.
   cartOverlay.classList.add('is-active');
+  // Lets CSS lift the navbar above the cart's scrim — see body.cart-open.
+  document.body.classList.add('cart-open');
   scrollLock.lock('cart');
   if (view === 'upsell') {
     cartUpsellView.style.display = 'block';
@@ -987,6 +989,7 @@ function openCart(view) {
 function closeCart() {
   if (!cartOverlay || !cartOverlay.classList.contains('is-active')) return;
   cartOverlay.classList.remove('is-active');
+  document.body.classList.remove('cart-open');
   scrollLock.unlock('cart');
 }
 
@@ -1145,6 +1148,14 @@ document.querySelectorAll('.cart-media-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     const src = btn.id === 'cart-media-expand-btn' ? itemImg?.src : btn.dataset.lightboxSrc;
     openCartLightbox(src);
+  });
+});
+// The pricing cards' product shots open the same full-screen viewer as the
+// cart's own photo — the one that keeps the floating B mark and BUY NOW on top.
+document.querySelectorAll('.pricing-card-image img').forEach(img => {
+  img.addEventListener('click', (e) => {
+    e.stopPropagation();
+    openCartLightbox(img.currentSrc || img.src);
   });
 });
 document.getElementById('cart-lightbox-close')?.addEventListener('click', closeCartLightbox);

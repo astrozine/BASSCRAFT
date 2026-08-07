@@ -25,6 +25,12 @@
   --grey: #86868b;
   --grey-light: #a1a1a6;
   --grey-dark: #6e6e73;
+  /* Brushed-silver accent, lifted from the nav's BUY NOW pill and B mark so the
+     pricing cards' detailing reads as the same material instead of flat black.
+     Kept as tokens because it's now used in several places. */
+  --silver: #aeb9c9;
+  --silver-sheen: linear-gradient(110deg, #abb7c7, #bac6d6, #a5b0c2, #bac6d6, #abb7c7);
+  --silver-ink: #ffffff;
   --glow: 0 0 30px rgba(180,225,255,0.35), 0 0 60px rgba(180,225,255,0.15);
   --glow-sm: 0 0 15px rgba(180,225,255,0.25);
   --nav-h: 52px;
@@ -41,7 +47,11 @@
    scrollIntoView actually measures "start" against, so this single rule
    fixes every one of those calls at once: sections now land with a
    breathing-room gap below the nav instead of butted up against it. */
-html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; scroll-padding-top: 20vh; }
+/* scroll-padding-top is what scrollIntoView measures "start" against. The nav
+   is a fixed 90px bar, so this is that height plus a small gap: sections land
+   exactly at their own top edge, clear of the bar rather than tucked under it.
+   (Was 20vh, which pushed every section a fifth of the way down the screen.) */
+html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; scroll-padding-top: 100px; }
 video { background-color: #000; }
 body {
   background: #f7f4ef; color: var(--white);
@@ -185,17 +195,24 @@ p {
   border-radius: 50%;
   box-shadow: 0 0 15px rgba(255, 255, 255, 0.15), inset 0 0 10px rgba(255, 255, 255, 0.4);
   padding: 6px; margin: 0; cursor: pointer;
-  color: #111827; width: 36px; height: 36px;
+  color: var(--silver-ink); width: 36px; height: 36px;
   align-items: center; justify-content: center;
   position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
   transition: transform 0.2s, box-shadow 0.2s, left 0.4s ease;
 }
 .mobile-menu-btn:active { transform: translate(-50%, -50%) scale(0.95); }
 .mobile-menu-btn svg { width: 20px; height: 20px; }
-.mobile-menu-btn .bar { transition: transform 0.3s ease, opacity 0.2s ease; transform-origin: center; }
-.mobile-menu-btn.is-active .bar-top { transform: translateY(5px) rotate(45deg); }
+/* On an SVG <line>, transform-origin:center resolves against the VIEW-BOX, not
+   the line's own box — so the old translate-then-rotate order rotated each bar
+   about the icon's centre while it was still sitting at its original y, swinging
+   it off onto a diagonal that never met its partner. Hence the half-formed X.
+   Pinning the origin to the view-box centre and translating FIRST (rightmost in
+   a transform list is applied first) moves each bar onto the centre line before
+   it rotates, so both land exactly on the diagonals. */
+.mobile-menu-btn .bar { transition: transform 0.3s ease, opacity 0.2s ease; transform-box: view-box; transform-origin: 12px 12px; }
+.mobile-menu-btn.is-active .bar-top { transform: rotate(45deg) translateY(5px); }
 .mobile-menu-btn.is-active .bar-mid { opacity: 0; }
-.mobile-menu-btn.is-active .bar-bot { transform: translateY(-5px) rotate(-45deg); }
+.mobile-menu-btn.is-active .bar-bot { transform: rotate(-45deg) translateY(-5px); }
 
 .mobile-nav-menu {
   display: none; /* becomes flex only inside the media query below */
@@ -203,11 +220,17 @@ p {
   flex-direction: column;
   background: rgba(10,10,10,0.94);
   backdrop-filter: saturate(180%) blur(20px); -webkit-backdrop-filter: saturate(180%) blur(20px);
-  border-bottom: 0.5px solid rgba(255,255,255,0.04);
+  /* No border while closed. max-height:0 collapses the CONTENT box, but a
+     border sits outside it and still paints — and since the background paints
+     through the border box too, that near-invisible 0.5px rule was rendering
+     as a hard 1px dark strip of this panel's near-black background right under
+     the nav. Desktop never showed it because the drawer is display:none there.
+     Only the navbar's own hairline should be visible when this is shut. */
+  border-bottom: 0;
   max-height: 0; overflow: hidden;
   transition: max-height 0.35s ease;
 }
-.mobile-nav-menu.is-open { max-height: 400px; }
+.mobile-nav-menu.is-open { max-height: 400px; border-bottom: 0.5px solid rgba(255,255,255,0.04); }
 .mobile-nav-menu a {
   color: #fff; font-family: 'CalSansText',sans-serif; font-size: 0.95rem;
   letter-spacing: 0.06em; text-transform: uppercase;
@@ -373,7 +396,7 @@ p {
   position: relative;
   overflow: hidden;
   box-shadow: 0 0 15px rgba(255, 255, 255, 0.15), inset 0 0 10px rgba(255, 255, 255, 0.4);
-  color: #111827;
+  color: var(--silver-ink);
   font-weight: 700;
   letter-spacing: 0.05em;
 }
@@ -413,6 +436,15 @@ p {
 
 /* ═══ ROUNDED VIDEO ═══ */
 .vid-r { border-radius: var(--r); overflow: hidden; position: relative; }
+/* Sunken-window effect on the "Music, activated." genre clips. Has to be an
+   overlay pseudo-element rather than a plain inset box-shadow on .vid-r: an
+   inset shadow paints above the element's background but BELOW its children,
+   so the <video> would cover it completely. */
+#experience .vid-r::after {
+  content: ''; position: absolute; inset: 0; z-index: 2; pointer-events: none;
+  border-radius: inherit;
+  box-shadow: inset 0 2px 10px rgba(0,0,0,0.5), inset 0 0 26px rgba(0,0,0,0.34);
+}
 .vid-r video { width: calc(100% + 2px); margin-left: -1px; display: block; }
 .vid-r-sm { border-radius: var(--r-sm); overflow: hidden; position: relative; }
 .vid-r-sm video { width: calc(100% + 2px); margin-left: -1px; display: block; }
@@ -709,7 +741,7 @@ p {
 }
 .pricing-card {
   background: var(--white); border-radius: var(--r); padding: clamp(1.5rem, 3vw, 2.5rem); text-align: left;
-  box-shadow: 0 10px 40px rgba(0,0,0,0.05); position: relative; border: 2px solid transparent;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.05); position: relative; border: 1px solid transparent;
 }
 .pricing-card-inner {
   display: flex; gap: 2rem; align-items: center;
@@ -719,16 +751,28 @@ p {
 }
 .pricing-card-image img {
   width: 100%; height: auto; display: block; border-radius: 16px;
+  cursor: zoom-in; /* opens the same full-screen viewer as the cart's photo */
 }
 .pricing-card-info {
   flex: 1; min-width: 0; display: flex; flex-direction: column;
 }
+/* Was a heavy 2px black outline. Now a hairline in the same brushed silver as
+   the nav's BUY NOW pill and B mark, with a soft silver halo doing the work of
+   marking this card as the featured one instead of a hard black frame. */
 .pricing-card.featured {
-  border-color: var(--dark); box-shadow: 0 20px 60px rgba(0,0,0,0.1); transform: scale(1.02);
+  border-color: rgba(174,185,201,0.9);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.08), 0 0 26px rgba(174,185,201,0.32);
+  transform: scale(1.02);
 }
 .pricing-badge {
   position: absolute; top: -15px; left: 50%; transform: translateX(-50%);
-  background: var(--dark); color: var(--white); padding: 6px 18px; border-radius: 20px;
+  background-color: var(--silver);
+  background-image: var(--silver-sheen);
+  background-size: 200% 200%;
+  animation: roving-gradient 14s linear infinite;
+  border: 1px solid rgba(255,255,255,0.4);
+  box-shadow: 0 2px 10px rgba(0,0,0,0.08), inset 0 0 10px rgba(255,255,255,0.4);
+  color: var(--silver-ink); padding: 6px 18px; border-radius: 20px;
   font-size: 0.85rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; white-space: nowrap;
 }
 .pricing-card h3 { font-size: 1.8rem; margin-bottom: 0.5rem; color: var(--dark); }
@@ -740,10 +784,21 @@ p {
 .pricing-features { list-style: none; margin-bottom: 2.5rem; flex-grow: 1; }
 .pricing-features li { padding: 0.8rem 0; border-bottom: 1px solid rgba(0,0,0,0.05); color: var(--dark); font-size: 1.05rem; }
 .pricing-features li:last-child { border-bottom: none; }
-.pricing-card .buy-btn { width: 100%; border: 2px solid var(--dark); background: transparent; color: var(--dark); }
-.pricing-card .buy-btn:hover { background: rgba(0,0,0,0.05); }
-.pricing-card .buy-btn-featured { background: var(--dark); color: var(--white); }
-.pricing-card .buy-btn-featured:hover { background: #000; opacity: 1; }
+/* Secondary (Starter Kit): hairline silver outline instead of a 2px black one.
+   Label stays dark — silver-on-white would be unreadable. */
+.pricing-card .buy-btn { width: 100%; border: 1px solid var(--silver); background: transparent; color: var(--dark); }
+.pricing-card .buy-btn:hover { background: rgba(174,185,201,0.14); }
+/* Featured (Double Kit): the same brushed-silver fill as the nav's BUY NOW. */
+.pricing-card .buy-btn-featured {
+  background-color: var(--silver);
+  background-image: var(--silver-sheen);
+  background-size: 200% 200%;
+  animation: roving-gradient 14s linear infinite;
+  border: 1px solid rgba(255,255,255,0.4);
+  box-shadow: 0 0 15px rgba(255,255,255,0.15), inset 0 0 10px rgba(255,255,255,0.4);
+  color: var(--silver-ink);
+}
+.pricing-card .buy-btn-featured:hover { opacity: .9; }
 
 @media (max-width: 768px) {
   .pricing-grid { display: flex; flex-direction: column; align-items: center; width: 100%; }
@@ -954,7 +1009,18 @@ p {
    gives plenty of contrast against the page behind it. */
 .cart-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.72); z-index: 9999; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; padding: 24px; }
 .cart-overlay.is-active { opacity: 1; pointer-events: all; }
-.cart-modal { background: rgba(32,32,34,0.85); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border: 1px solid rgba(255,255,255,0.08); border-radius: 24px; width: 100%; max-width: 760px; box-shadow: 0 40px 100px rgba(0,0,0,0.8); position: relative; transform: scale(0.95) translateY(20px); transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); text-align: left; overflow: hidden; max-height: 92vh; overflow-y: auto; }
+/* Opening the cart scroll-locks the page at 0, which drops .scrolled off the
+   navbar — so it falls back to its over-hero look and shows the full BASSCRAFT
+   wordmark rather than the B mark. That reads nicely over the cart, but the bar
+   and the cart overlay both sit at z-index 9999 and the overlay comes later in
+   the DOM, so it painted on top and knocked the white wordmark down to a murky
+   grey. Lift the bar above that scrim so it stays properly white. */
+body.cart-open .navbar { z-index: 10001; }
+/* The section links would otherwise sit crisply above the scrim while pointing
+   at a page that's locked behind the modal. */
+body.cart-open .nav-links { opacity: 0; pointer-events: none; }
+
+.cart-modal { background: rgba(32,32,34,0.85); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border: 1px solid rgba(255,255,255,0.08); border-radius: 24px; width: 100%; max-width: 912px; box-shadow: 0 40px 100px rgba(0,0,0,0.8); position: relative; transform: scale(0.95) translateY(20px); transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); text-align: left; overflow: hidden; max-height: 92vh; overflow-y: auto; }
 .cart-overlay.is-active .cart-modal { transform: scale(1) translateY(0); }
 .cart-close { position: absolute; top: 16px; right: 16px; z-index: 10; width: 34px; height: 34px; border-radius: 50%; background: rgba(0,0,0,0.5); border: none; color: white; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s; }
 .cart-close svg { width: 18px; height: 18px; }
