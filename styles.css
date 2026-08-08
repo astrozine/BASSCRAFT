@@ -1141,14 +1141,15 @@ body.cart-open .nav-links { opacity: 0; pointer-events: none; }
 .media-close:hover { box-shadow: 0 0 18px rgba(255,255,255,0.3), inset 0 0 10px rgba(255,255,255,0.5); }
 .media-close:active { transform: scale(0.94); }
 
-/* The document viewer's X hangs off the FRAME's top-right corner, half over the
-   edge so it reads as furniture belonging to the window. The frame is a fixed,
+/* Tucked inside the FRAME's top-right corner, at the same inset every other
+   viewer uses, so all four read identically. (It briefly hung half over the
+   edge; sitting inside matches the rest of the site.) The frame is a fixed,
    centred box, so this is a fixed position — the artwork zooming underneath
-   cannot move it. Sitting on the frame also means it clears the BUY NOW pill
-   for free: app.js keeps the frame below the chrome strip. */
+   cannot move it — and because app.js keeps the frame below the chrome strip,
+   it clears the BUY NOW pill for free. */
 .media-close--viewport {
   position: absolute; z-index: 6;
-  top: -18px; right: -18px;
+  top: 12px; right: 12px;
 }
 
 /* ═════ PLACEMENT HOTSPOTS ═════ */

@@ -718,22 +718,27 @@ document.addEventListener('keydown', (e) => {
      panels, the wide one puts 1 and 2 down the left and 3 on the right — so
      each gets its own list, chosen by aspect ratio when the image loads.
 
-     `x/y/w/h` is the region to frame; the marker is pinned at its centre. The
-     regions deliberately frame the cushion-plus-controller-and-cable assembly
-     rather than the whole panel: a panel spans almost the full width of the
-     sheet, so on a phone "fit the panel" is width-constrained and buys only
-     about 1.2x — barely a zoom at all. Framing the placement itself is both
-     the part worth looking at and tight enough to actually magnify. */
+     `mx/my` is where the marker sits — placed directly over the number already
+     printed on the sheet, so the badge covers it and you read one number
+     rather than two. `x/y/w/h` is the separate region it frames, which stays
+     on the placement itself. The two are deliberately not the same point: the
+     printed numbers sit out in the margin of each panel, and centring the zoom
+     there would frame empty paper.
+
+     The regions frame the cushion-plus-controller-and-cable assembly rather
+     than the whole panel: a panel spans almost the full width of the sheet, so
+     on a phone "fit the panel" is width-constrained and buys only about 1.2x —
+     barely a zoom at all. */
   const HOTSPOTS = {
     tall: [
-      { n: 1, x: 0.340, y: 0.235, w: 0.45, h: 0.150 },
-      { n: 2, x: 0.200, y: 0.475, w: 0.57, h: 0.155 },
-      { n: 3, x: 0.390, y: 0.765, w: 0.36, h: 0.170 },
+      { n: 1, mx: 0.125, my: 0.142, x: 0.340, y: 0.235, w: 0.45, h: 0.150 },
+      { n: 2, mx: 0.130, my: 0.422, x: 0.200, y: 0.475, w: 0.57, h: 0.155 },
+      { n: 3, mx: 0.145, my: 0.736, x: 0.390, y: 0.765, w: 0.36, h: 0.170 },
     ],
     wide: [
-      { n: 1, x: 0.180, y: 0.250, w: 0.26, h: 0.190 },
-      { n: 2, x: 0.150, y: 0.550, w: 0.32, h: 0.250 },
-      { n: 3, x: 0.680, y: 0.460, w: 0.25, h: 0.270 },
+      { n: 1, mx: 0.091, my: 0.468, x: 0.180, y: 0.250, w: 0.26, h: 0.190 },
+      { n: 2, mx: 0.454, my: 0.845, x: 0.150, y: 0.550, w: 0.32, h: 0.250 },
+      { n: 3, mx: 0.767, my: 0.342, x: 0.680, y: 0.460, w: 0.25, h: 0.270 },
     ],
   };
 
@@ -818,8 +823,9 @@ document.addEventListener('keydown', (e) => {
       const b = document.createElement('button');
       b.type = 'button';
       b.className = 'doc-hotspot';
-      b.style.left = ((r.x + r.w / 2) * 100) + '%';
-      b.style.top  = ((r.y + r.h / 2) * 100) + '%';
+      // Sits on the printed number, not on the region it frames.
+      b.style.left = (r.mx * 100) + '%';
+      b.style.top  = (r.my * 100) + '%';
       b.setAttribute('aria-label', `Zoom to placement option ${r.n}`);
       b.innerHTML = `<span class="doc-hotspot-dot">${r.n}</span>`;
       // The markers sit inside .doc-stage, whose pointerdown starts a pan and
