@@ -544,6 +544,13 @@
      multi-panel scans — legible only once they can be enlarged and explored,
      hence the drag-to-pan stage rather than a plain full-screen still. -->
 <div class="doc-lightbox" id="doc-lightbox">
+<!-- The frame is the fixed window the document is viewed THROUGH: a rounded
+     card sized in app.js to the loaded scan's aspect ratio, exactly as the
+     small card on the page is. It never moves. The artwork pans and zooms
+     inside it, clipped by it, and every control below hangs off ITS corners —
+     so the controls have a home that belongs to the window rather than to the
+     picture sliding around underneath. -->
+<div class="doc-frame" id="doc-frame">
   <div class="doc-stage" id="doc-stage">
     <div class="doc-paper" id="doc-paper">
       <img id="doc-lightbox-img" alt="Controller box placement options, enlarged" draggable="false">
@@ -590,6 +597,7 @@
       <line x1="6" y1="6" x2="18" y2="18"></line>
     </svg>
   </button>
+</div>
 </div>
 
 <!-- Full-screen product viewer, opened by tapping the cart's product photo.

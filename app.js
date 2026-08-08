@@ -699,6 +699,7 @@ document.addEventListener('keydown', (e) => {
   if (!lb || !stage || !paper || !img) return;
 
   const hotspotLayer = document.getElementById('doc-hotspots');
+  const frame = document.getElementById('doc-frame');
 
   let nw = 0, nh = 0;               // document's natural pixel size
   let scale = 1, fitScale = 1, maxScale = 1;
@@ -761,6 +762,36 @@ document.addEventListener('keydown', (e) => {
      belong to the viewer, not to the artwork — they get one fixed home and
      hold it at every zoom level. */
 
+  /* Size the window to the loaded scan's shape.
+
+     This is what makes the whole thing behave like the small rounded card on
+     the page: a frame with a definite size and place, that you look at the
+     document THROUGH. The sheet fills it exactly at rest — no grey gutter down
+     the sides — and zooming happens strictly inside it. Everything else here
+     measures against the stage, which is now this frame, so the fit maths and
+     the pan clamp both fall out of it for free.
+
+     The top gutter is the chrome strip (B mark + BUY NOW), so the frame — and
+     therefore the close button pinned to its corner — always starts clear of
+     the pill without any element having to know the pill exists. */
+  function sizeFrame() {
+    if (!frame || !nw || !nh) return;
+    const vw = lb.clientWidth, vh = lb.clientHeight;
+    const narrow = vw <= 768;
+    const side = narrow ? 16 : 40;
+    const top = narrow ? 92 : 104;      // clears the chrome bar
+    const bottom = narrow ? 28 : 44;
+    const availW = Math.max(120, vw - side * 2);
+    const availH = Math.max(120, vh - top - bottom);
+    let w = availW, h = w * nh / nw;
+    if (h > availH) { h = availH; w = h * nw / nh; }
+    frame.style.width = Math.round(w) + 'px';
+    frame.style.height = Math.round(h) + 'px';
+    // Centre inside the area left over once the chrome strip is reserved,
+    // rather than in the raw viewport, so it doesn't ride up under the bar.
+    frame.style.top = Math.round(top + availH / 2) + 'px';
+  }
+
   /* Frame one option: zoom so the region fills most of the stage, then centre
      it. Same clamping as every other zoom path, so it can never land somewhere
      panning couldn't have reached. */
@@ -805,19 +836,23 @@ document.addEventListener('keydown', (e) => {
 
   // Centre on whichever axis the document is smaller than the stage; otherwise
   // pin it so panning can never expose empty space past an edge.
+  /* Strict clamp — the window is always completely filled with artwork. The old
+     rule allowed up to 150px of overscroll past each edge, which was fine when
+     the sheet floated in a large grey stage but would now let you drag the
+     document off its own frame and expose bare white inside the window. */
   function clampOffsets() {
     const w = nw * scale, h = nh * scale;
     const sw = stage.clientWidth, sh = stage.clientHeight;
-    const px = Math.min(sw * 0.3, 150), py = Math.min(sh * 0.3, 150); // breathing room
-    tx = w <= sw ? (sw - w) / 2 : Math.min(px, Math.max(sw - w - px, tx));
-    ty = h <= sh ? (sh - h) / 2 : Math.min(py, Math.max(sh - h - py, ty));
+    tx = w <= sw ? (sw - w) / 2 : Math.min(0, Math.max(sw - w, tx));
+    ty = h <= sh ? (sh - h) / 2 : Math.min(0, Math.max(sh - h, ty));
   }
 
   function computeBounds() {
     const sw = stage.clientWidth, sh = stage.clientHeight;
     if (!nw || !nh || !sw || !sh) return;
-    // Slightly inset so the sheet reads as a sheet rather than a wall of paper.
-    fitScale = Math.min((sw * 0.92) / nw, (sh * 0.86) / nh);
+    // The frame already carries the margin, and it matches the scan's aspect
+    // ratio, so "fit" here means fill the window exactly, edge to edge.
+    fitScale = Math.min(sw / nw, sh / nh);
     // Always allow at least native 1:1 — that's the zoom where the fibre reads.
     maxScale = Math.max(fitScale * 4, 1);
   }
@@ -849,6 +884,7 @@ document.addEventListener('keydown', (e) => {
     if (!nw || !nh) return;
     paper.style.width = nw + 'px';
     paper.style.height = nh + 'px';
+    sizeFrame();       // the window takes the scan's shape before anything measures it
     computeBounds();
     buildHotspots();   // which set applies depends on the loaded image's shape
     if (initial) {
@@ -985,6 +1021,13 @@ document.addEventListener('keydown', (e) => {
     if (hintTookThisTap) { hintTookThisTap = false; return; }
     if (!moved && downTarget === stage) closeDoc();
   });
+
+  /* Click-outside-to-close. This used to be the rule above, back when the sheet
+     floated inside a full-bleed stage and the bare stage WAS the backdrop. Now
+     the artwork fills its window exactly, so nothing outside the window belongs
+     to the stage at all — the backdrop is the lightbox itself, and the test has
+     to live here or dismissing by clicking away stops working entirely. */
+  lb.addEventListener('click', (e) => { if (e.target === lb) closeDoc(); });
 
   zoomInBtn?.addEventListener('click', () => zoomByStep(1.4));
   zoomOutBtn?.addEventListener('click', () => zoomByStep(1 / 1.4));

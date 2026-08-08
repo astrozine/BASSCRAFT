@@ -1042,20 +1042,34 @@ body.cart-open .nav-links { opacity: 0; pointer-events: none; }
 
 /* The pannable surface. touch-action:none so a drag pans the document instead
    of scrolling the page still sitting behind the overlay. */
+/* The fixed window. Its exact size is set in app.js from the loaded scan's
+   aspect ratio so the sheet fills it edge to edge with no grey gutter, but its
+   POSITION — centred in the viewer — never changes, and neither does anything
+   hung off its corners. */
+.doc-frame {
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 44px;
+  box-shadow: 0 40px 120px rgba(0,0,0,0.18);
+}
 .doc-stage {
   position: absolute; inset: 0; overflow: hidden;
+  border-radius: inherit;              /* the window does the clipping now */
+  background: #fff;
   touch-action: none; cursor: grab;
   user-select: none; -webkit-user-select: none;
 }
 .doc-stage.is-grabbing { cursor: grabbing; }
 
+/* No radius here any more. The rounding used to live on this element, which is
+   the one that gets transformed — so zooming in carried the rounded corners off
+   with the artwork and the window stopped reading as a window. The frame above
+   clips it instead, and stays put. */
 .doc-paper {
   position: absolute; top: 0; left: 0;
   transform-origin: 0 0;
   background: #fff;
   isolation: isolate;
-  border-radius: 44px;
-  overflow: hidden;
 }
 /* GPU-promoted only while genuinely open and interactive — this element is a
    full-resolution scan (up to ~3770x2936px) that can sit zoomed in well past
@@ -1079,8 +1093,10 @@ body.cart-open .nav-links { opacity: 0; pointer-events: none; }
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='p' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.5' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeComponentTransfer%3E%3CfeFuncR type='linear' slope='0.12' intercept='0.88'/%3E%3CfeFuncG type='linear' slope='0.12' intercept='0.88'/%3E%3CfeFuncB type='linear' slope='0.12' intercept='0.88'/%3E%3CfeFuncA type='linear' slope='0' intercept='1'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23p)'/%3E%3C/svg%3E");
   background-size: 140px 140px;
   mix-blend-mode: multiply; opacity: 1;
-  border-radius: 24px;
-  box-shadow: inset 0 0 40px rgba(0,0,0,0.15);
+  /* No radius or inset vignette any more: both belonged to the era when this
+     element WAS the visible sheet edge. The frame draws that edge now, and a
+     rounded, shadowed overlay riding on the zoomed artwork would put a stray
+     dark arc somewhere out in the middle of the window. */
   transition: opacity .12s ease;
 }
 /* An isolated mix-blend-mode layer that's also rounded, clipped, and
@@ -1125,19 +1141,14 @@ body.cart-open .nav-links { opacity: 0; pointer-events: none; }
 .media-close:hover { box-shadow: 0 0 18px rgba(255,255,255,0.3), inset 0 0 10px rgba(255,255,255,0.5); }
 .media-close:active { transform: scale(0.94); }
 
-/* The document viewer is the one exception to "corner of the media": its media
-   is a pannable, zoomable canvas that can sit far outside the screen, so a
-   corner-anchored button would wander off with it. It anchors to the viewer
-   instead — same button, same corner of what you can actually see.
-
-   Because that corner IS the screen corner, this variant is the only one that
-   has to dodge the chrome bar explicitly, and it does so at every width: at
-   24px it sat level with the BUY NOW pill and merely to the right of it, which
-   read as the two competing for the same corner. Below it instead. */
+/* The document viewer's X hangs off the FRAME's top-right corner, half over the
+   edge so it reads as furniture belonging to the window. The frame is a fixed,
+   centred box, so this is a fixed position — the artwork zooming underneath
+   cannot move it. Sitting on the frame also means it clears the BUY NOW pill
+   for free: app.js keeps the frame below the chrome strip. */
 .media-close--viewport {
-  position: absolute; z-index: 3;
-  top: max(84px, calc(env(safe-area-inset-top, 0px) + 76px));
-  right: 24px;
+  position: absolute; z-index: 6;
+  top: -18px; right: -18px;
 }
 
 /* ═════ PLACEMENT HOTSPOTS ═════ */
@@ -1222,16 +1233,16 @@ body.cart-open .nav-links { opacity: 0; pointer-events: none; }
 .doc-hint svg { width: clamp(48px, 10vw, 120px); height: clamp(48px, 10vw, 120px); flex-shrink: 0; opacity: 0.95; }
 .doc-hint.is-hidden { opacity: 0; pointer-events: none; visibility: hidden; }
 
-/* A fixed home in the viewer's bottom-right corner, and it never leaves it.
-   These are plain CSS offsets on purpose: an earlier revision drove them from
-   JS so the cluster would hug the sheet's corner and therefore sit on the paper
-   while zoomed out, but the sheet's corner travels with every pan and zoom, so
-   the buttons wandered around the screen and slid off as you zoomed in. The
-   controls belong to the viewer, not to the artwork. */
+/* Bottom-right of the FRAME, inset just inside it. Fixed by construction: the
+   frame is a centred box of known size, so these offsets resolve to the same
+   place at every zoom level. Two earlier attempts got this wrong by measuring
+   from something that moves — first the viewport corner (which left the cluster
+   stranded out in the grey gutter beside the sheet), then the sheet's own
+   corner (which travels with every pan, so the buttons crept around and slid
+   off as you zoomed in). The window is the thing that holds still. */
 .doc-zoom {
-  position: absolute; z-index: 3;
-  right: 24px;
-  bottom: max(24px, calc(env(safe-area-inset-bottom, 0px) + 20px));
+  position: absolute; z-index: 6;
+  right: 20px; bottom: 20px;
   display: flex; gap: 10px;
 }
 /* Same brushed-silver circle as the nav hamburger, the viewers' close X and the
