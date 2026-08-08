@@ -864,27 +864,22 @@ body.cart-open .nav-links { opacity: 0; pointer-events: none; }
 .cart-image-lightbox.is-active { opacity: 1; pointer-events: all; }
 .cart-lightbox-inner { position: relative; height: 100%; width: auto; max-width: 100%; display: flex; align-items: center; justify-content: center; }
 .cart-image-lightbox img { display: block; height: 100%; width: auto; max-width: 100%; object-fit: contain; }
-.cart-lightbox-close {
-  position: absolute; top: 20px; right: 20px; z-index: 1;
-  width: 40px; height: 40px; border-radius: 50%;
-  background: rgba(20,20,20,0.85); border: 1px solid rgba(255,255,255,0.2);
-  color: #fff; cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  box-shadow: 0 4px 14px rgba(0,0,0,0.4);
-  transition: background 0.2s;
-}
-.cart-lightbox-close svg { width: 20px; height: 20px; }
-.cart-lightbox-close:hover { background: rgba(40,40,40,0.95); }
 @media (max-width: 768px) {
   /* Here the photo and the screen are both portrait, so filling the whole
      viewport (rather than hugging just the photo) is the fuller, more
-     "really full screen" presentation — and the close button anchored to
-     the screen corner still lands right by the photo's own corner too. */
+     "really full screen" presentation. */
   .cart-lightbox-inner { width: 100%; height: 100%; max-width: none; }
   .cart-image-lightbox img { width: 100%; height: 100%; }
-  /* Dropped below the shared chrome bar: BUY NOW now occupies the top-right
-     corner here, and at this width the two would otherwise overlap outright. */
-  .cart-lightbox-close { top: max(84px, calc(env(safe-area-inset-top, 0px) + 76px)); right: 16px; }}
+  /* ...and because it IS full-bleed at this width, the photo's own top-right
+     corner is the screen's top-right corner, i.e. exactly where BUY NOW sits.
+     This is the same situation the document viewer is in, so it takes the same
+     drop below the chrome bar. On desktop the photo only occupies the middle of
+     the screen, so its corner is naturally clear and the default applies. */
+  .cart-image-lightbox .media-close {
+    top: max(84px, calc(env(safe-area-inset-top, 0px) + 76px));
+    right: 16px;
+  }
+}
 
 /* ═════ VIDEO LIGHTBOX ═════ */
 /* For the sub-cultural genre clips + the "no bluetooth" demo: bigger and
@@ -940,45 +935,23 @@ body.cart-open .nav-links { opacity: 0; pointer-events: none; }
 }
 .video-lightbox-title:not(:empty) { display: block; }
 .video-lightbox-subtitle:not(:empty) { display: block; }
+/* Wraps the player so it and the X form one shrink-to-fit box. flex:0 1 auto
+   + min-height:0 lets it give up height under the caption without overflowing;
+   the column's align-items:center then sizes its WIDTH to the video itself, so
+   the button's corner and the video's corner are the same corner. */
+.video-lightbox-media {
+  position: relative; flex: 0 1 auto; min-height: 0;
+  display: flex; align-items: center; justify-content: center; max-width: 100%;
+}
 #video-lightbox-player {
   display: block; height: 100%; width: auto; max-width: 100%;
   border-radius: 16px; background: #000;
   box-shadow: 0 30px 90px rgba(0,0,0,0.55);
 }
-.video-lightbox-close {
-  position: absolute; top: 14px; right: 14px; z-index: 1;
-  width: 40px; height: 40px; border-radius: 50%;
-  background: rgba(20,20,20,0.85); border: 1px solid rgba(255,255,255,0.2);
-  color: #fff; cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  box-shadow: 0 4px 14px rgba(0,0,0,0.4);
-  transition: background 0.2s;
-}
-.video-lightbox-close svg { width: 20px; height: 20px; }
-.video-lightbox-close:hover { background: rgba(40,40,40,0.95); }
 
 @media (max-width: 768px) {
   .video-lightbox { padding: 20px; }
   .video-lightbox-inner { flex-direction: column; align-items: center; gap: 16px; height: auto; width: 100%; }
-  /* Taken out of the flex flow entirely. As a static flex item it needed a
-     margin-top to clear BUY NOW, and that margin pushed the whole column —
-     title, caption and video — down the screen, which is what left the modal
-     sitting too low and spilling past its own bottom edge. Pinning it instead
-     means it contributes nothing to layout, so .video-lightbox-inner centres
-     in the viewport the way it should, while the button keeps a fixed, known
-     distance from the BUY NOW pill no matter how tall the clip or caption is.
-
-     84px is the same clearance the document and cart viewers already use: the
-     chrome bar's pill ends around y=45, so this leaves ~39px of air below it.
-     position:fixed resolves against .video-lightbox itself rather than the
-     viewport — its backdrop-filter makes it the containing block for fixed
-     descendants — but that element is inset:0, so the two coincide. */
-  .video-lightbox-close {
-    position: fixed;
-    top: max(84px, calc(env(safe-area-inset-top, 0px) + 76px));
-    right: 16px;
-    margin: 0;
-  }
   .video-lightbox-title { font-size: 1.5rem; }
   /* width:100% (a definite value) forced the player's own box wider than a
      portrait video's actual rendered content once max-height clamped it
@@ -1120,18 +1093,52 @@ body.cart-open .nav-links { opacity: 0; pointer-events: none; }
    back in the moment the pointer lifts. */
 .doc-stage.is-grabbing .doc-paper::after { opacity: 0; mix-blend-mode: normal; }
 
-/* Sits below the chrome bar rather than beside it — BUY NOW owns the top-right
-   corner now, and stacking the two reads as one cluster instead of a collision. */
-.doc-lightbox-close {
-  position: absolute; top: 24px; right: 24px; z-index: 3;
-  width: 40px; height: 40px; border-radius: 50%;
-  background: rgba(0,0,0,0.05); border: 1px solid rgba(0,0,0,0.1);
-  color: #000; cursor: pointer;
+/* ═════ SHARED MEDIA CLOSE BUTTON ═════ */
+/* One X for every viewer on the site — the video lightbox, the cart's product
+   photo, the placement document and the Tech Specs in-place fullscreen. It used
+   to be four separate buttons with four sets of coordinates, each nudged by
+   hand to dodge the BUY NOW pill, which is why they appeared to move around
+   from one viewer to the next.
+
+   The rule now is positional, not numeric: the X sits in the top-right corner
+   of the MEDIA, inside it. Because every viewer centres its media and the chrome
+   bar lives at the very top of the screen, that corner is inherently clear of
+   BUY NOW — there is no offset to keep re-tuning, and nothing to drift.
+
+   Styling matches the nav's hamburger: the same brushed-silver circle, ring and
+   glow, so it reads as part of the same control set. */
+.media-close {
+  position: absolute; top: 12px; right: 12px; z-index: 5;
+  width: 36px; height: 36px; border-radius: 50%;
+  background-color: #aeb9c9;
+  background-image: linear-gradient(110deg, #abb7c7, #bac6d6, #a5b0c2, #bac6d6, #abb7c7);
+  background-size: 200% 200%;
+  animation: roving-gradient 14s linear infinite;
+  border: 1px solid rgba(255,255,255,0.4);
+  box-shadow: 0 0 15px rgba(255,255,255,0.15), inset 0 0 10px rgba(255,255,255,0.4);
+  color: var(--silver-ink);
+  padding: 6px; margin: 0; cursor: pointer;
   display: flex; align-items: center; justify-content: center;
-  transition: background .2s;
+  transition: transform .2s, box-shadow .2s;
 }
-.doc-lightbox-close svg { width: 20px; height: 20px; }
-.doc-lightbox-close:hover { background: rgba(0,0,0,0.1); }
+.media-close svg { width: 18px; height: 18px; }
+.media-close:hover { box-shadow: 0 0 18px rgba(255,255,255,0.3), inset 0 0 10px rgba(255,255,255,0.5); }
+.media-close:active { transform: scale(0.94); }
+
+/* The document viewer is the one exception to "corner of the media": its media
+   is a pannable, zoomable canvas that can sit far outside the screen, so a
+   corner-anchored button would wander off with it. It anchors to the viewer
+   instead — same button, same corner of what you can actually see.
+
+   Because that corner IS the screen corner, this variant is the only one that
+   has to dodge the chrome bar explicitly, and it does so at every width: at
+   24px it sat level with the BUY NOW pill and merely to the right of it, which
+   read as the two competing for the same corner. Below it instead. */
+.media-close--viewport {
+  position: absolute; z-index: 3;
+  top: max(84px, calc(env(safe-area-inset-top, 0px) + 76px));
+  right: 24px;
+}
 
 /* Photoshop-style hand affordance. Fades out once they've actually dragged —
    it's an instruction, not persistent furniture. */
@@ -1181,7 +1188,7 @@ body.cart-open .nav-links { opacity: 0; pointer-events: none; }
   .doc-hint { gap: 40px; padding: 40px 20px; }
   .doc-hint-text { gap: 20px; }
   .doc-hint svg { width: clamp(80px, 20vw, 140px); height: clamp(80px, 20vw, 140px); }
-  .doc-lightbox-close { top: max(84px, calc(env(safe-area-inset-top, 0px) + 76px)); right: 16px; }
+  .media-close--viewport { right: 16px; }
   .doc-zoom { right: 16px; bottom: max(24px, calc(env(safe-area-inset-bottom, 0px) + 16px)); }}
 
 /*  FLASHING PLAY INDICATOR  */
@@ -1321,19 +1328,10 @@ body.cart-open .nav-links { opacity: 0; pointer-events: none; }
      also occupies — moved to the bottom instead, as a frosted pill matching
      the document viewer's own hint (.doc-hint), rather than bare text
      competing with the chrome for the same strip. */
-  .spec-visual-item.fullscreen-overlay::before {
-    content: "TAP TO CLOSE";
-    position: absolute;
-    left: 50%; bottom: max(30px, calc(env(safe-area-inset-bottom, 0px) + 20px));
-    transform: translateX(-50%);
-    padding: 9px 17px; border-radius: 100px;
-    background: rgba(20,20,20,0.74); border: 1px solid rgba(255,255,255,0.14);
-    color: rgba(255,255,255,0.92);
-    font-size: 12px; font-weight: 600; letter-spacing: .03em;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.35);
-    z-index: 10000;
-    pointer-events: none;
-  }
+  /* The "TAP TO CLOSE" pill that used to sit here is gone — this overlay now
+     carries the same silver X as every other viewer (injected in app.js), so
+     the way out is visible rather than something you have to be told about.
+     Tapping anywhere still dismisses it. */
   .spec-visual-item.fullscreen-overlay video {
     max-height: 90vh;
     max-width: 100vw;

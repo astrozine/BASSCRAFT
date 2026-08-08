@@ -578,7 +578,7 @@
     </button>
   </div>
 
-  <button class="doc-lightbox-close" id="doc-lightbox-close" aria-label="Close enlarged document">
+  <button class="media-close media-close--viewport" id="doc-lightbox-close" aria-label="Close enlarged document">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round">
       <line x1="18" y1="6" x2="6" y2="18"></line>
       <line x1="6" y1="6" x2="18" y2="18"></line>
@@ -593,7 +593,7 @@
 <div class="cart-image-lightbox" id="cart-image-lightbox">
   <div class="cart-lightbox-inner">
     <img id="cart-lightbox-img" src="" alt="Product, full screen">
-    <button class="cart-lightbox-close" id="cart-lightbox-close" aria-label="Close full screen image">
+    <button class="media-close" id="cart-lightbox-close" aria-label="Close full screen image">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round">
         <line x1="18" y1="6" x2="6" y2="18"></line>
         <line x1="6" y1="6" x2="18" y2="18"></line>
@@ -610,12 +610,6 @@
      row, so it's not sitting on top of the video's tap area. -->
 <div class="video-lightbox" id="video-lightbox">
   <div class="video-lightbox-inner">
-    <button class="video-lightbox-close" id="video-lightbox-close" aria-label="Close video">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round">
-        <line x1="18" y1="6" x2="6" y2="18"></line>
-        <line x1="6" y1="6" x2="18" y2="18"></line>
-      </svg>
-    </button>
     <!-- No `controls`: these are short showcase clips, not something anyone
          needs to scrub, pause or re-mix the volume on. The native control bar
          (and the play/replay glyph it shows at either end of playback) was
@@ -625,7 +619,18 @@
       <h3 id="video-lightbox-title" class="video-lightbox-title"></h3>
       <p id="video-lightbox-subtitle" class="video-lightbox-subtitle"></p>
     </div>
-    <video id="video-lightbox-player" playsinline></video>
+    <!-- The player and its X share one shrink-to-fit box so the button can sit
+         in the VIDEO's own top-right corner rather than floating somewhere in
+         the viewport. See .media-close in the CSS. -->
+    <div class="video-lightbox-media">
+      <video id="video-lightbox-player" playsinline></video>
+      <button class="media-close" id="video-lightbox-close" aria-label="Close video">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
   </div>
 </div>
 

@@ -1372,12 +1372,34 @@ document.addEventListener('DOMContentLoaded', () => {
   // to the newer video-lightbox. Routing this legacy in-place toggle through
   // the same shared lightboxChrome/scrollLock (used everywhere else on the
   // site) closes that gap without changing how this feature itself works.
+  /* This overlay is the one viewer with no close button of its own — it was
+     built as "tap anywhere to dismiss" with a text pill saying so. Now that
+     every other viewer on the site closes via the same silver X, it gets one
+     too, injected on open and removed on close (the element it lives in is a
+     real Tech Specs panel that goes back into the page afterwards, so nothing
+     is left behind). Tap-anywhere still works; this just makes the way out
+     visible and consistent. Uses the --viewport variant because this media is
+     effectively full-bleed, so its own corner is the screen's corner and would
+     otherwise land under the BUY NOW pill. */
+  const SPEC_CLOSE_CLASS = 'spec-fullscreen-close';
+  const addSpecClose = (el) => {
+    if (el.querySelector('.' + SPEC_CLOSE_CLASS)) return;
+    const btn = document.createElement('button');
+    btn.className = `media-close media-close--viewport ${SPEC_CLOSE_CLASS}`;
+    btn.setAttribute('aria-label', 'Close video');
+    btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>';
+    btn.addEventListener('click', (e) => { e.stopPropagation(); setSpecFullscreen(el, false); });
+    el.appendChild(btn);
+  };
+
   const setSpecFullscreen = (el, on) => {
     el.classList.toggle('fullscreen-overlay', on);
     if (on) {
+      addSpecClose(el);
       lightboxChrome.show('spec-fullscreen');
       scrollLock.lock('spec-fullscreen');
     } else {
+      el.querySelector('.' + SPEC_CLOSE_CLASS)?.remove();
       lightboxChrome.hide('spec-fullscreen');
       scrollLock.unlock('spec-fullscreen');
     }
