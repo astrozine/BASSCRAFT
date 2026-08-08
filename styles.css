@@ -1222,10 +1222,18 @@ body.cart-open .nav-links { opacity: 0; pointer-events: none; }
 .doc-hint svg { width: clamp(48px, 10vw, 120px); height: clamp(48px, 10vw, 120px); flex-shrink: 0; opacity: 0.95; }
 .doc-hint.is-hidden { opacity: 0; pointer-events: none; visibility: hidden; }
 
-/* Right/bottom are set from app.js so the cluster tracks the sheet's own corner
-   rather than the viewport's — see positionZoomControls(). These values are the
-   starting point and the floor it clamps to. */
-.doc-zoom { position: absolute; right: 24px; bottom: 24px; display: flex; gap: 10px; z-index: 3; }
+/* A fixed home in the viewer's bottom-right corner, and it never leaves it.
+   These are plain CSS offsets on purpose: an earlier revision drove them from
+   JS so the cluster would hug the sheet's corner and therefore sit on the paper
+   while zoomed out, but the sheet's corner travels with every pan and zoom, so
+   the buttons wandered around the screen and slid off as you zoomed in. The
+   controls belong to the viewer, not to the artwork. */
+.doc-zoom {
+  position: absolute; z-index: 3;
+  right: 24px;
+  bottom: max(24px, calc(env(safe-area-inset-bottom, 0px) + 20px));
+  display: flex; gap: 10px;
+}
 /* Same brushed-silver circle as the nav hamburger, the viewers' close X and the
    placement markers — one control language across the whole site. */
 .doc-zoom button {
@@ -1249,7 +1257,8 @@ body.cart-open .nav-links { opacity: 0; pointer-events: none; }
   .doc-hint { gap: 40px; padding: 40px 20px; }
   .doc-hint-text { gap: 20px; }
   .doc-hint svg { width: clamp(80px, 20vw, 140px); height: clamp(80px, 20vw, 140px); }
-  .media-close--viewport { right: 16px; }}
+  .media-close--viewport { right: 16px; }
+  .doc-zoom { right: 16px; }}
 
 /*  FLASHING PLAY INDICATOR  */
 @keyframes indicatorFlash { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }

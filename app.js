@@ -699,7 +699,6 @@ document.addEventListener('keydown', (e) => {
   if (!lb || !stage || !paper || !img) return;
 
   const hotspotLayer = document.getElementById('doc-hotspots');
-  const zoomBox = document.querySelector('.doc-zoom');
 
   let nw = 0, nh = 0;               // document's natural pixel size
   let scale = 1, fitScale = 1, maxScale = 1;
@@ -750,38 +749,17 @@ document.addEventListener('keydown', (e) => {
       // sit on top of the detail you came to look at.
       hotspotLayer.classList.toggle('is-dimmed', scale > fitScale * 1.6);
     }
-    positionZoomControls();
   }
 
-  /* The zoom cluster is deliberately NOT inside .doc-paper — it must keep a
-     constant size and a steady place on screen, not ride along with the
-     artwork. But a plain fixed offset from the viewport corner left it floating
-     out in the grey margin beside the sheet: zoomed right out, the wide scan
-     only occupies the middle ~995px of a 1440px stage, so the buttons sat some
-     220px clear of the paper they belonged to.
+  /* NOTE: the zoom cluster and the close X are positioned purely in CSS, from
+     the viewer's own corners, and nothing here ever touches them.
 
-     So: offset from the SHEET's on-screen corner, clamped so it can never leave
-     the viewport. Zoomed out that puts the controls just inside the sheet's
-     bottom-right; zoomed in, where the sheet is larger than the screen, the
-     clamp takes over and they hold their usual corner. Screen-anchored either
-     way — only the reference point changes. */
-  function positionZoomControls() {
-    if (!zoomBox || !nw || !nh) return;
-    const sw = stage.clientWidth, sh = stage.clientHeight;
-    const edge = zoomEdgeInset();
-    const right  = Math.max(edge, sw - (tx + nw * scale) + 18);
-    const bottom = Math.max(edge, sh - (ty + nh * scale) + 18);
-    // Never so far in that the cluster drifts toward the middle of the sheet.
-    zoomBox.style.right  = Math.min(right,  sw * 0.42) + 'px';
-    zoomBox.style.bottom = Math.min(bottom, sh * 0.42) + 'px';
-  }
-  // Matches the CSS gutters, including the phone's home-indicator inset.
-  function zoomEdgeInset() {
-    if (window.innerWidth > 768) return 24;
-    const safe = parseFloat(getComputedStyle(document.documentElement)
-      .getPropertyValue('--safe-bottom')) || 0;
-    return Math.max(24, safe + 16);
-  }
+     An earlier revision had this function offset them from the SHEET's
+     on-screen corner so they'd sit on the paper when zoomed out. That was the
+     wrong model: the sheet's corner moves with every pan and zoom, so the
+     controls crept around the screen and slid off as you zoomed in. Controls
+     belong to the viewer, not to the artwork — they get one fixed home and
+     hold it at every zoom level. */
 
   /* Frame one option: zoom so the region fills most of the stage, then centre
      it. Same clamping as every other zoom path, so it can never land somewhere
