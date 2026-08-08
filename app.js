@@ -698,17 +698,131 @@ document.addEventListener('keydown', (e) => {
   const zoomOutBtn = document.getElementById('doc-zoom-out');
   if (!lb || !stage || !paper || !img) return;
 
+  const hotspotLayer = document.getElementById('doc-hotspots');
+  const zoomBox = document.querySelector('.doc-zoom');
+
   let nw = 0, nh = 0;               // document's natural pixel size
   let scale = 1, fitScale = 1, maxScale = 1;
   let tx = 0, ty = 0;
   const pointers = new Map();
   let pinch = null;
   let moved = false;
+  let downTarget = null;            // real pointerdown target, pre-capture
+  let hintTookThisTap = false;
+
+  /* The three placement options, as tap targets.
+
+     Coordinates are fractions of the image, not pixels, so they survive the
+     responsive swap and any future re-export at a different resolution. The
+     two scans are laid out completely differently — the vertical stacks its
+     panels, the wide one puts 1 and 2 down the left and 3 on the right — so
+     each gets its own list, chosen by aspect ratio when the image loads.
+
+     `x/y/w/h` is the region to frame; the marker is pinned at its centre. The
+     regions deliberately frame the cushion-plus-controller-and-cable assembly
+     rather than the whole panel: a panel spans almost the full width of the
+     sheet, so on a phone "fit the panel" is width-constrained and buys only
+     about 1.2x — barely a zoom at all. Framing the placement itself is both
+     the part worth looking at and tight enough to actually magnify. */
+  const HOTSPOTS = {
+    tall: [
+      { n: 1, x: 0.340, y: 0.235, w: 0.45, h: 0.150 },
+      { n: 2, x: 0.200, y: 0.475, w: 0.57, h: 0.155 },
+      { n: 3, x: 0.390, y: 0.765, w: 0.36, h: 0.170 },
+    ],
+    wide: [
+      { n: 1, x: 0.180, y: 0.250, w: 0.26, h: 0.190 },
+      { n: 2, x: 0.150, y: 0.550, w: 0.32, h: 0.250 },
+      { n: 3, x: 0.680, y: 0.460, w: 0.25, h: 0.270 },
+    ],
+  };
 
   function apply() {
     paper.style.transform = `translate(${tx}px, ${ty}px) scale(${scale})`;
     if (zoomInBtn) zoomInBtn.disabled = scale >= maxScale - 0.0005;
     if (zoomOutBtn) zoomOutBtn.disabled = scale <= fitScale + 0.0005;
+    // The markers ride inside the transformed paper so they stay glued to the
+    // artwork, which also means they'd balloon with it — counter-scale each one
+    // so it holds a constant size on screen at any zoom.
+    if (hotspotLayer) {
+      hotspotLayer.style.setProperty('--hs-counter', 1 / (scale || 1));
+      // Once you're actually zoomed in they've done their job and would just
+      // sit on top of the detail you came to look at.
+      hotspotLayer.classList.toggle('is-dimmed', scale > fitScale * 1.6);
+    }
+    positionZoomControls();
+  }
+
+  /* The zoom cluster is deliberately NOT inside .doc-paper — it must keep a
+     constant size and a steady place on screen, not ride along with the
+     artwork. But a plain fixed offset from the viewport corner left it floating
+     out in the grey margin beside the sheet: zoomed right out, the wide scan
+     only occupies the middle ~995px of a 1440px stage, so the buttons sat some
+     220px clear of the paper they belonged to.
+
+     So: offset from the SHEET's on-screen corner, clamped so it can never leave
+     the viewport. Zoomed out that puts the controls just inside the sheet's
+     bottom-right; zoomed in, where the sheet is larger than the screen, the
+     clamp takes over and they hold their usual corner. Screen-anchored either
+     way — only the reference point changes. */
+  function positionZoomControls() {
+    if (!zoomBox || !nw || !nh) return;
+    const sw = stage.clientWidth, sh = stage.clientHeight;
+    const edge = zoomEdgeInset();
+    const right  = Math.max(edge, sw - (tx + nw * scale) + 18);
+    const bottom = Math.max(edge, sh - (ty + nh * scale) + 18);
+    // Never so far in that the cluster drifts toward the middle of the sheet.
+    zoomBox.style.right  = Math.min(right,  sw * 0.42) + 'px';
+    zoomBox.style.bottom = Math.min(bottom, sh * 0.42) + 'px';
+  }
+  // Matches the CSS gutters, including the phone's home-indicator inset.
+  function zoomEdgeInset() {
+    if (window.innerWidth > 768) return 24;
+    const safe = parseFloat(getComputedStyle(document.documentElement)
+      .getPropertyValue('--safe-bottom')) || 0;
+    return Math.max(24, safe + 16);
+  }
+
+  /* Frame one option: zoom so the region fills most of the stage, then centre
+     it. Same clamping as every other zoom path, so it can never land somewhere
+     panning couldn't have reached. */
+  function focusRegion(r) {
+    const sw = stage.clientWidth, sh = stage.clientHeight;
+    if (!nw || !nh || !sw || !sh) return;
+    const fit = Math.min((sw * 0.9) / (r.w * nw), (sh * 0.9) / (r.h * nh));
+    scale = Math.min(maxScale, Math.max(fitScale, fit));
+    tx = sw / 2 - (r.x + r.w / 2) * nw * scale;
+    ty = sh / 2 - (r.y + r.h / 2) * nh * scale;
+    clampOffsets();
+    paper.classList.add('is-animating');
+    apply();
+    clearTimeout(focusTimer);
+    focusTimer = setTimeout(() => paper.classList.remove('is-animating'), 560);
+  }
+  let focusTimer = null;
+
+  function buildHotspots() {
+    if (!hotspotLayer || !nw || !nh) return;
+    const set = HOTSPOTS[nw >= nh ? 'wide' : 'tall'];
+    hotspotLayer.innerHTML = '';
+    set.forEach(r => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'doc-hotspot';
+      b.style.left = ((r.x + r.w / 2) * 100) + '%';
+      b.style.top  = ((r.y + r.h / 2) * 100) + '%';
+      b.setAttribute('aria-label', `Zoom to placement option ${r.n}`);
+      b.innerHTML = `<span class="doc-hotspot-dot">${r.n}</span>`;
+      // The markers sit inside .doc-stage, whose pointerdown starts a pan and
+      // whose click closes the viewer. Keep both out of it.
+      b.addEventListener('pointerdown', e => e.stopPropagation());
+      b.addEventListener('click', e => {
+        e.stopPropagation();
+        dismissHint();
+        focusRegion(r);
+      });
+      hotspotLayer.appendChild(b);
+    });
   }
 
   // Centre on whichever axis the document is smaller than the stage; otherwise
@@ -758,6 +872,7 @@ document.addEventListener('keydown', (e) => {
     paper.style.width = nw + 'px';
     paper.style.height = nh + 'px';
     computeBounds();
+    buildHotspots();   // which set applies depends on the loaded image's shape
     if (initial) {
       // Open fully zoomed out so the entire document is visible at a glance.
       scale = fitScale;
@@ -814,6 +929,11 @@ document.addEventListener('keydown', (e) => {
 
   stage.addEventListener('pointerdown', (e) => {
     pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    // Read the true target BEFORE setPointerCapture starts retargeting, and
+    // note whether the instructions were still up — the tap that clears them
+    // is a tap that means "got it", not "take me back to the page".
+    downTarget = e.target;
+    hintTookThisTap = !!hint && !hint.classList.contains('is-hidden');
     try { stage.setPointerCapture(e.pointerId); } catch (err) {}
     moved = false;
     dismissHint();
@@ -873,10 +993,19 @@ document.addEventListener('keydown', (e) => {
     dismissHint();
   });
 
-  // Clicking the empty margin around the sheet closes — but never when that
-  // "click" was the tail end of a drag that happened to finish off-sheet.
-  stage.addEventListener('click', (e) => {
-    if (!moved && e.target === stage) closeDoc();
+  /* Clicking the empty margin around the sheet closes — but never when that
+     "click" was the tail end of a drag that happened to finish off-sheet, and
+     never when it was the tap that dismissed the instructions.
+
+     This tests `downTarget`, captured on pointerdown, rather than the click
+     event's own target. setPointerCapture() — which is what keeps a drag alive
+     when the finger leaves the stage — RETARGETS every later event in the
+     gesture to the capturing element, so by the time the click arrives its
+     target is always the stage, whether you tapped the sheet or the margin.
+     Reading it there meant any tap at all closed the viewer. */
+  stage.addEventListener('click', () => {
+    if (hintTookThisTap) { hintTookThisTap = false; return; }
+    if (!moved && downTarget === stage) closeDoc();
   });
 
   zoomInBtn?.addEventListener('click', () => zoomByStep(1.4));

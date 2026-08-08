@@ -1140,6 +1140,55 @@ body.cart-open .nav-links { opacity: 0; pointer-events: none; }
   right: 24px;
 }
 
+/* ═════ PLACEMENT HOTSPOTS ═════ */
+/* One tap target per placement option, pinned to the artwork. They sit inside
+   .doc-paper so they pan and zoom with the document rather than floating over
+   it; app.js feeds --hs-counter the inverse of the current zoom so each marker
+   holds a constant size on screen however far in you are. */
+.doc-hotspots { position: absolute; inset: 0; --hs-counter: 1; }
+.doc-hotspot {
+  position: absolute;
+  transform: translate(-50%, -50%) scale(var(--hs-counter));
+  width: 54px; height: 54px; padding: 0;
+  background: none; border: 0; cursor: zoom-in;
+  display: flex; align-items: center; justify-content: center;
+  transition: opacity .35s ease;
+}
+.doc-hotspot-dot {
+  display: flex; align-items: center; justify-content: center;
+  width: 44px; height: 44px; border-radius: 50%;
+  font-family: 'CalSansUI', sans-serif; font-size: 19px; font-weight: 700;
+  color: var(--silver-ink);
+  background-color: #aeb9c9;
+  background-image: linear-gradient(110deg, #abb7c7, #bac6d6, #a5b0c2, #bac6d6, #abb7c7);
+  background-size: 200% 200%;
+  animation: roving-gradient 14s linear infinite;
+  border: 1px solid rgba(255,255,255,0.5);
+  box-shadow: 0 2px 10px rgba(0,0,0,0.25), inset 0 0 10px rgba(255,255,255,0.4);
+  transition: transform .2s;
+}
+/* Soft pulse so they read as "press me" rather than as part of the drawing. */
+.doc-hotspot::after {
+  content: ''; position: absolute; inset: 5px; border-radius: 50%;
+  border: 2px solid rgba(120,140,170,0.55);
+  animation: hotspot-pulse 2.4s ease-out infinite;
+  pointer-events: none;
+}
+@keyframes hotspot-pulse {
+  0%   { transform: scale(1);   opacity: .75; }
+  70%  { transform: scale(1.9); opacity: 0; }
+  100% { transform: scale(1.9); opacity: 0; }
+}
+.doc-hotspot:hover .doc-hotspot-dot { transform: scale(1.08); }
+.doc-hotspot:active .doc-hotspot-dot { transform: scale(0.94); }
+/* Zoomed in, they've served their purpose and would only cover the detail. */
+.doc-hotspots.is-dimmed .doc-hotspot { opacity: 0; pointer-events: none; }
+
+/* Only the programmatic "frame this option" jump animates. Dragging must stay
+   glued to the finger, so the transition is added for the duration of the
+   focus and taken straight off again (see focusRegion in app.js). */
+.doc-paper.is-animating { transition: transform .5s cubic-bezier(.22,.75,.24,1); }
+
 /* Photoshop-style hand affordance. Fades out once they've actually dragged —
    it's an instruction, not persistent furniture. */
 .doc-hint {
@@ -1173,23 +1222,34 @@ body.cart-open .nav-links { opacity: 0; pointer-events: none; }
 .doc-hint svg { width: clamp(48px, 10vw, 120px); height: clamp(48px, 10vw, 120px); flex-shrink: 0; opacity: 0.95; }
 .doc-hint.is-hidden { opacity: 0; pointer-events: none; visibility: hidden; }
 
-.doc-zoom { position: absolute; right: 24px; bottom: 30px; display: flex; gap: 8px; z-index: 3; }
+/* Right/bottom are set from app.js so the cluster tracks the sheet's own corner
+   rather than the viewport's — see positionZoomControls(). These values are the
+   starting point and the floor it clamps to. */
+.doc-zoom { position: absolute; right: 24px; bottom: 24px; display: flex; gap: 10px; z-index: 3; }
+/* Same brushed-silver circle as the nav hamburger, the viewers' close X and the
+   placement markers — one control language across the whole site. */
 .doc-zoom button {
-  width: 40px; height: 40px; border-radius: 50%;
-  background: rgba(20,20,20,0.85); border: 1px solid rgba(255,255,255,0.2);
-  color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center;
-  box-shadow: 0 4px 14px rgba(0,0,0,0.4); transition: background .2s, opacity .2s;
+  width: 40px; height: 40px; border-radius: 50%; padding: 0;
+  background-color: #aeb9c9;
+  background-image: linear-gradient(110deg, #abb7c7, #bac6d6, #a5b0c2, #bac6d6, #abb7c7);
+  background-size: 200% 200%;
+  animation: roving-gradient 14s linear infinite;
+  border: 1px solid rgba(255,255,255,0.4);
+  box-shadow: 0 0 15px rgba(255,255,255,0.15), inset 0 0 10px rgba(255,255,255,0.4);
+  color: var(--silver-ink); cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: transform .2s, box-shadow .2s, opacity .2s;
 }
-.doc-zoom button:hover { background: rgba(40,40,40,0.95); }
-.doc-zoom button:disabled { opacity: .35; cursor: default; }
+.doc-zoom button:hover { box-shadow: 0 0 18px rgba(255,255,255,0.3), inset 0 0 10px rgba(255,255,255,0.5); }
+.doc-zoom button:active { transform: scale(0.94); }
+.doc-zoom button:disabled { opacity: .3; cursor: default; box-shadow: none; }
 .doc-zoom svg { width: 18px; height: 18px; }
 
 @media (max-width: 768px) {
   .doc-hint { gap: 40px; padding: 40px 20px; }
   .doc-hint-text { gap: 20px; }
   .doc-hint svg { width: clamp(80px, 20vw, 140px); height: clamp(80px, 20vw, 140px); }
-  .media-close--viewport { right: 16px; }
-  .doc-zoom { right: 16px; bottom: max(24px, calc(env(safe-area-inset-bottom, 0px) + 16px)); }}
+  .media-close--viewport { right: 16px; }}
 
 /*  FLASHING PLAY INDICATOR  */
 @keyframes indicatorFlash { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }

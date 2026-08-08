@@ -547,6 +547,12 @@
   <div class="doc-stage" id="doc-stage">
     <div class="doc-paper" id="doc-paper">
       <img id="doc-lightbox-img" alt="Controller box placement options, enlarged" draggable="false">
+      <!-- Tap targets over each of the three placement options. Built in app.js
+           from normalised coordinates, so the same list works for the vertical
+           and the wide scan even though the two lay their panels out
+           differently. Lives INSIDE .doc-paper so the markers travel with the
+           document as it pans and zooms. -->
+      <div class="doc-hotspots" id="doc-hotspots"></div>
     </div>
   </div>
 
