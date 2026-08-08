@@ -1121,24 +1121,55 @@ body.cart-open .nav-links { opacity: 0; pointer-events: none; }
    bar lives at the very top of the screen, that corner is inherently clear of
    BUY NOW — there is no offset to keep re-tuning, and nothing to drift.
 
-   Styling matches the nav's hamburger: the same brushed-silver circle, ring and
-   glow, so it reads as part of the same control set. */
+   It used to be the nav hamburger's solid brushed-silver disc, which read as a
+   heavy grey coin sitting on top of the footage and pulled the eye off the
+   product. It's glass now: mostly transparent, blurring and slightly warming
+   whatever is behind it, with a whisper of red/cyan fringing on the rim so it
+   reads as a lens rather than a plate. Present, not loud.
+
+   The disc survives at all — rather than a bare X — because these viewers run
+   over both near-black video and the white placement scan, and an unbacked
+   glyph would disappear into one or the other. Legibility across that range is
+   handled twice over: the rim carries a light AND a dark hairline so one of
+   them always has contrast, and the glyph itself is white with a dark
+   drop-shadow, so it reads as white-on-dark or as a shadowed mark on white. */
 .media-close {
   position: absolute; top: 12px; right: 12px; z-index: 5;
   width: 36px; height: 36px; border-radius: 50%;
-  background-color: #aeb9c9;
-  background-image: linear-gradient(110deg, #abb7c7, #bac6d6, #a5b0c2, #bac6d6, #abb7c7);
-  background-size: 200% 200%;
-  animation: roving-gradient 14s linear infinite;
-  border: 1px solid rgba(255,255,255,0.4);
-  box-shadow: 0 0 15px rgba(255,255,255,0.15), inset 0 0 10px rgba(255,255,255,0.4);
-  color: var(--silver-ink);
+  background: rgba(255,255,255,0.11);
+  backdrop-filter: blur(9px) saturate(150%);
+  -webkit-backdrop-filter: blur(9px) saturate(150%);
+  border: 0;
+  /* Rim: light hairline for dark backgrounds, dark hairline for light ones,
+     then the chromatic fringe — red pulled one way, cyan the other, the same
+     dispersion the lightbox backdrops already use, scaled down to a rim. */
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,0.34),
+    0 0 0 1px rgba(0,0,0,0.06),
+    -1.5px 0 7px rgba(255,0,90,0.20),
+     1.5px 0 7px rgba(0,190,255,0.20),
+     0 3px 12px rgba(0,0,0,0.12);
+  color: #fff;
   padding: 6px; margin: 0; cursor: pointer;
   display: flex; align-items: center; justify-content: center;
-  transition: transform .2s, box-shadow .2s;
+  transition: background .25s, box-shadow .25s, transform .2s;
 }
-.media-close svg { width: 18px; height: 18px; }
-.media-close:hover { box-shadow: 0 0 18px rgba(255,255,255,0.3), inset 0 0 10px rgba(255,255,255,0.5); }
+.media-close svg {
+  width: 17px; height: 17px;
+  /* Carries the glyph on white paper, where a plain white X would vanish.
+     Two shadows: a tight one that acts as an outline so the stroke has an
+     edge against light backgrounds, and a softer one underneath for lift. */
+  filter: drop-shadow(0 0 1px rgba(0,0,0,0.5)) drop-shadow(0 1px 2px rgba(0,0,0,0.45));
+}
+.media-close:hover {
+  background: rgba(255,255,255,0.2);
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,0.5),
+    0 0 0 1px rgba(0,0,0,0.08),
+    -2px 0 9px rgba(255,0,90,0.28),
+     2px 0 9px rgba(0,190,255,0.28),
+     0 3px 14px rgba(0,0,0,0.16);
+}
 .media-close:active { transform: scale(0.94); }
 
 /* Tucked inside the FRAME's top-right corner, at the same inset every other
@@ -1166,18 +1197,26 @@ body.cart-open .nav-links { opacity: 0; pointer-events: none; }
   display: flex; align-items: center; justify-content: center;
   transition: opacity .35s ease;
 }
+/* Same glass as the close button. These carry a bit more presence than the
+   chrome does — they're the invitation to explore, not just a way out, and
+   they sit on white paper where glass has less to work with — but they're
+   still lens rather than coin. */
 .doc-hotspot-dot {
   display: flex; align-items: center; justify-content: center;
   width: 44px; height: 44px; border-radius: 50%;
   font-family: 'CalSansUI', sans-serif; font-size: 19px; font-weight: 700;
-  color: var(--silver-ink);
-  background-color: #aeb9c9;
-  background-image: linear-gradient(110deg, #abb7c7, #bac6d6, #a5b0c2, #bac6d6, #abb7c7);
-  background-size: 200% 200%;
-  animation: roving-gradient 14s linear infinite;
-  border: 1px solid rgba(255,255,255,0.5);
-  box-shadow: 0 2px 10px rgba(0,0,0,0.25), inset 0 0 10px rgba(255,255,255,0.4);
-  transition: transform .2s;
+  color: #fff;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.55);
+  background: rgba(150,168,196,0.30);
+  backdrop-filter: blur(7px) saturate(150%);
+  -webkit-backdrop-filter: blur(7px) saturate(150%);
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,0.42),
+    0 0 0 1px rgba(0,0,0,0.05),
+    -1.5px 0 7px rgba(255,0,90,0.20),
+     1.5px 0 7px rgba(0,190,255,0.20),
+     0 3px 12px rgba(0,0,0,0.14);
+  transition: transform .2s, background .25s;
 }
 /* Soft pulse so they read as "press me" rather than as part of the drawing. */
 .doc-hotspot::after {
@@ -1195,6 +1234,15 @@ body.cart-open .nav-links { opacity: 0; pointer-events: none; }
 .doc-hotspot:active .doc-hotspot-dot { transform: scale(0.94); }
 /* Zoomed in, they've served their purpose and would only cover the detail. */
 .doc-hotspots.is-dimmed .doc-hotspot { opacity: 0; pointer-events: none; }
+/* Same precaution as the paper's fibre layer: these now carry a backdrop-filter
+   AND sit inside the element being re-transformed on every pointermove, which
+   is precisely the mix that made mobile compositors drop frames before. Sample
+   the backdrop while the document is still; go flat for the duration of a drag,
+   where nobody is looking at the glass anyway. */
+.doc-stage.is-grabbing .doc-hotspot-dot {
+  backdrop-filter: none; -webkit-backdrop-filter: none;
+  background: rgba(150,168,196,0.55);
+}
 
 /* Only the programmatic "frame this option" jump animates. Dragging must stay
    glued to the finger, so the transition is added for the duration of the
@@ -1246,24 +1294,40 @@ body.cart-open .nav-links { opacity: 0; pointer-events: none; }
   right: 20px; bottom: 20px;
   display: flex; gap: 10px;
 }
-/* Same brushed-silver circle as the nav hamburger, the viewers' close X and the
-   placement markers — one control language across the whole site. */
+/* Same glass as the close X and the placement markers — one control language
+   across the whole site. */
 .doc-zoom button {
   width: 40px; height: 40px; border-radius: 50%; padding: 0;
-  background-color: #aeb9c9;
-  background-image: linear-gradient(110deg, #abb7c7, #bac6d6, #a5b0c2, #bac6d6, #abb7c7);
-  background-size: 200% 200%;
-  animation: roving-gradient 14s linear infinite;
-  border: 1px solid rgba(255,255,255,0.4);
-  box-shadow: 0 0 15px rgba(255,255,255,0.15), inset 0 0 10px rgba(255,255,255,0.4);
-  color: var(--silver-ink); cursor: pointer;
+  background: rgba(255,255,255,0.11);
+  backdrop-filter: blur(9px) saturate(150%);
+  -webkit-backdrop-filter: blur(9px) saturate(150%);
+  border: 0;
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,0.34),
+    0 0 0 1px rgba(0,0,0,0.06),
+    -1.5px 0 7px rgba(255,0,90,0.20),
+     1.5px 0 7px rgba(0,190,255,0.20),
+     0 3px 12px rgba(0,0,0,0.12);
+  color: #fff; cursor: pointer;
   display: flex; align-items: center; justify-content: center;
-  transition: transform .2s, box-shadow .2s, opacity .2s;
+  transition: background .25s, box-shadow .25s, transform .2s, opacity .2s;
 }
-.doc-zoom button:hover { box-shadow: 0 0 18px rgba(255,255,255,0.3), inset 0 0 10px rgba(255,255,255,0.5); }
+.doc-zoom button:hover {
+  background: rgba(255,255,255,0.2);
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,0.5),
+    0 0 0 1px rgba(0,0,0,0.08),
+    -2px 0 9px rgba(255,0,90,0.28),
+     2px 0 9px rgba(0,190,255,0.28),
+     0 3px 14px rgba(0,0,0,0.16);
+}
 .doc-zoom button:active { transform: scale(0.94); }
-.doc-zoom button:disabled { opacity: .3; cursor: default; box-shadow: none; }
-.doc-zoom svg { width: 18px; height: 18px; }
+.doc-zoom button:disabled { opacity: .4; cursor: default; }
+/* Same shadow trick as the close glyph — these sit on white paper. */
+.doc-zoom svg {
+  width: 18px; height: 18px;
+  filter: drop-shadow(0 0 1px rgba(0,0,0,0.5)) drop-shadow(0 1px 2px rgba(0,0,0,0.45));
+}
 
 @media (max-width: 768px) {
   .doc-hint { gap: 40px; padding: 40px 20px; }
