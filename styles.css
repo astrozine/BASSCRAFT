@@ -1611,3 +1611,437 @@ body.cart-open .nav-links { opacity: 0; pointer-events: none; }
   /* Smaller card with rounded corners, same as desktop — full-bleed edge-to-edge
      was tried and didn't read better, so this keeps the framed-card look. */
   .diagram-card { max-width: 92vw; padding: 12px; }}
+
+/* ==========================================================================
+   FOOTER — Roadmap Priority 5 ("involved footer")
+   Replaces the old three-link strip. Light colourway to match the page below
+   #experience; the .footer background token is already overridden to #f7f4ef
+   further up, so this block only adds the new internal structure.
+   ========================================================================== */
+
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+.footer { padding: clamp(56px, 7vw, 88px) 0 32px; }
+
+/* ── Top region: 4 link columns + newsletter ── */
+.footer-top {
+  display: grid;
+  grid-template-columns: minmax(0, 2.2fr) minmax(280px, 1fr);
+  gap: clamp(32px, 5vw, 72px);
+  align-items: start;
+}
+.footer-nav {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(20px, 3vw, 40px);
+}
+.footer-col { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.footer-col h4 {
+  font-family: 'CalSansUI', sans-serif;
+  font-size: .78rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase;
+  color: #1d1d1f; margin-bottom: 4px;
+}
+.footer-col a {
+  font-size: .86rem; line-height: 1.35; color: var(--grey-dark);
+  text-decoration: none; transition: color .25s ease;
+}
+.footer-col a:hover { color: #1d1d1f; }
+
+/* ── Newsletter ── */
+.footer-subscribe h4 {
+  font-family: 'CalSansUI', sans-serif;
+  font-size: 1.02rem; font-weight: 600; color: #1d1d1f; margin-bottom: 6px;
+}
+.footer-subscribe > p { font-size: .86rem; color: var(--grey-dark); margin-bottom: 14px; line-height: 1.45; }
+.footer-sub-form { display: flex; align-items: stretch; gap: 0; max-width: 380px; }
+.footer-sub-form input[type="email"] {
+  flex: 1 1 auto; min-width: 0;
+  padding: 11px 14px;
+  font-family: inherit; font-size: .88rem; color: #1d1d1f;
+  background: rgba(255,255,255,.75);
+  border: 1px solid rgba(0,0,0,.14);
+  border-right: none;
+  border-radius: 10px 0 0 10px;
+  outline: none; transition: border-color .25s ease, background .25s ease;
+}
+.footer-sub-form input[type="email"]::placeholder { color: #9a9aa0; }
+.footer-sub-form input[type="email"]:focus { border-color: rgba(0,0,0,.35); background: #fff; }
+.footer-sub-form button {
+  flex: 0 0 auto; width: 46px; display: grid; place-items: center;
+  background: #1d1d1f; color: #fff; border: 1px solid #1d1d1f;
+  border-radius: 0 10px 10px 0; cursor: pointer;
+  transition: background .25s ease, transform .25s ease;
+}
+.footer-sub-form button:hover { background: #000; }
+.footer-sub-form button:active { transform: scale(.97); }
+.footer-sub-form button svg { width: 17px; height: 17px; }
+
+.footer-sub-consent {
+  display: flex; align-items: flex-start; gap: 8px;
+  margin-top: 11px; font-size: .72rem; line-height: 1.4; color: var(--grey-dark);
+}
+.footer-sub-consent input { margin-top: 2px; accent-color: #1d1d1f; flex: 0 0 auto; }
+.footer-sub-consent a { color: var(--grey-dark); text-decoration: underline; }
+.footer-sub-consent a:hover { color: #1d1d1f; }
+
+.footer-contact { margin-top: 18px; display: flex; flex-direction: column; gap: 8px; }
+.footer-contact a {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: .84rem; color: var(--grey-dark); text-decoration: none; transition: color .25s ease;
+}
+.footer-contact a:hover { color: #1d1d1f; }
+.footer-contact svg { width: 16px; height: 16px; flex: 0 0 auto; }
+
+/* ── Wordmark band ── */
+.footer-brand {
+  display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; flex-wrap: wrap;
+  margin-top: clamp(40px, 5vw, 64px);
+  padding-bottom: 26px;
+  border-bottom: 1px solid rgba(0,0,0,.08);
+}
+/* Masked so the single white logo asset can be tinted dark for the light page,
+   same trick the nav uses for .logo-white. */
+.footer-wordmark {
+  display: block;
+  width: clamp(180px, 26vw, 300px); height: clamp(26px, 3.4vw, 40px);
+  -webkit-mask: url('assets/images/logo-white.png') no-repeat left center / contain;
+  mask: url('assets/images/logo-white.png') no-repeat left center / contain;
+  background-color: #1d1d1f;
+}
+.footer-social { display: flex; align-items: center; gap: 14px; }
+.footer-social a {
+  width: 34px; height: 34px; display: grid; place-items: center;
+  color: var(--grey-dark); border: 1px solid rgba(0,0,0,.12); border-radius: 50%;
+  transition: color .25s ease, border-color .25s ease, background .25s ease;
+}
+.footer-social a:hover { color: #fff; background: #1d1d1f; border-color: #1d1d1f; }
+.footer-social svg { width: 16px; height: 16px; }
+
+/* ── Bottom: payments + legal ── */
+.footer-bottom {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 20px; flex-wrap: wrap; padding-top: 22px;
+}
+.footer-pay { display: flex; align-items: center; gap: 7px; flex-wrap: wrap; }
+/* Text chips rather than brand marks: real card-network logos are trademarked
+   art we don't have licensed copies of yet. Same silhouette, swap when the
+   payment provider hands over their badge kit. */
+.pay-chip {
+  font-family: 'CalSansUI', sans-serif;
+  font-size: .6rem; font-weight: 600; letter-spacing: .04em; color: var(--grey-dark);
+  background: rgba(255,255,255,.8); border: 1px solid rgba(0,0,0,.1);
+  border-radius: 5px; padding: 5px 8px; line-height: 1; white-space: nowrap;
+}
+.footer-legal { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+.footer-legal p { text-align: left; font-size: .76rem; color: var(--grey-dark); }
+.footer .footer-links { justify-content: flex-start; gap: 1.1rem; margin-top: 0; flex-wrap: wrap; }
+.footer .footer-links a { font-size: .76rem; }
+
+/* ── Chat FAB (placeholder for the real support widget) ── */
+.chat-fab {
+  position: fixed; right: 18px; bottom: 18px; z-index: 900;
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 10px 16px 10px 13px;
+  font-family: 'CalSansUI', sans-serif; font-size: .82rem; font-weight: 500; color: #fff;
+  background: #1d1d1f; border: none; border-radius: 999px; cursor: pointer;
+  box-shadow: 0 6px 24px rgba(0,0,0,.22);
+  transition: transform .25s ease, background .25s ease;
+}
+.chat-fab:hover { background: #000; transform: translateY(-2px); }
+.chat-fab svg { width: 18px; height: 18px; }
+
+/* ── Responsive ── */
+@media (max-width: 1024px) {
+  .footer-top { grid-template-columns: 1fr; }
+  .footer-subscribe { max-width: 520px; }
+}
+@media (max-width: 680px) {
+  .footer-nav { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 26px 20px; }
+  .footer-brand { align-items: flex-start; flex-direction: column; gap: 20px; }
+  .footer-bottom { flex-direction: column; align-items: flex-start; }
+  .chat-fab span { display: none; }
+  .chat-fab { padding: 13px; }
+}
+
+
+/* ==========================================================================
+   PROBLEM SECTION — the "why would I want this" beat, above #installation
+   ========================================================================== */
+
+.problem-head { max-width: 780px; margin: 0 auto clamp(36px, 5vw, 60px); }
+.problem-sub {
+  margin-top: 18px; font-size: clamp(1rem, 1.6vw, 1.15rem);
+  line-height: 1.55; color: var(--grey-dark);
+}
+
+.problem-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr));
+  gap: clamp(18px, 2.4vw, 28px);
+}
+.problem-card {
+  background: #ffffff;
+  border: 1px solid rgba(0,0,0,.07);
+  border-radius: var(--r);
+  padding: 0 0 26px;
+  overflow: hidden;
+  display: flex; flex-direction: column;
+  transition: transform .35s ease, box-shadow .35s ease;
+}
+.problem-card:hover { transform: translateY(-4px); box-shadow: 0 14px 40px rgba(0,0,0,.09); }
+.problem-card h3 {
+  font-family: 'CalSansUI', sans-serif;
+  font-size: 1.06rem; font-weight: 600; color: var(--dark);
+  margin: 20px 22px 9px;
+}
+.problem-card p {
+  font-size: .89rem; line-height: 1.55; color: var(--grey-dark); margin: 0 22px;
+}
+
+/* Placeholder tile. Deliberately reads as unfinished — a soft grey field with
+   the intended shot labelled on it — so nobody mistakes it for final art. The
+   label comes from the data-placeholder attribute on the div. */
+.problem-media {
+  aspect-ratio: 4 / 3; width: 100%;
+  background:
+    repeating-linear-gradient(45deg, rgba(0,0,0,.022) 0 12px, transparent 12px 24px),
+    linear-gradient(160deg, #ececef, #e2e2e7);
+  display: grid; place-items: center;
+  position: relative;
+}
+.problem-media::after {
+  content: attr(data-placeholder);
+  font-family: 'CalSansUI', sans-serif;
+  font-size: .68rem; letter-spacing: .06em; text-transform: uppercase;
+  color: #9a9aa0; text-align: center; padding: 0 16px; line-height: 1.5;
+}
+
+.problem-turn {
+  margin: clamp(38px, 5vw, 58px) auto 0; max-width: 720px;
+  font-family: 'CalSansUI', sans-serif;
+  font-size: clamp(1.1rem, 2.1vw, 1.5rem); font-weight: 500;
+  line-height: 1.45; color: var(--dark);
+}
+
+/* ==========================================================================
+   TRUST ROW — Priority 2 (unblocked half)
+   ========================================================================== */
+
+.trust-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(250px, 100%), 1fr));
+  gap: clamp(16px, 2.2vw, 26px);
+}
+.trust-card {
+  background: #ffffff;
+  border: 1px solid rgba(0,0,0,.07);
+  border-radius: var(--r-sm);
+  padding: 30px 26px;
+  text-align: center;
+}
+.trust-icon {
+  width: 46px; height: 46px; margin: 0 auto 16px;
+  display: grid; place-items: center;
+  color: var(--dark);
+  background: #f2f2f7; border-radius: 50%;
+}
+.trust-icon svg { width: 23px; height: 23px; }
+.trust-card h3 {
+  font-family: 'CalSansUI', sans-serif;
+  font-size: 1rem; font-weight: 600; color: var(--dark); margin-bottom: 8px;
+}
+.trust-card p { font-size: .87rem; line-height: 1.55; color: var(--grey-dark); }
+
+
+/* ==========================================================================
+   COUNTDOWN / URGENCY MODAL — Priority 1
+   Sits outside #site-wrapper in the markup for the same reason the cart modal
+   does (that wrapper's overflow:hidden clips position:fixed descendants).
+   ========================================================================== */
+
+.cd-overlay {
+  position: fixed; inset: 0; z-index: 1200;
+  display: grid; place-items: center;
+  padding: 20px;
+  background: rgba(0,0,0,.55);
+  -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+  opacity: 0; transition: opacity .3s ease;
+}
+.cd-overlay.is-open { opacity: 1; }
+.cd-overlay[hidden] { display: none; }
+
+.cd-modal {
+  position: relative;
+  width: min(440px, 100%);
+  max-height: calc(100vh - 40px); overflow-y: auto;
+  background: #0d0d0f;
+  border: 1px solid rgba(255,255,255,.09);
+  border-radius: var(--r);
+  padding: 40px 32px 30px;
+  text-align: center;
+  box-shadow: 0 30px 80px rgba(0,0,0,.5);
+  transform: translateY(14px) scale(.97);
+  transition: transform .35s cubic-bezier(.2,.8,.25,1);
+}
+.cd-overlay.is-open .cd-modal { transform: none; }
+
+.cd-close {
+  position: absolute; top: 12px; right: 12px;
+  width: 32px; height: 32px; display: grid; place-items: center;
+  background: rgba(255,255,255,.07); border: none; border-radius: 50%;
+  color: var(--grey-light); cursor: pointer;
+  transition: background .25s ease, color .25s ease;
+}
+.cd-close:hover { background: rgba(255,255,255,.16); color: #fff; }
+.cd-close svg { width: 15px; height: 15px; }
+
+.cd-eyebrow {
+  font-family: 'CalSansUI', sans-serif;
+  font-size: .7rem; font-weight: 600; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--silver); margin-bottom: 16px;
+}
+
+/* ── Timer ── */
+.cd-timer {
+  display: flex; align-items: flex-start; justify-content: center; gap: 4px;
+  margin-bottom: 24px;
+}
+.cd-unit {
+  display: flex; flex-direction: column; align-items: center; gap: 5px;
+  min-width: 58px;
+  background: rgba(255,255,255,.05);
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 12px; padding: 11px 6px 8px;
+}
+.cd-num {
+  font-family: 'CalSansUI', sans-serif;
+  font-size: 1.7rem; font-weight: 700; line-height: 1; color: #fff;
+  font-variant-numeric: tabular-nums;
+}
+.cd-lbl {
+  font-size: .58rem; letter-spacing: .1em; text-transform: uppercase; color: var(--grey);
+}
+.cd-sep {
+  font-size: 1.5rem; font-weight: 700; color: rgba(255,255,255,.22);
+  line-height: 1; padding-top: 13px;
+}
+
+.cd-title {
+  font-family: 'CalSansUI', sans-serif;
+  font-size: clamp(1.25rem, 3.4vw, 1.55rem); font-weight: 700; line-height: 1.25;
+  color: #fff; margin-bottom: 10px;
+}
+.cd-offer {
+  font-size: .87rem; line-height: 1.55; color: var(--grey-light);
+  margin-bottom: 22px;
+}
+/* The "(Offer TBC)" note — visually flagged so nobody reads the placeholder as
+   a live promise during review. Delete the <em> once real terms are in. */
+.cd-offer em { display: block; margin-top: 6px; font-size: .78rem; color: #d08a8a; font-style: normal; }
+
+.cd-form { display: flex; flex-direction: column; gap: 10px; }
+.cd-form input[type="email"] {
+  width: 100%; padding: 12px 15px;
+  font-family: inherit; font-size: .9rem; color: #fff;
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.14); border-radius: 10px;
+  outline: none; transition: border-color .25s ease, background .25s ease;
+}
+.cd-form input[type="email"]::placeholder { color: #7a7a80; }
+.cd-form input[type="email"]:focus { border-color: rgba(255,255,255,.4); background: rgba(255,255,255,.1); }
+.cd-form .buy-btn { width: 100%; }
+
+.cd-consent {
+  display: flex; align-items: flex-start; gap: 8px; text-align: left;
+  margin-top: 13px; font-size: .7rem; line-height: 1.45; color: var(--grey);
+}
+.cd-consent input { margin-top: 2px; accent-color: var(--silver); flex: 0 0 auto; }
+.cd-consent a { color: var(--grey-light); text-decoration: underline; }
+
+.cd-dismiss {
+  margin-top: 14px; background: none; border: none; cursor: pointer;
+  font-family: inherit; font-size: .76rem; color: var(--grey-dark);
+  text-decoration: underline; transition: color .25s ease;
+}
+.cd-dismiss:hover { color: var(--grey-light); }
+
+@media (max-width: 420px) {
+  .cd-modal { padding: 36px 20px 26px; }
+  .cd-unit { min-width: 48px; }
+  .cd-num { font-size: 1.4rem; }
+}
+
+
+/* ==========================================================================
+   SOCIAL PROOF — press bar + UGC grid (BLOCKED ON ASSETS, layout only)
+   ========================================================================== */
+
+/* Review-time banner. Its whole job is to stop a placeholder block from being
+   mistaken for finished work in a screenshare. Delete it — and the neutral
+   slots below — when the real assets land. */
+.asset-flag {
+  display: block; width: fit-content; margin: 0 auto clamp(28px,4vw,44px);
+  font-family: 'CalSansUI', sans-serif;
+  font-size: .68rem; font-weight: 600; letter-spacing: .07em; text-transform: uppercase;
+  color: #9a6a2f; background: #fdf3e2; border: 1px dashed #e0b878;
+  border-radius: 999px; padding: 7px 16px; text-align: center;
+}
+
+.press-eyebrow {
+  font-family: 'CalSansUI', sans-serif;
+  font-size: .72rem; font-weight: 600; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--grey); margin-bottom: 18px;
+}
+.press-bar {
+  display: flex; align-items: center; justify-content: center;
+  gap: clamp(12px, 2.4vw, 30px); flex-wrap: wrap;
+}
+.press-slot {
+  min-width: 106px; height: 38px;
+  display: grid; place-items: center;
+  font-family: 'CalSansUI', sans-serif;
+  font-size: .6rem; letter-spacing: .08em; text-transform: uppercase; color: #b3b3b8;
+  background: rgba(0,0,0,.03);
+  border: 1px dashed rgba(0,0,0,.14); border-radius: 8px;
+  padding: 0 14px;
+}
+
+.ugc-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(210px, 100%), 1fr));
+  gap: clamp(14px, 2vw, 22px);
+  margin-top: clamp(28px, 4vw, 44px);
+}
+.ugc-card {
+  background: #fff; border: 1px solid rgba(0,0,0,.07);
+  border-radius: var(--r-sm); overflow: hidden;
+}
+/* 9:16 — the vertical TikTok/Reels shape the roadmap calls for. */
+.ugc-media {
+  aspect-ratio: 9 / 16; width: 100%;
+  background:
+    repeating-linear-gradient(45deg, rgba(0,0,0,.022) 0 12px, transparent 12px 24px),
+    linear-gradient(160deg, #ececef, #e2e2e7);
+  display: grid; place-items: center;
+}
+.ugc-media::after {
+  content: attr(data-placeholder);
+  font-family: 'CalSansUI', sans-serif;
+  font-size: .64rem; letter-spacing: .05em; text-transform: uppercase;
+  color: #9a9aa0; text-align: center; padding: 0 14px; line-height: 1.6;
+}
+.ugc-card figcaption {
+  font-size: .78rem; line-height: 1.5; color: var(--grey-dark);
+  padding: 14px 16px 18px;
+}
+
+/* The legacy `.footer p { text-align: center }` rule (kept for the old centred
+   copyright line) was leaking into the newsletter column and the consent text.
+   Realign everything in the top region to the left, where the column sits. */
+.footer-top p, .footer-subscribe p { text-align: left; }
+/* Clear the fixed chat FAB so it can't sit on top of the legal links. */
+.footer { padding-bottom: 92px; }
+@media (max-width: 680px) { .footer { padding-bottom: 100px; } }
