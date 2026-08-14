@@ -2114,3 +2114,164 @@ body.cart-open .nav-links { opacity: 0; pointer-events: none; }
 /* Clear the fixed chat FAB so it can't sit on top of the legal links. */
 .footer { padding-bottom: 92px; }
 @media (max-width: 680px) { .footer { padding-bottom: 100px; } }
+
+
+/* ==========================================================================
+   ORDER SECTION — dark colourway
+   The page opens on white type over black footage; this makes it close the
+   same way. Scoped entirely under #order so the same .pricing-* components
+   keep their light styling anywhere else they're used.
+
+   NOTE: the product shots (hero-cart-single/dual-product.webp) are still cut
+   out on white, so each image sits on its own white plate to stay legible
+   against the black. Swap .pricing-card-image's background to transparent
+   once black-background versions of those renders land.
+   ========================================================================== */
+
+#order { background: var(--bg) !important; color: var(--white); }
+#order h2 { color: var(--white); }
+
+#order .pricing-card {
+  background: #121214;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  box-shadow: 0 14px 44px rgba(0, 0, 0, 0.5);
+}
+#order .pricing-card.featured {
+  border-color: rgba(174, 185, 201, 0.55);
+  box-shadow: 0 22px 60px rgba(0, 0, 0, 0.6), 0 0 30px rgba(174, 185, 201, 0.18);
+}
+#order .pricing-card h3 { color: var(--white); }
+#order .pricing-desc { color: var(--grey-light); }
+#order .pricing-price { color: var(--white); }
+#order .pricing-was { color: var(--grey); }
+
+/* Secondary button: the light theme kept its label dark because silver-on-white
+   was unreadable. On black the opposite is true — outline stays silver, label
+   goes white. */
+#order .pricing-card .buy-btn {
+  border: 1px solid rgba(174, 185, 201, 0.75);
+  background: transparent;
+  color: var(--white);
+}
+#order .pricing-card .buy-btn:hover { background: rgba(174, 185, 201, 0.16); }
+/* Featured keeps the brushed-silver fill — it already reads as the bright
+   element, and it's the same treatment as the nav's BUY NOW. */
+
+/* Temporary plate behind the cut-out-on-white product renders. Delete this rule
+   when black-background versions replace them. */
+#order .pricing-card-image {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 10px;
+}
+
+
+/* ==========================================================================
+   MOBILE SWIPE CAROUSELS
+   Rows of side-by-side cards become a snapping, swipeable strip with dots on
+   phones (opt in via data-carousel; .is-carousel is added by carousel.js only
+   when the mobile media query matches, so desktop keeps the plain grid).
+
+   The !important flags are load-bearing: these grids declare display/
+   grid-template-columns as INLINE styles in the markup, which otherwise beat
+   any stylesheet rule.
+   ========================================================================== */
+
+@media (max-width: 768px) {
+  .is-carousel {
+    display: flex !important;
+    grid-template-columns: none !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    /* Room for the card shadows, and a peek of the next card so the swipe
+       affordance is visible without any prompt. */
+    padding: 4px 0 8px;
+    margin-inline: 0;
+  }
+  .is-carousel::-webkit-scrollbar { display: none; }
+
+  .is-carousel > * {
+    flex: 0 0 86%;
+    min-width: 0;
+    scroll-snap-align: center;
+    scroll-snap-stop: always;
+  }
+
+  .carousel-dots {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin-top: 16px;
+  }
+  .carousel-dot {
+    width: 7px; height: 7px; padding: 0;
+    border: none; border-radius: 50%;
+    background: rgba(0, 0, 0, 0.22);
+    cursor: pointer;
+    transition: background .25s ease, transform .25s ease, width .25s ease;
+  }
+  .carousel-dot.is-active {
+    background: rgba(0, 0, 0, 0.75);
+    transform: scale(1.15);
+  }
+  /* Dark sections need the inverse, or the dots vanish into the background. */
+  .s-dark .carousel-dot { background: rgba(255, 255, 255, 0.28); }
+  .s-dark .carousel-dot.is-active { background: rgba(255, 255, 255, 0.92); }
+
+  /* Give the dots a bigger touch target than their painted size. */
+  .carousel-dot::after {
+    content: ''; position: absolute;
+    inset: -10px;
+  }
+  .carousel-dot { position: relative; }
+}
+
+/* Desktop: dots are only meaningful while the strip scrolls. carousel.js
+   removes them above the breakpoint, but this guards the gap between DOM
+   ready and that first run. */
+@media (min-width: 769px) { .carousel-dots { display: none; } }
+
+
+/* ==========================================================================
+   CONTROLLER-PLACEMENT PANEL inside Tech Specs
+   The diagram was moved out of the Installation section into its own accordion
+   panel. It brings its own sizing model with it: .diagram-frame-inner sets its
+   own aspect-ratio from JS to match the video, then the still, so object-fit:
+   cover never actually crops either one.
+
+   That fights the generic .spec-visual-item sizing (a fixed 4/3 box, plus an
+   inline aspect-ratio the panel sizer writes from the video). So this panel
+   opts out of imposing a ratio and just wraps the diagram, and the card inside
+   is stretched to fill it — without this the card collapsed to its own 40px of
+   padding and the diagram rendered as an empty grey box.
+   ========================================================================== */
+
+.spec-visual-item.diagram-spec-panel {
+  aspect-ratio: auto !important;
+  height: auto;
+  max-width: 500px;
+  background: transparent;
+  border: none;
+  padding: 0;
+  overflow: visible;
+}
+.diagram-spec-panel .diagram-card {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  cursor: zoom-in;
+}
+/* Mobile: the panel is injected into the .tech-item, which caps visuals at
+   160px for the little video thumbnails. A document needs the full column. */
+@media (max-width: 768px) {
+  .tech-item .spec-visual-item.diagram-spec-panel {
+    max-width: 100%;
+    width: 100%;
+  }
+  .tech-item .spec-visual-item.diagram-spec-panel::after { display: none; }
+}

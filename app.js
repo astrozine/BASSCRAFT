@@ -125,7 +125,11 @@ function setResponsiveVideoSources() {
     // Videos in a narrow column (Tech Specs accordion panels, or any 2-column layout
     // explicitly marked data-prefer-tall) render small as horizontal clips even on
     // desktop — they always prefer vertical/square over horizontal, any breakpoint.
-    const preferTall = v.closest('.spec-visual-item') !== null || v.hasAttribute('data-prefer-tall');
+    // data-prefer-wide opts back out: the controller-placement diagram lives in
+    // a Tech Specs panel but is a wide document, so the vertical cut would be
+    // the wrong asset for it.
+    const preferTall = v.hasAttribute('data-prefer-tall')
+      || (v.closest('.spec-visual-item') !== null && !v.hasAttribute('data-prefer-wide'));
     let target;
     if (isMobile || preferTall) {
       target = vert || sq || h;
@@ -1577,7 +1581,17 @@ document.addEventListener('DOMContentLoaded', () => {
   techItems.forEach((item, index) => {
     item.addEventListener('click', (e) => {
       const clickedVideo = e.target.closest('.spec-visual-item');
-      
+      // A panel "owns its viewer" when something else already binds a click on
+      // it: .vid-clickable opens the video-lightbox, .doc-clickable (the
+      // controller-placement diagram, moved here from Installation) opens the
+      // zoomable document viewer. Either way this legacy in-place fullscreen
+      // must stay out of the way, or both fire on one tap and stack.
+      const ownsViewer = !!clickedVideo && (
+        clickedVideo.classList.contains('vid-clickable') ||
+        clickedVideo.classList.contains('doc-clickable') ||
+        !!clickedVideo.querySelector('.doc-clickable')
+      );
+
       if (item.classList.contains('active')) {
         // .vid-clickable panels (the "no bluetooth" demo) now open the real
         // video-lightbox instead — that binds its own click handler directly
@@ -1588,9 +1602,9 @@ document.addEventListener('DOMContentLoaded', () => {
         // clips — so closing the lightbox dropped you into THAT instead of
         // the normal page. Exactly the "goes to a previous window, trips
         // between the 2 videos" report.
-        if (clickedVideo && isMobile() && !clickedVideo.classList.contains('vid-clickable')) {
+        if (clickedVideo && isMobile() && !ownsViewer) {
           setSpecFullscreen(clickedVideo, !clickedVideo.classList.contains('fullscreen-overlay'));
-        } else if (!clickedVideo || !clickedVideo.classList.contains('vid-clickable')) {
+        } else if (!clickedVideo || !ownsViewer) {
           item.classList.remove('active');
           if (visItems[index]) {
             visItems[index].classList.remove('active');

@@ -157,6 +157,53 @@
   </div>
 </section>
 
+<!-- ═══ SOCIAL PROOF — Roadmap Priority 2 (press) + Priority 3 (UGC) ═══
+     BLOCKED ON ASSETS. This is layout only.
+
+     Deliberately NOT included, and not to be added until the real thing exists:
+       · press logos (IGN / CNET / PC Gamer etc.) — no coverage has run yet, so
+         putting their marks up would be claiming endorsements we don't have
+       · star ratings, review counts, testimonial quotes — no reviews exist yet
+       · creator handles — seeding hasn't happened (Dan: early October)
+     The slots below are neutral placeholders so the section can be judged on
+     rhythm and spacing. Fill them from real assets, never from invented ones. -->
+<section class="s-light" id="social-proof" style="padding: clamp(56px,7vw,90px) 0;">
+  <div class="container">
+
+    <div class="asset-flag">Placeholder section — awaiting real press &amp; creator assets</div>
+
+    <p class="press-eyebrow tc">As seen in</p>
+    <div class="press-bar">
+      <span class="press-slot">press logo</span>
+      <span class="press-slot">press logo</span>
+      <span class="press-slot">press logo</span>
+      <span class="press-slot">press logo</span>
+      <span class="press-slot">press logo</span>
+    </div>
+
+    <h2 class="tc glow" style="color: var(--dark); margin-top: clamp(48px,6vw,76px);">Hear from BASSCRAFT owners</h2>
+    <div class="ugc-grid" data-carousel>
+      <figure class="ugc-card">
+        <div class="ugc-media" data-placeholder="creator clip — pending seeding"></div>
+        <figcaption>Creator handle and quote go here once product is in real hands.</figcaption>
+      </figure>
+      <figure class="ugc-card">
+        <div class="ugc-media" data-placeholder="creator clip — pending seeding"></div>
+        <figcaption>Creator handle and quote go here once product is in real hands.</figcaption>
+      </figure>
+      <figure class="ugc-card">
+        <div class="ugc-media" data-placeholder="creator clip — pending seeding"></div>
+        <figcaption>Creator handle and quote go here once product is in real hands.</figcaption>
+      </figure>
+      <figure class="ugc-card">
+        <div class="ugc-media" data-placeholder="creator clip — pending seeding"></div>
+        <figcaption>Creator handle and quote go here once product is in real hands.</figcaption>
+      </figure>
+    </div>
+
+  </div>
+</section>
+
 <!-- ═══ 2. THE PROBLEM ═══
      The single biggest gap against LiberNovo: their page makes you sit through
      "Where Sitting Hurts" before it names a product. Ours went hero → "Setup in
@@ -175,7 +222,7 @@
         you your trunk, your weekend, or your neighbours.</p>
     </div>
 
-    <div class="problem-grid">
+    <div class="problem-grid" data-carousel>
       <article class="problem-card">
         <div class="problem-media" data-placeholder="clip: thin factory sound"></div>
         <h3>Factory speakers stop short</h3>
@@ -222,7 +269,7 @@
            overflowing ~8px past its container and leaving every step sitting a
            few px right of centre. min(…,100%) lets that floor collapse to the
            container's own width when it's the narrower of the two. -->
-      <div class="install-steps-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr)); gap: 30px; margin-top: 20px;">
+      <div class="install-steps-grid" data-carousel style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr)); gap: 30px; margin-top: 20px;">
         <div class="install-step">
           <h3 class="glow" style="color: var(--black); margin-top: 0; margin-bottom: 8px;">1. Hook it</h3>
           <p style="color: var(--grey-dark); margin-bottom: 16px;">Simply slip the integrated hook under your driver or passenger headrest.</p>
@@ -270,30 +317,8 @@
       </div>
     </div>
 
-    <!-- Controller box placement diagrams (per July 24 meeting: 3-4 diagrams requested, 2 exist so far) -->
-    <div class="controller-placement">
-      <hr class="section-divider">
-      <h3 class="tc glow" style="color: var(--black); margin-bottom: 10px;">Where does your <br class="mobile-break">controller box go?</h3>
-      <p class="tc controller-placement-desc" style="color: var(--grey-dark); max-width: 600px;">The controller tucks discreetly out of sight &mdash; drivers and passengers can each run their own.</p>
-      <!-- Plays the animated walkthrough once, filling the frame completely. When it ends,
-           the frame's own aspect-ratio morphs to match the still diagram exactly (see app.js),
-           so the image is then shown in full with no cropping — one box, two assets, no letterboxing. -->
-      <div class="diagram-card doc-clickable" id="diagram-card" role="button" tabindex="0"
-        aria-label="Enlarge the controller placement document to explore it">
-        <div class="diagram-frame-inner">
-          <img class="diagram-still" alt="Possible controller box locations"
-            data-h="assets/where to put the controller box/possible lcoations for boxes - wide.png"
-            data-v="assets/where to put the controller box/possible lcoations for boxes - vertical.png"
-            src="assets/where to put the controller box/possible lcoations for boxes - wide.png">
-          <video poster="assets/July 2026 website video exports/controller/controller location diagram example/controller location diagram example - horizontal-poster.webp" preload="none" class="diagram-anim" autoplay muted playsinline
-            data-h="assets/July 2026 website video exports/controller/controller location diagram example/controller location diagram example - horizontal - h264.mp4"
-            data-v="assets/July 2026 website video exports/controller/controller location diagram example/controller location diagrams - vertical - h264.mp4"
-            data-sq="assets/July 2026 website video exports/controller/controller location diagram example/controller location diagram example - square - h264.mp4">
-            <source src="assets/July 2026 website video exports/controller/controller location diagram example/controller location diagram example - horizontal - h264.mp4" type="video/mp4">
-          </video>
-        </div>
-      </div>
-    </div>
+    <!-- The "Where does your controller box go?" block that used to close this
+         section now lives inside Tech Specs as its own accordion panel. -->
   </div>
 </section>
 
@@ -320,6 +345,14 @@
         <div class="tech-item">
           <h3><div class="tech-icon">+</div> Controller Breakdown</h3>
           <p>The basscraft controller box and frequency sensor houses the amplifier, DAC, and intensity electronics that drive both cushions.</p>
+        </div>
+        <!-- Controller placement — moved here from the Installation section.
+             IMPORTANT: .tech-item and .spec-visual-item are paired purely by
+             DOM index (app.js does visItems[index]), so this panel's visual
+             must stay at the matching position in .tech-specs-visual below. -->
+        <div class="tech-item">
+          <h3><div class="tech-icon">+</div> Where the Controller Goes</h3>
+          <p>The controller tucks discreetly out of sight &mdash; drivers and passengers can each run their own. Tap the diagram to explore the placement options full screen.</p>
         </div>
         <!-- Tactile Control -->
         <div class="tech-item">
@@ -365,6 +398,28 @@
             data-v="assets/July 2026 website video exports/controller/exploded view/exploded view - vertical - h264.mp4">
             <source src="assets/July 2026 website video exports/controller/exploded view/exploded view - vertical - h264.mp4" type="video/mp4">
           </video>
+        </div>
+        <!-- Controller placement diagram (index-matched to the "Where the
+             Controller Goes" accordion item above). Keeps its original
+             doc-clickable behaviour: the animation plays once, the frame then
+             reshapes to the still, and tapping opens the zoomable document
+             viewer with its placement hotspots. -->
+        <div class="spec-visual-item shape-square-always diagram-spec-panel">
+          <div class="diagram-card doc-clickable" id="diagram-card" role="button" tabindex="0"
+            aria-label="Enlarge the controller placement document to explore it">
+            <div class="diagram-frame-inner">
+              <img class="diagram-still" alt="Possible controller box locations"
+                data-h="assets/where to put the controller box/possible lcoations for boxes - wide.png"
+                data-v="assets/where to put the controller box/possible lcoations for boxes - vertical.png"
+                src="assets/where to put the controller box/possible lcoations for boxes - wide.png">
+              <video poster="assets/July 2026 website video exports/controller/controller location diagram example/controller location diagram example - horizontal-poster.webp" preload="none" class="diagram-anim" autoplay muted playsinline data-prefer-wide
+                data-h="assets/July 2026 website video exports/controller/controller location diagram example/controller location diagram example - horizontal - h264.mp4"
+                data-v="assets/July 2026 website video exports/controller/controller location diagram example/controller location diagrams - vertical - h264.mp4"
+                data-sq="assets/July 2026 website video exports/controller/controller location diagram example/controller location diagram example - square - h264.mp4">
+                <source src="assets/July 2026 website video exports/controller/controller location diagram example/controller location diagram example - horizontal - h264.mp4" type="video/mp4">
+              </video>
+            </div>
+          </div>
         </div>
         <div class="spec-visual-item shape-square-mobile vid-clickable" data-title="Tactile Control" data-subtitle="Three analog knobs let you adjust intensity by feel &mdash; no app, no screen, no distraction." data-lightbox-src="assets/July 2026 website video exports/controller/controller knobs/controller knobs - horizontal - h264.mp4">
           <video poster="assets/July 2026 website video exports/controller/controller knobs/controller knobs - horizontal-poster.webp" preload="none" class="play-once" autoplay muted playsinline style="width: 100%; height: 100%; object-fit: cover; border-radius: 24px;"
@@ -426,7 +481,7 @@
          half of the hero sequence above, so the two don't read as duplicate videos. -->
 
     <!-- Sub-cultural clips: different people/genres feeling it -->
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px; max-width: 1000px; margin: 0 auto;">
+    <div data-carousel style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px; max-width: 1000px; margin: 0 auto;">
       <div class="vid-r vid-clickable" style="aspect-ratio: 1;" data-title="Amapiano" data-subtitle="The ultimate way to experience refined percussion and deeply sync with African club music." data-lightbox-src="assets/July 2026 website video exports/sub cultural/amapiano - square - compressed.mp4">
         <video poster="assets/July 2026 website video exports/sub cultural/amapiano - square-poster.webp" preload="none" autoplay loop muted playsinline style="width: 100%; height: 100%; object-fit: cover;">
           <source src="assets/July 2026 website video exports/sub cultural/amapiano - square - compressed.mp4" type="video/mp4">
@@ -446,53 +501,6 @@
   </div>
 </section>
 
-<!-- ═══ SOCIAL PROOF — Roadmap Priority 2 (press) + Priority 3 (UGC) ═══
-     BLOCKED ON ASSETS. This is layout only.
-
-     Deliberately NOT included, and not to be added until the real thing exists:
-       · press logos (IGN / CNET / PC Gamer etc.) — no coverage has run yet, so
-         putting their marks up would be claiming endorsements we don't have
-       · star ratings, review counts, testimonial quotes — no reviews exist yet
-       · creator handles — seeding hasn't happened (Dan: early October)
-     The slots below are neutral placeholders so the section can be judged on
-     rhythm and spacing. Fill them from real assets, never from invented ones. -->
-<section class="s-light" id="social-proof" style="padding: clamp(56px,7vw,90px) 0;">
-  <div class="container">
-
-    <div class="asset-flag">Placeholder section — awaiting real press &amp; creator assets</div>
-
-    <p class="press-eyebrow tc">As seen in</p>
-    <div class="press-bar">
-      <span class="press-slot">press logo</span>
-      <span class="press-slot">press logo</span>
-      <span class="press-slot">press logo</span>
-      <span class="press-slot">press logo</span>
-      <span class="press-slot">press logo</span>
-    </div>
-
-    <h2 class="tc glow" style="color: var(--dark); margin-top: clamp(48px,6vw,76px);">Hear from BASSCRAFT owners</h2>
-    <div class="ugc-grid">
-      <figure class="ugc-card">
-        <div class="ugc-media" data-placeholder="creator clip — pending seeding"></div>
-        <figcaption>Creator handle and quote go here once product is in real hands.</figcaption>
-      </figure>
-      <figure class="ugc-card">
-        <div class="ugc-media" data-placeholder="creator clip — pending seeding"></div>
-        <figcaption>Creator handle and quote go here once product is in real hands.</figcaption>
-      </figure>
-      <figure class="ugc-card">
-        <div class="ugc-media" data-placeholder="creator clip — pending seeding"></div>
-        <figcaption>Creator handle and quote go here once product is in real hands.</figcaption>
-      </figure>
-      <figure class="ugc-card">
-        <div class="ugc-media" data-placeholder="creator clip — pending seeding"></div>
-        <figcaption>Creator handle and quote go here once product is in real hands.</figcaption>
-      </figure>
-    </div>
-
-  </div>
-</section>
-
 <!-- ═══ TRUST ROW — Roadmap Priority 2 (the unblocked half) ═══
      LiberNovo's "Why Choose LiberNovo" band. Sits immediately before pricing on
      purpose: these are the three objections that fire at the moment someone
@@ -505,7 +513,7 @@
 <section class="s-light" id="trust" style="padding: clamp(56px,7vw,90px) 0;">
   <div class="container">
     <h2 class="tc glow mb-5" style="color: var(--dark);">Why choose BASSCRAFT</h2>
-    <div class="trust-grid">
+    <div class="trust-grid" data-carousel>
       <div class="trust-card">
         <div class="trust-icon" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
@@ -540,10 +548,14 @@
   </div>
 </section>
 
-<!-- ═══ 6. ORDER (always the final section) ═══ -->
-<section class="s-light" id="order" style="padding-top: 100px; padding-bottom: 100px;">
+<!-- ═══ 6. ORDER (always the final section) ═══
+     Runs on the dark colourway so the page closes the way it opens — white
+     type over black, matching the hero. (Inline `color: var(--black)` was
+     dropped from the heading: --black was never defined as a token, so it
+     resolved to nothing, and it would now fight the white text anyway.) -->
+<section class="s-dark" id="order" style="padding-top: 100px; padding-bottom: 100px;">
   <div class="container tc">
-    <h2 class="glow mb-5" style="color: var(--black);">Choose your kit.</h2>
+    <h2 class="glow mb-5">Choose your kit.</h2>
     <div class="pricing-grid">
       <!-- DOUBLE KIT -->
       <div class="pricing-card featured">
@@ -1033,5 +1045,6 @@
 </script>
 <script src="app.js"></script>
 <script src="countdown.js"></script>
+<script src="carousel.js"></script>
 </body>
 </html>
