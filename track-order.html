@@ -1,0 +1,212 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Track Order — BASSCRAFT</title>
+  <meta name="description" content="Enter your order number and email address to check your order status and shipping updates.">
+  <link rel="icon" href="favicon.ico">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .inner-page { background: #f7f4ef; min-height: 80vh; padding: clamp(100px,12vw,160px) 0 clamp(60px,8vw,100px); }
+    .inner-page .container { max-width: min(820px, 88vw); }
+    .inner-eyebrow { font-family:'CalSansText',sans-serif; font-size:.75rem; letter-spacing:.12em; text-transform:uppercase; color:var(--grey); margin-bottom:18px; }
+    .inner-page h1 { font-family:'CalSansUI',sans-serif; font-weight:700; font-size:clamp(2.2rem,5vw,3.6rem); letter-spacing:-0.025em; line-height:1.08; color:#1d1d1f; margin-bottom:24px; }
+    .inner-intro { font-size:clamp(1rem,1.3vw,1.2rem); color:#6e6e73; line-height:1.65; margin-bottom:clamp(48px,6vw,72px); border-bottom:1px solid rgba(0,0,0,0.08); padding-bottom:clamp(32px,4vw,48px); }
+    .inner-section { margin-bottom:clamp(36px,4vw,52px); }
+    .inner-section h2 { font-family:'CalSansUI',sans-serif; font-weight:600; font-size:clamp(1.1rem,1.6vw,1.4rem); color:#1d1d1f; margin-bottom:12px; letter-spacing:-0.01em; }
+    .inner-section h3 { font-family:'CalSansUI',sans-serif; font-weight:600; font-size:clamp(1rem,1.3vw,1.15rem); color:#1d1d1f; margin-bottom:8px; margin-top:24px; }
+    .inner-section p { font-family:'CalSansText',sans-serif; color:#6e6e73; line-height:1.7; font-size:clamp(.9rem,1.05vw,1rem); margin-bottom:14px; }
+    .inner-section ul, .inner-section ol { padding-left:1.4em; margin-bottom:14px; }
+    .inner-section li { font-family:'CalSansText',sans-serif; color:#6e6e73; line-height:1.7; font-size:clamp(.9rem,1.05vw,1rem); margin-bottom:6px; }
+    .inner-divider { border:0; height:1px; background:rgba(0,0,0,0.08); margin:clamp(28px,3vw,40px) 0; }
+    .placeholder-badge { display:inline-block; background:rgba(255,180,0,0.1); border:1px solid rgba(255,160,0,0.25); color:#9a6700; font-size:.7rem; font-family:'CalSansText',sans-serif; letter-spacing:.06em; text-transform:uppercase; padding:4px 10px; border-radius:4px; margin-bottom:28px; }
+    .faq-item { border-bottom:1px solid rgba(0,0,0,0.07); padding:20px 0; }
+    .faq-item:first-child { padding-top:0; }
+    .faq-q { font-family:'CalSansUI',sans-serif; font-weight:600; font-size:clamp(.95rem,1.2vw,1.05rem); color:#1d1d1f; margin-bottom:10px; }
+    .faq-a { font-family:'CalSansText',sans-serif; color:#6e6e73; line-height:1.7; font-size:clamp(.88rem,1vw,.98rem); }
+    .track-form input, .track-form button { font-family:'CalSansText',sans-serif; }
+    .track-form { display:flex; gap:12px; flex-wrap:wrap; margin:24px 0; }
+    .track-form input { flex:1 1 260px; padding:13px 16px; border:1px solid rgba(0,0,0,0.15); border-radius:12px; background:#fff; font-size:.95rem; color:#1d1d1f; outline:none; }
+    .track-form button { padding:13px 26px; background:#1d1d1f; color:#fff; border:none; border-radius:12px; font-size:.9rem; font-weight:600; cursor:pointer; letter-spacing:.03em; }
+  </style>
+</head>
+<body>
+<div id="site-wrapper">
+<nav class="navbar">
+  <div class="nav-left">
+    <a href="index.html#experience" class="nav-logo" id="nav-logo" style="display: flex; align-items: center; gap: 10px;">
+      <!-- Over the hero the full white wordmark shows. Once scrolled (.navbar.scrolled) the
+           wordmark cross-fades to just the B icon, held at low opacity so it reads as a
+           discreet glassy mark rather than competing with the content. -->
+      <div class="logo-white" aria-label="BASSCRAFT" role="img"></div>
+      <div class="logo-icon" aria-label="BASSCRAFT" role="img"></div>
+    </a>
+  </div>
+  <div class="nav-links">
+    <a href="index.html">HOME</a>
+    <a href="index.html#social-proof">OWNERS</a>
+    <a href="index.html#problem">THE FEEL</a>
+    <a href="index.html#installation">HOW IT WORKS</a>
+    <a href="index.html#specs">TECH SPECS</a>
+    <a href="index.html#order">ORDER</a>
+  </div>
+  <div class="nav-right">
+    <a href="index.html#order" class="nav-cta scroll-buy-btn k-pop-btn"><span>BUY NOW</span></a>
+  </div>
+  <!-- Mobile only: .nav-links is display:none below 768px, so this is the
+       only way to reach INSTALLATION/TECH SPECS/EXPERIENCE/ORDER there.
+       Absolutely centered independent of the logo/buy-now flex flow, so it
+       stays put in the middle regardless of whether the buy button is
+       showing (pre-scroll) or not. -->
+  <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Open menu" aria-expanded="false">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+      <line class="bar bar-top" x1="4" y1="7" x2="20" y2="7"></line>
+      <line class="bar bar-mid" x1="4" y1="12" x2="20" y2="12"></line>
+      <line class="bar bar-bot" x1="4" y1="17" x2="20" y2="17"></line>
+    </svg>
+  </button>
+</nav>
+
+<!-- Mobile nav drawer: the same links as .nav-links, just reachable on mobile. -->
+<div class="mobile-nav-menu" id="mobile-nav-menu">
+  <a href="index.html">HOME</a>
+  <a href="index.html#social-proof">OWNERS</a>
+  <a href="index.html#problem">THE FEEL</a>
+  <a href="index.html#installation">HOW IT WORKS</a>
+  <a href="index.html#specs">TECH SPECS</a>
+  <a href="index.html#order">ORDER</a>
+</div>
+<main class="inner-page">
+  <div class="container">
+    <p class="placeholder-badge">Placeholder page — content pending</p>
+    <p class="inner-eyebrow">BASSCRAFT</p>
+    <h1>Track your BASSCRAFT order.</h1>
+    <p class="inner-intro">Enter your order number and email address to check your order status and shipping updates.</p>
+    <div class="inner-section">
+  <form class="track-form" onsubmit="return false;">
+    <input type="text" placeholder="Order number (e.g. BC-10042)" id="track-order-num">
+    <input type="email" placeholder="Email address used at checkout" id="track-email">
+    <button type="submit">Track Order</button>
+  </form>
+  <p>Your order number is in the confirmation email sent when you placed your order. If you cannot find it, email <a href="mailto:support@basscraft.co" style="color:#1d1d1f;text-decoration:underline;">support@basscraft.co</a> and we'll look it up for you.</p>
+</div>
+<hr class="inner-divider">
+<div class="inner-section">
+  <h2>Pre-order status</h2>
+  <p>If you placed a pre-order, your order is confirmed and queued for fulfillment. You will receive an email with a tracking link as soon as your kit ships. Expected ship date: <strong>[Quarter]</strong>.</p>
+</div>
+  </div>
+</main>
+<footer class="footer">
+  <div class="container">
+
+    <!-- ── Top: link groups + newsletter ── -->
+    <div class="footer-top">
+      <nav class="footer-nav" aria-label="Footer">
+        <div class="footer-col">
+          <h4>Product</h4>
+          <a href="index.html#order">Starter Kit</a>
+          <a href="index.html#order">Double Kit</a>
+          <a href="index.html#specs">The Cushion</a>
+          <a href="index.html#specs">The Controller</a>
+        </div>
+        <div class="footer-col">
+          <h4>Explore</h4>
+          <a href="index.html#installation">How It Works</a>
+          <a href="index.html#specs">Tech Specs</a>
+          <a href="index.html#experience">The Experience</a>
+          <a href="#">Vehicle Compatibility</a>
+          <a href="#">Tutorials</a>
+        </div>
+        <div class="footer-col">
+          <h4>Brand</h4>
+          <a href="#">About Us</a>
+          <a href="#">Become a Dealer</a>
+          <a href="#">Affiliate Program</a>
+          <a href="#">Refer a Friend</a>
+          <a href="#">Press</a>
+        </div>
+        <div class="footer-col">
+          <h4>Support</h4>
+          <a href="mailto:support@basscraft.co">Contact Us</a>
+          <a href="#">FAQs</a>
+          <a href="#">Track Order</a>
+          <a href="#">Warranty</a>
+          <a href="#">Returns &amp; Refunds</a>
+          <a href="#">Shipping Policy</a>
+        </div>
+      </nav>
+
+      <!-- Newsletter. Mirrors LiberNovo's "unlock X% off" capture; the actual
+           incentive is still Dan's call, so the copy stays offer-agnostic. -->
+      <div class="footer-subscribe">
+        <h4>Get first access.</h4>
+        <p>Founding-buyer pricing and launch updates, straight to your inbox.</p>
+        <form class="footer-sub-form" id="footer-sub-form" novalidate>
+          <label class="sr-only" for="footer-sub-email">Email address</label>
+          <input type="email" id="footer-sub-email" name="email" placeholder="Email address" autocomplete="email" required>
+          <button type="submit" aria-label="Subscribe">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </button>
+        </form>
+        <p class="footer-sub-consent">
+          <input type="checkbox" id="footer-sub-consent" name="consent">
+          <label for="footer-sub-consent">I agree to receive marketing emails and accept the <a href="#">Privacy Policy</a>.</label>
+        </p>
+        <div class="footer-contact">
+          <a href="mailto:support@basscraft.co">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 6 10-6"/></svg>
+            support@basscraft.co
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Wordmark ── -->
+    <div class="footer-brand">
+      <span class="footer-wordmark" role="img" aria-label="BASSCRAFT"></span>
+      <div class="footer-social">
+        <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1.1" fill="currentColor" stroke="none"/></svg></a>
+        <a href="#" aria-label="TikTok"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16.5 3a5.6 5.6 0 0 0 4 3.2v3a8.6 8.6 0 0 1-4-1.2v6.4a5.9 5.9 0 1 1-5.9-5.9c.3 0 .6 0 .9.1v3.1a2.9 2.9 0 1 0 2 2.7V3h3Z"/></svg></a>
+        <a href="#" aria-label="YouTube"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M23 12s0-3.5-.4-5.2a2.7 2.7 0 0 0-1.9-1.9C19 4.5 12 4.5 12 4.5s-7 0-8.7.4a2.7 2.7 0 0 0-1.9 1.9C1 8.5 1 12 1 12s0 3.5.4 5.2a2.7 2.7 0 0 0 1.9 1.9c1.7.4 8.7.4 8.7.4s7 0 8.7-.4a2.7 2.7 0 0 0 1.9-1.9C23 15.5 23 12 23 12ZM9.8 15.3V8.7l5.7 3.3-5.7 3.3Z"/></svg></a>
+        <a href="#" aria-label="X"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.5 3h3.2l-7 8 8.2 10h-6.4l-5-6.1-5.8 6.1H1.5l7.5-8.6L1.2 3h6.6l4.5 5.6L17.5 3Zm-1.1 16.1h1.8L7.7 4.8H5.8l10.6 14.3Z"/></svg></a>
+        <a href="#" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M22 12a10 10 0 1 0-11.6 9.9v-7h-2.5V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.5h-1.3c-1.2 0-1.6.8-1.6 1.6V12h2.8l-.4 2.9h-2.4v7A10 10 0 0 0 22 12Z"/></svg></a>
+      </div>
+    </div>
+
+    <!-- ── Bottom: payments + legal ── -->
+    <div class="footer-bottom">
+      <div class="footer-pay" aria-label="Accepted payment methods">
+        <span class="pay-chip">Visa</span>
+        <span class="pay-chip">Mastercard</span>
+        <span class="pay-chip">Amex</span>
+        <span class="pay-chip">Discover</span>
+        <span class="pay-chip">Maestro</span>
+        <span class="pay-chip">JCB</span>
+        <span class="pay-chip">Diners</span>
+        <span class="pay-chip">Klarna</span>
+        <span class="pay-chip">PayPal</span>
+        <span class="pay-chip">Apple&nbsp;Pay</span>
+        <span class="pay-chip">G&nbsp;Pay</span>
+        <span class="pay-chip">Shop&nbsp;Pay</span>
+      </div>
+      <div class="footer-legal">
+        <p>&copy; 2026 BASSCRAFT. All rights reserved.</p>
+        <div class="footer-links">
+          <a href="#">Shipping Policy</a>
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Service</a>
+          <a href="#">Intellectual Property</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</footer>
+</div>
+<script src="app.js"></script>
+</body>
+</html>
