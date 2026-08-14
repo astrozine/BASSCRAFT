@@ -338,11 +338,11 @@ p {
   /* Phones stack instead: single column, everything centred, button under the
      copy. (The desktop rule above is a grid now, so this re-declares the grid
      rather than the old flex-direction/justify-content, which grid ignores.) */
-  /* Phone order is headline → BUY NOW → description. The button is a sibling
-     of .hero-text-group, not a child, so it can't be slotted between the two
-     lines by source order alone. display:contents dissolves the wrapper so
-     the h1 and p become direct flex children alongside the button, and then
-     `order` can interleave all three. */
+  /* Phone order is BUY NOW → headline → description, matching the desktop
+     stack: the CTA sits above the whole copy block rather than wedged between
+     the two lines. The button is a sibling of .hero-text-group, not a child,
+     so display:contents dissolves the wrapper — the h1 and p become direct
+     flex children alongside the button, letting `order` sequence all three. */
   .hero-center {
     display: flex;
     flex-direction: column;
@@ -353,8 +353,8 @@ p {
     overflow: hidden;
   }
   .hero-text-group { display: contents; }
-  .hero-center .hero-title { order: 1; }
-  .hero-center .hero-cta { order: 2; }
+  .hero-center .hero-cta { order: 1; }
+  .hero-center .hero-title { order: 2; }
   .hero-center .hero-tagline { order: 3; }
   .hero-center h1 { font-size: clamp(1.25rem, 3.8vw, 1.8rem) !important; line-height: 1.1; max-width: min(85vw, 400px); margin-top: 0; margin-bottom: 0; text-align: center; }
   .hero-center p {
@@ -364,7 +364,9 @@ p {
     margin-top: 0; margin-bottom: 0;
     text-align: center;
   }
-  .hero-cta { padding: 10px 26px; font-size: 0.84rem; margin-top: 6px; margin-bottom: 2px; }}
+  /* Sits on top now, so the breathing room moves below it, between button and
+     headline (was margin-top, for when it was wedged under the headline). */
+  .hero-cta { padding: 10px 26px; font-size: 0.84rem; margin-top: 0; margin-bottom: 10px; }}
 
 /* Sized to hold "Feel every frequency." on a single line inside the grid's
    left rail. The old 5vw/4rem ran ~640px wide, which overflowed the rail once
