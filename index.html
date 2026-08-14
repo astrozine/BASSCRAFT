@@ -529,18 +529,23 @@
   </div>
 </section>
 
-<!-- ═══ TRUST ROW — Roadmap Priority 2 (the unblocked half) ═══
-     LiberNovo's "Why Choose LiberNovo" band. Sits immediately before pricing on
-     purpose: these are the three objections that fire at the moment someone
-     looks at the price.
+<!-- ═══ 6. ORDER (always the final section) ═══
+     Runs on the dark colourway so the page closes the way it opens — white
+     type over black, matching the hero. (Inline `color: var(--black)` was
+     dropped from the heading: --black was never defined as a token, so it
+     resolved to nothing, and it would now fight the white text anyway.) -->
+<section class="s-dark" id="order" style="padding-top: 100px; padding-bottom: 100px;">
+  <div class="container tc">
+    <h2 class="glow">Choose your kit.</h2>
 
-     NOTE: the terms below are placeholders written to match the shape of the
-     LiberNovo band — they are NOT confirmed policy. Dan needs to sign off on the
-     actual shipping/guarantee/warranty terms before this goes anywhere public,
-     since they read as a commitment to the buyer. -->
-<section class="s-light" id="trust" style="padding: clamp(56px,7vw,90px) 0;">
-  <div class="container">
-    <h2 class="tc glow mb-5" style="color: var(--dark);">Why choose BASSCRAFT</h2>
+    <!-- Trust row, relocated out of its own "Why choose BASSCRAFT" section to sit
+         under this heading instead: these are the three objections that fire at
+         the exact moment someone looks at the price, so they belong beside it
+         rather than in a band of their own.
+
+         NOTE: the terms are placeholders shaped after the LiberNovo band — NOT
+         confirmed policy. They read as a commitment to the buyer, so Dan needs to
+         sign off before this goes anywhere public. -->
     <div class="trust-grid" data-carousel>
       <div class="trust-card">
         <div class="trust-icon" aria-hidden="true">
@@ -573,17 +578,7 @@
         <p>Covered against defects in the cushion, controller and wiring harness.</p>
       </div>
     </div>
-  </div>
-</section>
 
-<!-- ═══ 6. ORDER (always the final section) ═══
-     Runs on the dark colourway so the page closes the way it opens — white
-     type over black, matching the hero. (Inline `color: var(--black)` was
-     dropped from the heading: --black was never defined as a token, so it
-     resolved to nothing, and it would now fight the white text anyway.) -->
-<section class="s-dark" id="order" style="padding-top: 100px; padding-bottom: 100px;">
-  <div class="container tc">
-    <h2 class="glow mb-5">Choose your kit.</h2>
     <div class="pricing-grid">
       <!-- DOUBLE KIT -->
       <div class="pricing-card featured">

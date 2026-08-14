@@ -2450,3 +2450,44 @@ body.cart-open .nav-links { opacity: 0; pointer-events: none; }
 @media (prefers-reduced-motion: reduce) {
   #hero-cta::before { animation: none; opacity: .5; transform: rotate(18deg) translateX(60px); }
 }
+
+
+/* ── Trust row, now living inside #order ──
+   It used to sit in its own light section; on the dark order background the
+   white cards and dark type inverted. Spacing follows the section rhythm used
+   elsewhere: heading → row → pricing, with the row reading as support for the
+   heading rather than as a separate band. */
+#order .trust-grid {
+  max-width: 800px;              /* line up with .pricing-grid, not full bleed */
+  margin: clamp(28px, 3.5vw, 44px) auto clamp(44px, 5.5vw, 68px);
+}
+/* Pinned to three columns rather than left to auto-fit: inside the 800px
+   pricing width, auto-fit's 250px floor only fits two per row and the third
+   card dropped to a lonely second line. */
+@media (min-width: 769px) {
+  #order .trust-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+}
+#order .trust-card {
+  background: #121214;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 24px 20px;
+}
+#order .trust-card h3 { color: var(--white); font-size: .95rem; }
+#order .trust-card p { color: var(--grey-light); font-size: .84rem; }
+#order .trust-icon {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--white);
+  width: 40px; height: 40px; margin-bottom: 13px;
+}
+#order .trust-icon svg { width: 20px; height: 20px; }
+/* Dots for the mobile carousel need the dark-section treatment here. */
+#order .carousel-dot { background: rgba(255, 255, 255, 0.28); }
+#order .carousel-dot.is-active { background: rgba(255, 255, 255, 0.92); }
+
+/* The heading lost its .mb-5 (the row now provides the gap), so give it the
+   same breathing room the other section headings have. */
+#order h2 { margin-bottom: 0; }
+
+@media (max-width: 768px) {
+  #order .trust-grid { margin: 24px auto 36px; }
+}
