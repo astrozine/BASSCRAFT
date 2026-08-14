@@ -3,7 +3,13 @@
    Responsive media swap · Overlays & lightboxes · Video power management · Cart
    ========================================================================== */
 
-gsap.registerPlugin(ScrollTrigger);
+/* GSAP only drives the homepage's scroll fade-ins, and only index.html loads it.
+   The inner pages (policies, About, dealer/affiliate) load this same file without
+   it — and because this call sits at top level, an undefined `gsap` threw here and
+   aborted the WHOLE file, taking the mobile nav toggle down with it on every one
+   of those pages. Feature-detect instead so the rest of the script always runs. */
+const HAS_GSAP = typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined';
+if (HAS_GSAP) gsap.registerPlugin(ScrollTrigger);
 
 /* ══════════════════════════════════════════════════════════════
    0. SCROLL LOCK — shared by every full-screen overlay
@@ -312,7 +318,7 @@ if (heroCta) {
 /* --------------------------------------------------------------
    4. SCROLL-TRIGGERED FADE-INS
    -------------------------------------------------------------- */
-document.querySelectorAll('.s-dark, .s-light').forEach(section => {
+if (HAS_GSAP) document.querySelectorAll('.s-dark, .s-light').forEach(section => {
   // Trimmed to the classes this page actually has — the list had accumulated a
   // dozen selectors (.genre-grid, .specs-tbl, .duo-grid, .controller-demo …)
   // belonging to sections that no longer exist in the markup.

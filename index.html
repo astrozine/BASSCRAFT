@@ -556,15 +556,20 @@
          confirmed policy. They read as a commitment to the buyer, so Dan needs to
          sign off before this goes anywhere public. -->
     <div class="trust-grid" data-carousel>
+      <!-- These three now match the written policies exactly. The first card
+           used to claim "Free shipping — every pre-order ships free", which the
+           Shipping Policy contradicts outright (cost is calculated at checkout,
+           no free or flat rate). Replaced with the preorder cancellation right,
+           which is real and is the stronger reassurance while the product is
+           still preorder-only. -->
       <div class="trust-card">
         <div class="trust-icon" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="1" y="6" width="14" height="11" rx="2"/><path d="M15 9h4l3 3.5V17h-7z"/>
-            <circle cx="6" cy="19" r="2"/><circle cx="18" cy="19" r="2"/>
+            <path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/>
           </svg>
         </div>
-        <h3>Free shipping</h3>
-        <p>Every pre-order ships free within the continental US, tracked door to door.</p>
+        <h3>Cancel any time before it ships</h3>
+        <p>Pre-orders can be cancelled for a full refund right up until your unit leaves our Austin facility.</p>
       </div>
 
       <div class="trust-card">
@@ -573,8 +578,8 @@
             <path d="M12 2a10 10 0 1 0 10 10"/><path d="M22 4 12 14l-3-3"/>
           </svg>
         </div>
-        <h3>30-day returns</h3>
-        <p>Drive with it for a month. If it doesn't change how your music feels, send it back.</p>
+        <h3>30-day returns, shipping on us</h3>
+        <p>Drive with it for a month. If it doesn't change how your music feels, we send a prepaid label.</p>
       </div>
 
       <div class="trust-card">
@@ -583,8 +588,8 @@
             <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/>
           </svg>
         </div>
-        <h3>Warranty protection</h3>
-        <p>Covered against defects in the cushion, controller and wiring harness.</p>
+        <h3>1-year warranty</h3>
+        <p>Covered against manufacturing defects in the cushion, controller and wiring for a full year.</p>
       </div>
     </div>
 
@@ -654,14 +659,18 @@
           <a href="about-us.html">About Us</a>
           <a href="become-a-dealer.html">Become a Dealer</a>
           <a href="affiliate-program.html">Affiliate Program</a>
-          <a href="refer-a-friend.html">Refer a Friend</a>
+          <!-- Hidden per the client brief ("Hide for now: Refer a Friend, Where to Buy,
+               Track Order"). Page file is kept, just unlinked — restore this line
+               when the referral programme actually exists.
+          <a href="refer-a-friend.html">Refer a Friend</a> -->
           <a href="press.html">Press</a>
         </div>
         <div class="footer-col">
           <h4>Support</h4>
-          <a href="mailto:support@basscraft.co">Contact Us</a>
+          <a href="mailto:info@basscraft.co">Contact Us</a>
           <a href="faq.html">FAQs</a>
-          <a href="track-order.html">Track Order</a>
+          <!-- Hidden per the client brief; there is no order-tracking back end yet.
+          <a href="track-order.html">Track Order</a> -->
           <a href="warranty.html">Warranty</a>
           <a href="returns.html">Returns &amp; Refunds</a>
           <a href="shipping.html">Shipping Policy</a>
@@ -684,12 +693,12 @@
         </form>
         <p class="footer-sub-consent">
           <input type="checkbox" id="footer-sub-consent" name="consent">
-          <label for="footer-sub-consent">I agree to receive marketing emails and accept the <a href="#">Privacy Policy</a>.</label>
+          <label for="footer-sub-consent">I agree to receive marketing emails and accept the <a href="privacy.html">Privacy Policy</a>.</label>
         </p>
         <div class="footer-contact">
-          <a href="mailto:support@basscraft.co">
+          <a href="mailto:info@basscraft.co">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 6 10-6"/></svg>
-            support@basscraft.co
+            info@basscraft.co
           </a>
         </div>
       </div>
@@ -778,7 +787,7 @@
 
     <p class="cd-consent">
       <input type="checkbox" id="cd-consent" name="consent">
-      <label for="cd-consent">I agree to receive marketing emails and accept the <a href="#">Privacy Policy</a>.</label>
+      <label for="cd-consent">I agree to receive marketing emails and accept the <a href="privacy.html">Privacy Policy</a>.</label>
     </p>
     <button class="cd-dismiss" id="cd-dismiss">No thanks, I'll pay full price</button>
   </div>
