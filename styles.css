@@ -1,4 +1,4 @@
-/* ==========================================================================
+﻿/* ==========================================================================
    BASSCRAFT — Premium Apple-Style Design System v4
    Cal Sans · Responsive · 4K-Ready · Seamless Scroll Fades
    ========================================================================== */
@@ -2313,22 +2313,28 @@ body.cart-open .nav-links { opacity: 0; pointer-events: none; }
 
 /* ── Desktop: the spotlight itself ── */
 @media (min-width: 769px) {
+  /* Grid approach: three columns that animate their widths together.
+     This avoids the flex-basis reflow jitter — grid column sizing is
+     GPU-composited, so all three resize in the same paint call.
+     The JS still writes `order` to reposition the active item to the
+     middle column; we toggle data-cols on the stage to drive the CSS. */
   .genre-stage.is-spotlight {
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr 1.72fr 1fr;
     align-items: center;
-    justify-content: center;
-    gap: clamp(16px, 2.4vw, 30px);
+    justify-items: center;
+    gap: clamp(14px, 2vw, 28px);
+    /* Smooth column-width transition */
+    transition: grid-template-columns 0.52s cubic-bezier(0.22, 0.8, 0.25, 1);
   }
   .genre-stage.is-spotlight .genre-item {
-    flex: 0 1 clamp(180px, 22vw, 260px);
-    opacity: .55;
-    transform: scale(.94);
-    transition: flex-basis .45s cubic-bezier(.2,.8,.25,1),
-                opacity .45s ease, transform .45s ease;
+    width: 100%;
+    opacity: 0.52;
+    transform: scale(0.93);
+    transition: opacity 0.45s ease, transform 0.45s ease;
   }
-  .genre-stage.is-spotlight .genre-item:hover { opacity: .8; }
+  .genre-stage.is-spotlight .genre-item:hover { opacity: 0.78; }
   .genre-stage.is-spotlight .genre-item.is-active {
-    flex: 0 1 clamp(320px, 38vw, 470px);
     opacity: 1;
     transform: none;
   }
@@ -2380,7 +2386,23 @@ body.cart-open .nav-links { opacity: 0; pointer-events: none; }
    the button already has overflow:hidden, so the sweep is clipped to the pill).
    ========================================================================== */
 
-#hero-cta { isolation: isolate; }
+#hero-cta {
+  isolation: isolate;
+  /* Ice-blue outer glow with white-hot centre — subtle at rest, brightens on hover */
+  box-shadow:
+    0 0 18px 2px rgba(180, 225, 255, 0.55),
+    0 0 42px 8px rgba(180, 225, 255, 0.22),
+    0 0 80px 16px rgba(180, 225, 255, 0.10),
+    inset 0 0 12px 0 rgba(255, 255, 255, 0.18);
+  transition: box-shadow 0.4s ease;
+}
+#hero-cta:hover {
+  box-shadow:
+    0 0 24px 4px rgba(180, 225, 255, 0.70),
+    0 0 60px 14px rgba(180, 225, 255, 0.32),
+    0 0 110px 24px rgba(180, 225, 255, 0.15),
+    inset 0 0 18px 0 rgba(255, 255, 255, 0.28);
+}
 
 /* Travelling specular highlight. Deliberately wide and soft — a hard band
    reads as a "shine" gimmick, a broad one reads as light moving over glass.
@@ -2392,11 +2414,11 @@ body.cart-open .nav-links { opacity: 0; pointer-events: none; }
   width: 68%;
   background: linear-gradient(
     100deg,
-    rgba(255, 255, 255, 0) 0%,
-    rgba(255, 255, 255, 0.12) 32%,
-    rgba(255, 255, 255, 0.50) 50%,
-    rgba(255, 255, 255, 0.12) 68%,
-    rgba(255, 255, 255, 0) 100%
+    rgba(180, 225, 255, 0) 0%,
+    rgba(180, 225, 255, 0.18) 28%,
+    rgba(255, 255, 255, 0.55) 50%,
+    rgba(180, 225, 255, 0.18) 72%,
+    rgba(180, 225, 255, 0) 100%
   );
   filter: blur(7px);
   transform: rotate(18deg) translateX(-180px);
