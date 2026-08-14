@@ -475,29 +475,57 @@
 <!-- ═══ 2. EXPERIENCE ═══ -->
 <section class="s-dark" id="experience" style="padding: 100px 0;">
   <div class="container tc">
-    <h2 class="glow mb-5">Music, activated.</h2>
-    <p class="mb-5" style="max-width: 600px; margin: 0 auto 40px auto; line-height: 1.5; color: var(--grey-light);">Experience your favorite tracks like never before. Every 808, every bass drop, felt directly in your core.</p>
+    <h2 class="glow mb-5">Every genre has a low end you've never felt.</h2>
+    <p class="mb-5 genre-intro">Log drums, hang drums, distorted 808s &mdash; whatever you put on, the deepest
+      part of it has only ever been something you heard. BASSCRAFT is what turns it into something you feel.</p>
     <!-- The "lead hero with people" clip that used to sit here is now played as the second
          half of the hero sequence above, so the two don't read as duplicate videos. -->
 
-    <!-- Sub-cultural clips: different people/genres feeling it -->
-    <div data-carousel style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px; max-width: 1000px; margin: 0 auto;">
-      <div class="vid-r vid-clickable" style="aspect-ratio: 1;" data-title="Amapiano" data-subtitle="The ultimate way to experience refined percussion and deeply sync with African club music." data-lightbox-src="assets/July 2026 website video exports/sub cultural/amapiano - square - compressed.mp4">
-        <video poster="assets/July 2026 website video exports/sub cultural/amapiano - square-poster.webp" preload="none" autoplay loop muted playsinline style="width: 100%; height: 100%; object-fit: cover;">
-          <source src="assets/July 2026 website video exports/sub cultural/amapiano - square - compressed.mp4" type="video/mp4">
-        </video>
-      </div>
-      <div class="vid-r vid-clickable" style="aspect-ratio: 1;" data-title="Frequency Healing" data-subtitle="Connect with resonant hang drum vibrations for deeply therapeutic, full-body frequency healing." data-lightbox-src="assets/July 2026 website video exports/sub cultural/hang drum - square - compressed.mp4">
-        <video poster="assets/July 2026 website video exports/sub cultural/hang drum - square-poster.webp" preload="none" autoplay loop muted playsinline style="width: 100%; height: 100%; object-fit: cover;">
-          <source src="assets/July 2026 website video exports/sub cultural/hang drum - square - compressed.mp4" type="video/mp4">
-        </video>
-      </div>
-      <div class="vid-r vid-clickable" style="aspect-ratio: 1;" data-title="Maximum Stimulation" data-subtitle="Underground phonk and heavy electronic bass—crank up the stimulation of every moment." data-lightbox-src="assets/July 2026 website video exports/sub cultural/phonk - square - compressed.mp4">
-        <video poster="assets/July 2026 website video exports/sub cultural/phonk - square-poster.webp" preload="none" autoplay loop muted playsinline style="width: 100%; height: 100%; object-fit: cover;">
-          <source src="assets/July 2026 website video exports/sub cultural/phonk - square - compressed.mp4" type="video/mp4">
-        </video>
-      </div>
+    <!-- Genre spotlight: one clip held large in the centre, the rest smaller either
+         side. Clicking a side clip promotes it to the centre (spotlight.js); clicking
+         the centre one opens it in the video lightbox as before. Three deliberately
+         unalike genres, because the point of the section is that this isn't a
+         bass-music accessory — it's every genre's missing bottom octave.
+         Still data-carousel: below 768px this reverts to the swipeable strip,
+         where a shrunken side-by-side spotlight would be unreadable. -->
+    <div class="genre-stage" data-spotlight data-carousel>
+      <figure class="genre-item">
+        <div class="vid-r vid-clickable" style="aspect-ratio: 1;" data-title="Amapiano" data-subtitle="The ultimate way to experience refined percussion and deeply sync with African club music." data-lightbox-src="assets/July 2026 website video exports/sub cultural/amapiano - square - compressed.mp4">
+          <video poster="assets/July 2026 website video exports/sub cultural/amapiano - square-poster.webp" preload="none" autoplay loop muted playsinline style="width: 100%; height: 100%; object-fit: cover;">
+            <source src="assets/July 2026 website video exports/sub cultural/amapiano - square - compressed.mp4" type="video/mp4">
+          </video>
+        </div>
+        <figcaption class="genre-label">
+          <span class="genre-name">Amapiano</span>
+          <span class="genre-note">Log drums that sit under the beat.</span>
+        </figcaption>
+      </figure>
+
+      <figure class="genre-item">
+        <div class="vid-r vid-clickable" style="aspect-ratio: 1;" data-title="Frequency Healing" data-subtitle="Connect with resonant hang drum vibrations for deeply therapeutic, full-body frequency healing." data-lightbox-src="assets/July 2026 website video exports/sub cultural/hang drum - square - compressed.mp4">
+          <video poster="assets/July 2026 website video exports/sub cultural/hang drum - square-poster.webp" preload="none" autoplay loop muted playsinline style="width: 100%; height: 100%; object-fit: cover;">
+            <source src="assets/July 2026 website video exports/sub cultural/hang drum - square - compressed.mp4" type="video/mp4">
+          </video>
+        </div>
+        <figcaption class="genre-label">
+          <span class="genre-name">Hang Drum</span>
+          <span class="genre-note">Sustained tones you feel more than hear.</span>
+        </figcaption>
+      </figure>
+
+      <figure class="genre-item">
+        <div class="vid-r vid-clickable" style="aspect-ratio: 1;" data-title="Maximum Stimulation" data-subtitle="Underground phonk and heavy electronic bass—crank up the stimulation of every moment." data-lightbox-src="assets/July 2026 website video exports/sub cultural/phonk - square - compressed.mp4">
+          <video poster="assets/July 2026 website video exports/sub cultural/phonk - square-poster.webp" preload="none" autoplay loop muted playsinline style="width: 100%; height: 100%; object-fit: cover;">
+            <source src="assets/July 2026 website video exports/sub cultural/phonk - square - compressed.mp4" type="video/mp4">
+          </video>
+        </div>
+        <figcaption class="genre-label">
+          <span class="genre-name">Phonk</span>
+          <span class="genre-note">Distorted 808s, straight through your chest.</span>
+        </figcaption>
+      </figure>
     </div>
+    <p class="genre-hint">Pick a sound to bring it front and centre &mdash; tap it again to play it full screen.</p>
   </div>
 </section>
 
@@ -1046,5 +1074,6 @@
 <script src="app.js"></script>
 <script src="countdown.js"></script>
 <script src="carousel.js"></script>
+<script src="spotlight.js"></script>
 </body>
 </html>

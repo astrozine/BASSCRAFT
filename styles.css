@@ -2275,3 +2275,178 @@ body.cart-open .nav-links { opacity: 0; pointer-events: none; }
   }
   .tech-item .spec-visual-item.diagram-spec-panel::after { display: none; }
 }
+
+
+/* ==========================================================================
+   GENRE SPOTLIGHT (#experience)
+   One clip held large in the centre, the others smaller either side; clicking
+   a side clip promotes it (spotlight.js reorders via CSS `order`, never by
+   moving nodes — re-parenting a <video> restarts playback).
+   ========================================================================== */
+
+.genre-intro {
+  max-width: 640px; margin: 0 auto 44px auto;
+  line-height: 1.55; color: var(--grey-light);
+}
+
+.genre-stage { max-width: 1100px; margin: 0 auto; }
+
+.genre-item { margin: 0; min-width: 0; }
+.genre-item .vid-r { cursor: pointer; }
+
+.genre-label {
+  display: flex; flex-direction: column; gap: 3px;
+  margin-top: 14px; text-align: center;
+}
+.genre-name {
+  font-family: 'CalSansUI', sans-serif;
+  font-size: .95rem; font-weight: 600; letter-spacing: .01em;
+  color: var(--white);
+}
+.genre-note {
+  font-size: .82rem; line-height: 1.4; color: var(--grey);
+}
+.genre-hint {
+  margin-top: 28px; text-align: center;
+  font-size: .8rem; color: var(--grey-dark);
+}
+
+/* ── Desktop: the spotlight itself ── */
+@media (min-width: 769px) {
+  .genre-stage.is-spotlight {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(16px, 2.4vw, 30px);
+  }
+  .genre-stage.is-spotlight .genre-item {
+    flex: 0 1 clamp(180px, 22vw, 260px);
+    opacity: .55;
+    transform: scale(.94);
+    transition: flex-basis .45s cubic-bezier(.2,.8,.25,1),
+                opacity .45s ease, transform .45s ease;
+  }
+  .genre-stage.is-spotlight .genre-item:hover { opacity: .8; }
+  .genre-stage.is-spotlight .genre-item.is-active {
+    flex: 0 1 clamp(320px, 38vw, 470px);
+    opacity: 1;
+    transform: none;
+  }
+  /* Only the centre clip is the "open full screen" affordance. */
+  .genre-stage.is-spotlight .genre-item.is-active .vid-r { cursor: zoom-in; }
+  .genre-stage.is-spotlight .genre-item.is-active .genre-name { color: var(--white); }
+  .genre-stage.is-spotlight .genre-item.is-active .genre-note { color: var(--grey-light); }
+}
+
+/* Respect reduced-motion: promotion still works, it just doesn't animate. */
+@media (prefers-reduced-motion: reduce) {
+  .genre-stage.is-spotlight .genre-item { transition: none; }
+}
+
+/* ── Mobile: carousel.js takes over; the hint text is about clicking, so drop
+   it and let the dots do the explaining. ── */
+@media (max-width: 768px) {
+  .genre-hint { display: none; }
+  .genre-label { margin-top: 12px; }
+}
+
+
+/* ── Genre spotlight: colour correction ──
+   #experience carries class="s-dark" in the markup, but the light-theme block
+   further up overrides it to #f7f4ef !important — so it actually renders on
+   cream, and the white label text set above was invisible against it. These
+   re-tone the spotlight copy for the background it really has.
+   (Same trap for the carousel dots: the .s-dark rule would paint them white.) */
+#experience .genre-intro { color: var(--grey-dark); }
+#experience .genre-name { color: #1d1d1f; }
+#experience .genre-note { color: var(--grey-dark); }
+#experience .genre-hint { color: var(--grey); }
+#experience .carousel-dot { background: rgba(0, 0, 0, 0.22); }
+#experience .carousel-dot.is-active { background: rgba(0, 0, 0, 0.75); }
+
+@media (min-width: 769px) {
+  #experience .genre-stage.is-spotlight .genre-item.is-active .genre-name { color: #1d1d1f; }
+  #experience .genre-stage.is-spotlight .genre-item.is-active .genre-note { color: var(--grey-dark); }
+}
+
+
+/* ==========================================================================
+   HERO CTA — liquid glass
+   The flat translucent panel read as too plain ("too clear"). This adds the
+   two things that sell glass: a slow specular sweep travelling across the
+   face, and a bright rim along the top edge for optical depth.
+
+   Both are pseudo-elements behind the label (.k-pop-btn span is z-index 2 and
+   the button already has overflow:hidden, so the sweep is clipped to the pill).
+   ========================================================================== */
+
+#hero-cta { isolation: isolate; }
+
+/* Travelling specular highlight. Deliberately wide and soft — a hard band
+   reads as a "shine" gimmick, a broad one reads as light moving over glass.
+   8s and ease-in-out so it glides and pauses rather than strobing. */
+#hero-cta::before {
+  content: '';
+  position: absolute;
+  top: -70%; bottom: -70%; left: -30%;
+  width: 68%;
+  background: linear-gradient(
+    100deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.12) 32%,
+    rgba(255, 255, 255, 0.50) 50%,
+    rgba(255, 255, 255, 0.12) 68%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  filter: blur(7px);
+  transform: rotate(18deg) translateX(-180px);
+  animation: cta-sheen 7s linear infinite;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Static glass rim: bright along the top edge, fading out by the middle —
+   the "edge highlighting" that makes the pill read as a solid piece of glass
+   rather than a flat translucent rectangle. */
+#hero-cta::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background:
+    linear-gradient(to bottom,
+      rgba(255, 255, 255, 0.30) 0%,
+      rgba(255, 255, 255, 0.06) 42%,
+      rgba(255, 255, 255, 0) 60%),
+    radial-gradient(120% 80% at 50% 0%,
+      rgba(255, 255, 255, 0.18) 0%,
+      rgba(255, 255, 255, 0) 70%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Travels the full width at a constant rate; opacity only fades at the very
+   ends so the loop point is invisible rather than snapping back. */
+@keyframes cta-sheen {
+  0%   { transform: rotate(18deg) translateX(-180px); opacity: 0; }
+  14%  { opacity: 1; }
+  86%  { opacity: 1; }
+  100% { transform: rotate(18deg) translateX(300px); opacity: 0; }
+}
+
+#hero-cta:hover::after {
+  background:
+    linear-gradient(to bottom,
+      rgba(255, 255, 255, 0.42) 0%,
+      rgba(255, 255, 255, 0.10) 42%,
+      rgba(255, 255, 255, 0) 60%),
+    radial-gradient(120% 80% at 50% 0%,
+      rgba(255, 255, 255, 0.26) 0%,
+      rgba(255, 255, 255, 0) 70%);
+}
+
+/* A permanently-moving highlight is exactly the kind of thing that triggers
+   motion sensitivity — keep the glass, drop the travel. */
+@media (prefers-reduced-motion: reduce) {
+  #hero-cta::before { animation: none; opacity: .5; transform: rotate(18deg) translateX(60px); }
+}
