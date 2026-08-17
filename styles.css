@@ -2776,48 +2776,40 @@ body.cart-open .nav-links { opacity: 0; pointer-events: none; }
     z-index: 9999 !important;
   }
 }
-/* TRADEMARK SYMBOLS FOR NAV LOGOS */
-.nav-logo::before {
-  content: "®";
+/* NAV LOGO TRADEMARKS (HTML Wrappers) */
+.nav-mark {
   position: absolute;
-  left: 252px;
-  top: 0px;
+  font-family: sans-serif;
+  font-weight: bold;
+}
+.nav-mark-reg {
+  top: 0;
+  right: -8px;
   font-size: 11px;
   color: #ffffff;
-  opacity: 1;
-  transition: opacity 0.3s ease;
-  font-family: sans-serif;
 }
-.nav-logo::after {
-  content: "™";
-  position: absolute;
-  left: 56px;
+.nav-mark-tm {
   top: 5px;
-  font-size: 12px;
-  color: #1d1d1f;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  font-family: sans-serif;
+  right: -12px;
+  font-size: 11px;
+  color: inherit; /* Inherit color from wrapper */
 }
 
-/* On inner pages, the nav icon is white even when scrolled */
-.inner-nav .nav-logo::after {
-  color: #ffffff !important;
-}
+/* Ensure the wrapper transitions work just like the child used to */
+.nav-logo > .logo-white-wrap { opacity: 1; transition: opacity .45s ease, transform .45s ease; grid-area: 1 / 1; }
+.nav-logo > .logo-icon-wrap { opacity: 0; transform: scale(.94); transition: opacity .45s ease, transform .45s ease; grid-area: 1 / 1; }
+.navbar.scrolled .logo-white-wrap { opacity: 0; }
+.navbar.scrolled .logo-icon-wrap { opacity: 1; transform: scale(1); }
+.navbar.scrolled .nav-logo:hover .logo-icon-wrap { opacity: .8; }
 
-/* Fade rules */
-.navbar.scrolled .nav-logo::before { opacity: 0; }
-.navbar.scrolled .nav-logo::after { opacity: 1; }
+/* In inner-nav scrolled, the logo is grey, so the TM should be grey. */
+.inner-nav.scrolled .nav-mark-tm { color: #ffffff !important; }
+/* In index scrolled, it's also dark */
+.navbar.scrolled .nav-mark-tm {
+  color: #1d1d1f; 
+}
 
 @media (max-width: 768px) {
-  .nav-logo::before {
-    left: 162px;
-    top: -2px;
-    font-size: 9px;
-  }
-  .nav-logo::after {
-    left: 36px;
-    top: 2px;
-    font-size: 10px;
-  }
+  .nav-mark-reg { right: -6px; top: 0; font-size: 8px; }
+  .nav-mark-tm { right: -9px; top: 2px; font-size: 8px; }
 }
