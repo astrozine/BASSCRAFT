@@ -292,7 +292,7 @@ p {
   #global-mute-btn { display: none !important; }}
 
 /* ═══ HERO ═══ */
-.hero { position: relative; height: 100vh; height: 100svh; max-height: 1200px; width: 100%; overflow: hidden; }
+.hero { position: relative; height: 100vh; height: 100svh; max-height: 1200px; width: 100%; overflow: hidden; background: #000; }
 .hero-bg { position: absolute; inset: 0; }
 .hero-bg video {
   position: absolute; top: 0; left: 0;
