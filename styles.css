@@ -297,8 +297,12 @@ p {
 .hero-bg video {
   position: absolute; top: 0; left: 0;
   width: 100%; height: 100%;
-  object-fit: contain;
-  object-position: top;
+  /* Was object-fit: contain — on any viewport wider than the video's own
+     aspect ratio that letterboxes it, pillarboxing black bars down both
+     sides instead of filling the screen. cover crops instead of shrinking,
+     matching what mobile already did below. */
+  object-fit: cover;
+  object-position: center;
   z-index: 0;
 }
 @media (max-width: 768px) {
@@ -313,8 +317,11 @@ p {
 .hero-poster {
   position: absolute; top: 0; left: 0;
   width: 100%; height: 100%;
-  object-fit: contain;
-  object-position: top;
+  /* Matches the video's own fit mode above — the poster crossfades directly
+     into the video, so a mismatch here would cause a visible jump/reflow at
+     that exact moment. */
+  object-fit: cover;
+  object-position: center;
   z-index: 1;
   transition: opacity 90ms linear;
 }
@@ -335,7 +342,18 @@ p {
    column 1, so the two can never run into each other at any width. */
 .hero-center {
   position: absolute; inset: 0; display: grid;
-  grid-template-columns: 1fr auto 1fr;
+  /* Middle column was `auto` — sized to whatever's inside it. That was fine
+     while it only held the button, but once the tagline moved in here too,
+     its full-sentence width (~400px+) grew the middle column enough to eat
+     into the two 1fr flanks. Those flanks are ALWAYS equal to each other by
+     definition (both 1fr) — column 3 is empty, invisible, and exists purely
+     so column 1 gets a matching mirror and the button lands on the section's
+     true centre — so squeezing the middle column's leftover space squeezed
+     column 1 (the headline) right along with it, below the width it needs to
+     hold "Feel every frequency." on one line. Capping the middle column
+     stops its content from ever driving that: the tagline wraps to two short
+     lines instead, which is the acceptable side of this trade-off.  */
+  grid-template-columns: 1fr minmax(120px, 230px) 1fr;
   /* Two rows: the CTA rides in row 1, the copy in row 2, and align-content:end
      packs the pair against the bottom padding. That lifts the button clear
      above the headline instead of sitting level with it, while the middle
@@ -352,6 +370,10 @@ p {
   min-width: 0; /* let the column actually constrain the text instead of overflowing */
 }
 .hero-center .hero-cta { grid-row: 1; grid-column: 2; justify-self: center; }
+/* Tagline sits under the button (column 2), on the same row as the headline
+   (column 1) — the two read as a matched pair at the same baseline, one
+   anchored left under the wordmark, one centred under the CTA. */
+.hero-center .hero-tagline { grid-row: 2; grid-column: 2; justify-self: center; text-align: center; }
 .hero-center h1, .hero-center p { max-width: 100%; margin: 0; }
 @media (max-width: 768px) {
   /* Phones stack instead: single column, everything centred, button under the
@@ -396,13 +418,16 @@ p {
   font-size: clamp(1.75rem, 3.1vw, 3rem);
 }
 
-/* Narrow landscape range (iPad portrait ~820px is the common one): still the
-   side-by-side desktop grid, but the left rail gets tight enough to wrap the
-   headline. Buy the rail a bit more room and trim the type so it stays on one
-   line right down to the 768px mobile breakpoint. */
-@media (min-width: 769px) and (max-width: 950px) {
+/* Narrow landscape range — iPad portrait (~820px) through small laptop
+   windows (~1100px): still the side-by-side desktop grid, but the left rail
+   gets tight enough to wrap the headline. Extended up from the original
+   950px ceiling because the base 3.1vw title size still didn't fit the rail
+   at 1100px even after the middle column below got capped — 1100 needs the
+   same relief 820 does, just less of it. Buy the rail a bit more room and
+   trim the type so it stays on one line right down to the 768px breakpoint. */
+@media (min-width: 769px) and (max-width: 1180px) {
   .hero-center { gap: 12px; padding-left: 4vw; padding-right: 4vw; }
-  .hero-title { font-size: 2.6vw; }
+  .hero-title { font-size: 2.7vw; }
   .hero-tagline { font-size: 1.05rem; }
 }
 
