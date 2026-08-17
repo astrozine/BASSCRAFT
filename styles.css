@@ -161,6 +161,17 @@ p {
   backdrop-filter: saturate(180%) blur(20px); -webkit-backdrop-filter: saturate(180%) blur(20px);
   border-bottom: 1px solid rgba(255,255,255,0.06);
 }
+/* Pre-scroll the bar is just a faint top scrim (so it doesn't crop the hero
+   video), which reads poorly over a bright frame. Desktop-only hover lets
+   people fade it to a solid, legible bar on demand without permanently
+   losing the transparent look. Mobile has no real hover, so it's excluded
+   there rather than risk a state that sticks after a tap. */
+@media (min-width: 769px) {
+  .navbar:not(.scrolled):hover {
+    background: rgba(0,0,0,0.82);
+    backdrop-filter: saturate(180%) blur(20px); -webkit-backdrop-filter: saturate(180%) blur(20px);
+  }
+}
 .nav-logo img { height: 50px; cursor: pointer; transition: opacity 0.3s; }
 .nav-logo img:hover { opacity: 0.7; }
 .nav-links { display: flex; gap: 1.6rem; }
@@ -341,44 +352,32 @@ p {
    centred in whatever space the copy left over. The copy is boxed into
    column 1, so the two can never run into each other at any width. */
 .hero-center {
-  position: absolute; inset: 0; display: grid;
-  /* Middle column was `auto` — sized to whatever's inside it. That was fine
-     while it only held the button, but once the tagline moved in here too,
-     its full-sentence width (~400px+) grew the middle column enough to eat
-     into the two 1fr flanks. Those flanks are ALWAYS equal to each other by
-     definition (both 1fr) — column 3 is empty, invisible, and exists purely
-     so column 1 gets a matching mirror and the button lands on the section's
-     true centre — so squeezing the middle column's leftover space squeezed
-     column 1 (the headline) right along with it, below the width it needs to
-     hold "Feel every frequency." on one line. Capping the middle column
-     stops its content from ever driving that: the tagline wraps to two short
-     lines instead, which is the acceptable side of this trade-off.  */
-  grid-template-columns: 1fr minmax(120px, 230px) 1fr;
-  /* Two rows: the CTA rides in row 1, the copy in row 2, and align-content:end
-     packs the pair against the bottom padding. That lifts the button clear
-     above the headline instead of sitting level with it, while the middle
-     column keeps it on the true horizontal centre. */
-  grid-template-rows: auto auto;
-  align-content: end;
-  z-index: 10; column-gap: 20px; row-gap: clamp(18px, 2.4vh, 34px);
-  padding-bottom: clamp(60px, 8vh, 100px);
-  padding-left: clamp(30px, 6vw, 100px); padding-right: clamp(30px, 6vw, 100px);
+  /* Libernovo-style: headline, subcopy and CTA read as one stacked block,
+     left-justified and vertically centred against the hero video's height —
+     not spread across a left/centre grid, and not pinned to the bottom. */
+  position: absolute;
+  left: clamp(30px, 6vw, 100px);
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: fit-content;
+  max-width: 680px;
+  z-index: 10;
+  gap: clamp(10px, 1.6vh, 18px);
 }
 .hero-text-group {
-  grid-row: 2; grid-column: 1;
   display: flex; flex-direction: column; align-items: flex-start; text-align: left;
   min-width: 0; /* let the column actually constrain the text instead of overflowing */
 }
-.hero-center .hero-cta { grid-row: 1; grid-column: 2; justify-self: center; }
-/* Tagline sits under the button (column 2), on the same row as the headline
-   (column 1) — the two read as a matched pair at the same baseline, one
-   anchored left under the wordmark, one centred under the CTA. */
-.hero-center .hero-tagline { grid-row: 2; grid-column: 2; justify-self: center; text-align: center; }
+.hero-center .hero-cta { order: 3; }
+.hero-center .hero-tagline { order: 2; text-align: left; }
 .hero-center h1, .hero-center p { max-width: 100%; margin: 0; }
 @media (max-width: 768px) {
-  /* Phones stack instead: single column, everything centred, button under the
-     copy. (The desktop rule above is a grid now, so this re-declares the grid
-     rather than the old flex-direction/justify-content, which grid ignores.) */
+  /* Phones keep the original bottom-anchored, centred stack — the desktop
+     rule above repositions to a left-justified, vertically-centred block via
+     top/transform/width, so all of that needs resetting back here too. */
   /* Phone order is BUY NOW → headline → description, matching the desktop
      stack: the CTA sits above the whole copy block rather than wedged between
      the two lines. The button is a sibling of .hero-text-group, not a child,
@@ -389,6 +388,8 @@ p {
     flex-direction: column;
     align-items: center;
     justify-content: flex-end;
+    left: 0; right: 0; top: 0; bottom: 0; transform: none;
+    width: auto; max-width: none;
     padding-bottom: max(32px, env(safe-area-inset-bottom, 24px)); gap: 6px;
     padding-left: 28px; padding-right: 28px;
     overflow: hidden;
@@ -397,8 +398,13 @@ p {
   .hero-center .hero-cta { order: 2; }
   .hero-center .hero-title { order: 2; }
   .hero-center .hero-tagline { order: 3; }
-  .hero-center h1 { font-size: clamp(1.25rem, 3.8vw, 1.8rem) !important; line-height: 1.1; max-width: min(85vw, 400px); margin-top: 0; margin-bottom: 0; text-align: center; }
-  .hero-center p {
+  .hero-center h1 { font-size: clamp(1.25rem, 3.8vw, 1.8rem) !important; line-height: 1.1; max-width: min(85vw, 400px); margin-top: 0; margin-bottom: 0; text-align: center; white-space: normal; }
+  /* Must match (not just equal-specificity-lose-to) the base ".hero-center
+     .hero-tagline { text-align: left }" rule — ".hero-center p" alone is
+     lower specificity (class+element vs two classes) and silently loses the
+     cascade regardless of source order, leaving the tagline left-aligned on
+     phones. Targeting .hero-tagline directly here fixes that. */
+  .hero-center .hero-tagline {
     font-size: clamp(0.82rem, 3.4vw, 0.95rem);
     line-height: 1.3;
     max-width: 220px;
@@ -409,13 +415,13 @@ p {
      headline (was margin-top, for when it was wedged under the headline). */
   .hero-cta { padding: 10px 26px; font-size: 0.84rem; margin-top: 0; margin-bottom: 10px; }}
 
-/* Sized to hold "Feel every frequency." on a single line inside the grid's
-   left rail. The old 5vw/4rem ran ~640px wide, which overflowed the rail once
-   the centred button claimed the middle, wrapping the headline to two lines
-   and pushing the whole block upward. This keeps it on one line and therefore
-   sitting where it always sat. */
+/* Sized to hold "Feel every frequency." on a single line inside the block's
+   680px cap; nowrap makes that a hard guarantee instead of a hope. Mobile
+   resets this back to normal since its own font-size/max-width pairing
+   below is tuned to wrap safely at phone widths. */
 .hero-title {
   font-size: clamp(1.75rem, 3.1vw, 3rem);
+  white-space: nowrap;
 }
 
 /* Narrow landscape range — iPad portrait (~820px) through small laptop
@@ -426,7 +432,7 @@ p {
    same relief 820 does, just less of it. Buy the rail a bit more room and
    trim the type so it stays on one line right down to the 768px breakpoint. */
 @media (min-width: 769px) and (max-width: 1180px) {
-  .hero-center { gap: 12px; padding-left: 4vw; padding-right: 4vw; }
+  .hero-center { gap: 12px; left: 4vw; }
   .hero-title { font-size: 2.7vw; }
   .hero-tagline { font-size: 1.05rem; }
 }
@@ -606,11 +612,10 @@ p {
 
 /* ═══ PRICING GRID ═══ */
 .pricing-grid {
-  /* Was 800px, which left the pricing cards sitting well inside an already
-     centred container — a narrow column in the middle of a wide screen. Each
-     card is a horizontal image|info layout, so the extra width goes straight
-     into a bigger product shot rather than over-long lines of text. */
-  display: grid; grid-template-columns: 1fr; gap: 2rem; max-width: 1120px; margin: 0 auto;
+  /* Back to the horizontal image|info split (not the stacked 3:2-box version),
+     but tightened from the old 1120px — narrow enough to read as one centred
+     block on the page instead of a wide stretched-out bar. */
+  display: grid; grid-template-columns: 1fr; gap: 2rem; max-width: 760px; margin: 0 auto;
 }
 .pricing-card {
   background: var(--white); border-radius: var(--r); padding: clamp(1.5rem, 3vw, 2.5rem); text-align: left;
@@ -620,7 +625,10 @@ p {
   display: flex; gap: 2rem; align-items: center;
 }
 .pricing-card-image {
-  flex: 1; min-width: 0; position: relative;
+  /* Slightly more than half the row, and left uncropped (natural portrait
+     aspect via height:auto) instead of squeezed into a 3:2 box — taller and
+     bigger, per the client, so the product actually reads at a glance. */
+  flex: 1.15; min-width: 0; position: relative;
 }
 .pricing-card-image img {
   width: 100%; height: auto; display: block; border-radius: 16px;
@@ -671,28 +679,20 @@ p {
 .pricing-card .buy-btn-featured:hover { opacity: .9; }
 
 @media (max-width: 768px) {
-  .pricing-grid { display: flex; flex-direction: column; align-items: center; width: 100%; }
-  .pricing-card { max-width: 450px; width: 100%; margin: 0 0 2rem 0; }
-  .pricing-card.featured { transform: scale(1); margin: 0 0 2rem 0; }
-  .pricing-card-image { max-width: 260px; margin: 0 auto 1.5rem; }
-  .pricing-card-inner { flex-direction: column; text-align: center; gap: 1rem; }
-  .pricing-card-info { text-align: center; }
-  .pricing-price { justify-content: center; }
-
-  /* Keep a whole kit card within one phone screen. The product shots are portrait,
-     so height (not width) is what was overflowing — cap by max-height and let the
-     width follow, then tighten the type/spacing to match. */
-  .pricing-card { padding: 1.25rem; margin: 0 0 1.25rem 0; }
-  .pricing-card.featured { margin: 0 0 1.25rem 0; }
-  .pricing-card-image { max-width: 100%; margin: 0 auto 0.75rem; }
-  .pricing-card-image img { max-height: 30vh; width: auto; margin: 0 auto; object-fit: contain; }
-  .pricing-card-inner { gap: 0.6rem; }
+  /* Phones stack instead: the row layout above doesn't have room to sit
+     image-beside-text, so this switches back to image-on-top, centred. */
+  .pricing-card.featured { transform: scale(1); }
+  .pricing-card { padding: 1.25rem; text-align: center; }
+  .pricing-card-inner { flex-direction: column; text-align: center; gap: 0.75rem; }
+  .pricing-card-image { max-width: 260px; margin: 0 auto; }
+  .pricing-card-info { align-items: center; text-align: center; }
   .pricing-card h3 { font-size: 1.35rem; margin-bottom: 0.2rem; }
   .pricing-desc { font-size: 0.9rem; margin-bottom: 0.6rem; }
-  .pricing-price { font-size: 1.9rem; margin-bottom: 0.9rem; gap: 10px; }
+  .pricing-price { font-size: 1.9rem; margin-bottom: 0.9rem; gap: 10px; justify-content: center; }
   .pricing-was { font-size: 1.05rem; }
   .pricing-card .buy-btn { padding: 12px 24px; font-size: 0.9rem; }
-  .pricing-badge { top: -11px; font-size: 0.72rem; padding: 5px 14px; }}
+  .pricing-badge { top: -11px; font-size: 0.72rem; padding: 5px 14px; }
+}
 
 /* ═══ FOOTER ═══ */
 .footer { background: var(--bg); border-top: 1px solid rgba(255,255,255,0.06); padding: 60px 0; }
@@ -2215,20 +2215,6 @@ body.cart-open .nav-links { opacity: 0; pointer-events: none; }
   padding: 10px;
 }
 
-/* The product renders are tall portraits (2336x3504). Once .pricing-grid went
-   from 800px to 1120px the image column grew to ~500px, which at that aspect
-   made the shot ~750px tall and left a large empty gap beside the copy. Cap the
-   height and let the plate hug the image, so the extra card width lands in the
-   info column instead of stretching the card vertically. */
-#order .pricing-card-image { flex: 0 1 auto; align-self: center; }
-#order .pricing-card-image img {
-  max-height: 420px;
-  width: auto;
-  max-width: 100%;
-  margin: 0 auto;
-  object-fit: contain;
-}
-
 
 /* ==========================================================================
    MOBILE SWIPE CAROUSELS
@@ -2546,7 +2532,7 @@ body.cart-open .nav-links { opacity: 0; pointer-events: none; }
    elsewhere: heading → row → pricing, with the row reading as support for the
    heading rather than as a separate band. */
 #order .trust-grid {
-  max-width: 1120px;             /* stays locked to .pricing-grid's width above */
+  max-width: 1120px;             /* wide 3-up row; .pricing-grid below is its own, narrower, centred stack */
   margin: clamp(28px, 3.5vw, 44px) auto clamp(44px, 5.5vw, 68px);
 }
 /* Pinned to three columns rather than left to auto-fit: inside the 800px
@@ -2783,13 +2769,13 @@ body.cart-open .nav-links { opacity: 0; pointer-events: none; }
   font-weight: bold;
 }
 .nav-mark-reg {
-  top: 0;
+  top: -3px;
   right: -8px;
   font-size: 11px;
   color: #ffffff;
 }
 .nav-mark-tm {
-  top: 5px;
+  top: 2px;
   right: -12px;
   font-size: 11px;
   color: inherit; /* Inherit color from wrapper */
@@ -2810,6 +2796,6 @@ body.cart-open .nav-links { opacity: 0; pointer-events: none; }
 }
 
 @media (max-width: 768px) {
-  .nav-mark-reg { right: -6px; top: 0; font-size: 8px; }
-  .nav-mark-tm { right: -9px; top: 2px; font-size: 8px; }
+  .nav-mark-reg { right: -6px; top: -2px; font-size: 8px; }
+  .nav-mark-tm { right: -9px; top: 0; font-size: 8px; }
 }
