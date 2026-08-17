@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FAQs — BASSCRAFT</title>
-  <meta name="description" content="Everything you want to know about BASSCRAFT before you order.">
+  <title>How It Works — BASSCRAFT</title>
+  <meta name="description" content="No Bluetooth. No lag. An analog mic picks up the sound in the car and drives it straight into the haptics in real time.">
   <link rel="icon" href="favicon.ico">
   <link rel="stylesheet" href="styles.css">
   <style>
@@ -13,22 +13,26 @@
     .inner-eyebrow { font-family:'CalSansText',sans-serif; font-size:.75rem; letter-spacing:.12em; text-transform:uppercase; color:var(--grey); margin-bottom:18px; }
     .inner-page h1 { font-family:'CalSansUI',sans-serif; font-weight:700; font-size:clamp(2.2rem,5vw,3.6rem); letter-spacing:-0.025em; line-height:1.08; color:#1d1d1f; margin-bottom:24px; }
     .inner-intro { font-size:clamp(1rem,1.3vw,1.2rem); color:#6e6e73; line-height:1.65; margin-bottom:clamp(48px,6vw,72px); border-bottom:1px solid rgba(0,0,0,0.08); padding-bottom:clamp(32px,4vw,48px); }
-    .inner-section { margin-bottom:clamp(36px,4vw,52px); }
-    .inner-section h2 { font-family:'CalSansUI',sans-serif; font-weight:600; font-size:clamp(1.1rem,1.6vw,1.4rem); color:#1d1d1f; margin-bottom:12px; letter-spacing:-0.01em; }
-    .inner-section h3 { font-family:'CalSansUI',sans-serif; font-weight:600; font-size:clamp(1rem,1.3vw,1.15rem); color:#1d1d1f; margin-bottom:8px; margin-top:24px; }
-    .inner-section p { font-family:'CalSansText',sans-serif; color:#6e6e73; line-height:1.7; font-size:clamp(.9rem,1.05vw,1rem); margin-bottom:14px; }
-    .inner-section ul, .inner-section ol { padding-left:1.4em; margin-bottom:14px; }
-    .inner-section li { font-family:'CalSansText',sans-serif; color:#6e6e73; line-height:1.7; font-size:clamp(.9rem,1.05vw,1rem); margin-bottom:6px; }
+    
+    .tut-step { margin-bottom: clamp(44px, 5vw, 64px); }
+    .tut-step-head { display: flex; align-items: baseline; gap: 16px; margin-bottom: clamp(24px, 3vw, 34px); }
+    .tut-step-head h2 { font-family:'CalSansUI',sans-serif; font-weight:600; font-size:clamp(1.2rem,1.8vw,1.6rem); color:#1d1d1f; margin: 0; }
+    
+    .tut-grid-2 { display: grid; grid-template-columns: minmax(0,1.1fr) minmax(0,1fr); gap: clamp(28px, 4vw, 52px); align-items: center; }
+    .tut-grid-2--reverse { grid-template-columns: minmax(0,1fr) minmax(0,1.1fr); }
+    .tut-grid-2--reverse .tut-text { order: 1; }
+    .tut-grid-2--reverse .tut-media { order: 2; }
+    
+    .tut-media { position: relative; border-radius: 16px; overflow: hidden; line-height: 0; }
+    .tut-media--wide { max-width: 100%; margin-bottom: clamp(28px,3.5vw,40px); }
+    
+    .tut-text p { font-family: 'CalSansText', sans-serif; color: #6e6e73; line-height: 1.7; font-size: clamp(.9rem, 1.05vw, 1rem); margin-bottom: 14px; }
     .inner-divider { border:0; height:1px; background:rgba(0,0,0,0.08); margin:clamp(28px,3vw,40px) 0; }
-    .placeholder-badge { display:inline-block; background:rgba(255,180,0,0.1); border:1px solid rgba(255,160,0,0.25); color:#9a6700; font-size:.7rem; font-family:'CalSansText',sans-serif; letter-spacing:.06em; text-transform:uppercase; padding:4px 10px; border-radius:4px; margin-bottom:28px; }
-    .faq-item { border-bottom:1px solid rgba(0,0,0,0.07); padding:20px 0; }
-    .faq-item:first-child { padding-top:0; }
-    .faq-q { font-family:'CalSansUI',sans-serif; font-weight:600; font-size:clamp(.95rem,1.2vw,1.05rem); color:#1d1d1f; margin-bottom:10px; }
-    .faq-a { font-family:'CalSansText',sans-serif; color:#6e6e73; line-height:1.7; font-size:clamp(.88rem,1vw,.98rem); }
-    .track-form input, .track-form button { font-family:'CalSansText',sans-serif; }
-    .track-form { display:flex; gap:12px; flex-wrap:wrap; margin:24px 0; }
-    .track-form input { flex:1 1 260px; padding:13px 16px; border:1px solid rgba(0,0,0,0.15); border-radius:12px; background:#fff; font-size:.95rem; color:#1d1d1f; outline:none; }
-    .track-form button { padding:13px 26px; background:#1d1d1f; color:#fff; border:none; border-radius:12px; font-size:.9rem; font-weight:600; cursor:pointer; letter-spacing:.03em; }
+    
+    @media (max-width: 768px) {
+      .tut-grid-2, .tut-grid-2--reverse { grid-template-columns: 1fr; gap: 20px; }
+      .tut-grid-2--reverse .tut-text, .tut-grid-2--reverse .tut-media { order: unset; }
+    }
   </style>
 </head>
 <body>
@@ -47,8 +51,8 @@
     <a href="/">HOME</a>
     <a href="/#social-proof">OWNERS</a>
     <a href="/#problem">THE FEEL</a>
-    <a href="index.html#installation">HOW IT WORKS</a>
-    <a href="index.html#specs">TECH SPECS</a>
+    <a href="how-it-works.html">HOW IT WORKS</a>
+    <a href="tech-specs.html">TECH SPECS</a>
     <a href="/#order">ORDER</a>
   </div>
   <div class="mega-nav-links">
@@ -144,56 +148,35 @@
   <a href="shipping.html">Shipping Policy</a>
 </div>
 <main class="inner-page">
-  <div class="container">
-    <p class="placeholder-badge">Placeholder page — content pending</p>
+  <div class="container" style="max-width: min(940px, 90vw);">
     <p class="inner-eyebrow">BASSCRAFT</p>
-    <h1>Frequently asked questions.</h1>
-    <p class="inner-intro">Everything you want to know about BASSCRAFT before you order.</p>
-    <div class="inner-section">
-  <h2>Product</h2>
-  <div class="faq-item">
-    <p class="faq-q">What exactly is BASSCRAFT?</p>
-    <p class="faq-a">BASSCRAFT is a vibrotactile seat cushion for cars. It sits on top of your existing car seat and uses a built-in transducer to turn low-frequency audio into physical vibration you feel through your body — not just hear through speakers.</p>
-  </div>
-  <div class="faq-item">
-    <p class="faq-q">Will it work with my car?</p>
-    <p class="faq-a">BASSCRAFT fits virtually any standard car bucket seat and connects to any head unit made after 1995 via 3.5mm aux or RCA. For specific vehicle questions, email info@basscraft.co.</p>
-  </div>
-  <div class="faq-item">
-    <p class="faq-q">Do I need to permanently modify my car?</p>
-    <p class="faq-a">No. BASSCRAFT installs in seconds with no tools, no drilling, and no permanent modification. It straps onto your seat and plugs into your existing audio output and 12V socket.</p>
-  </div>
-  <div class="faq-item">
-    <p class="faq-q">Will it damage my seat?</p>
-    <p class="faq-a">No. BASSCRAFT sits on top of your seat without any adhesives or clips that contact the seat fabric directly. The straps are padded and designed to not mark leather or fabric upholstery.</p>
+    <h1>How It Works</h1>
+    <p class="inner-intro">No Bluetooth. No lag. An analog mic picks up the sound in the car and drives it straight into the haptics in real time.</p>
+    <div class="tut-media tut-media--wide" style="aspect-ratio: 21/9;">
+  <div style="background: repeating-linear-gradient(45deg, #e8e8eb, #e8e8eb 10px, #f2f2f5 10px, #f2f2f5 20px); border-radius: 16px; display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; border: 1px solid rgba(0,0,0,0.05);"><p style="font-family: 'Inter', sans-serif; font-size: 0.75rem; color: #8e8e93; letter-spacing: 0.1em; text-transform: uppercase; margin: 0; text-align: center;">HERO ASSET PENDING</p></div>
+</div>
+<hr class="inner-divider">
+<div class="tut-step">
+  <div class="tut-step-head"><h2>Why Bluetooth Fails</h2></div>
+  <div class="tut-grid-2">
+    <div class="tut-media"><div style="background: repeating-linear-gradient(45deg, #e8e8eb, #e8e8eb 10px, #f2f2f5 10px, #f2f2f5 20px); border-radius: 16px; display: flex; align-items: center; justify-content: center; width: 100%; aspect-ratio: 16/9; border: 1px solid rgba(0,0,0,0.05);"><p style="font-family: 'Inter', sans-serif; font-size: 0.75rem; color: #8e8e93; letter-spacing: 0.1em; text-transform: uppercase; margin: 0; text-align: center;">ASSET PENDING</p></div></div>
+    <div class="tut-text"><p>Wireless audio inherently has latency. When translating audio to physical sensation, even a fraction of a second delay makes the bass feel completely disconnected from the music. We eliminated the lag entirely.</p></div>
   </div>
 </div>
 <hr class="inner-divider">
-<div class="inner-section">
-  <h2>Ordering &amp; Shipping</h2>
-  <div class="faq-item">
-    <p class="faq-q">When will my order ship?</p>
-    <p class="faq-a">We are currently in a pre-order phase. Founding-buyer kits are scheduled to ship in [Quarter]. You will receive an email with tracking information as soon as your order dispatches.</p>
-  </div>
-  <div class="faq-item">
-    <p class="faq-q">Do you ship internationally?</p>
-    <p class="faq-a">We currently ship to [Countries]. Additional regions will be added over time. Enter your address at checkout to confirm availability to your location.</p>
-  </div>
-  <div class="faq-item">
-    <p class="faq-q">Can I change or cancel my order?</p>
-    <p class="faq-a">Orders can be modified or cancelled within 24 hours of placement. Email info@basscraft.co with your order number as soon as possible.</p>
+<div class="tut-step">
+  <div class="tut-step-head"><h2>Acoustic Sensing</h2></div>
+  <div class="tut-grid-2 tut-grid-2--reverse">
+    <div class="tut-text"><p>The controller features a built-in, highly sensitive microphone that listens to your car's ambient audio. It instantly processes the signal, filtering out road noise and focusing purely on the music.</p></div>
+    <div class="tut-media"><div style="background: repeating-linear-gradient(45deg, #e8e8eb, #e8e8eb 10px, #f2f2f5 10px, #f2f2f5 20px); border-radius: 16px; display: flex; align-items: center; justify-content: center; width: 100%; aspect-ratio: 16/9; border: 1px solid rgba(0,0,0,0.05);"><p style="font-family: 'Inter', sans-serif; font-size: 0.75rem; color: #8e8e93; letter-spacing: 0.1em; text-transform: uppercase; margin: 0; text-align: center;">ASSET PENDING</p></div></div>
   </div>
 </div>
 <hr class="inner-divider">
-<div class="inner-section">
-  <h2>Returns &amp; Warranty</h2>
-  <div class="faq-item">
-    <p class="faq-q">What is your return policy?</p>
-    <p class="faq-a">We offer a 30-day return window from the date of delivery. Items must be returned in original condition and packaging. See our <a href="returns.html" style="color:#1d1d1f;text-decoration:underline;">Returns &amp; Refunds</a> page for full details.</p>
-  </div>
-  <div class="faq-item">
-    <p class="faq-q">What does the warranty cover?</p>
-    <p class="faq-a">BASSCRAFT products come with a 12-month limited warranty covering manufacturing defects. See our <a href="warranty.html" style="color:#1d1d1f;text-decoration:underline;">Warranty</a> page for full terms.</p>
+<div class="tut-step">
+  <div class="tut-step-head"><h2>Frequency Translation</h2></div>
+  <div class="tut-grid-2">
+    <div class="tut-text"><p>The processed signal isolates the sub-bass frequencies (20-120Hz) and drives them straight into the transducers in your seat. The result is a visceral, physical connection to your music.</p></div>
+    <div class="tut-media"><div style="background: repeating-linear-gradient(45deg, #e8e8eb, #e8e8eb 10px, #f2f2f5 10px, #f2f2f5 20px); border-radius: 16px; display: flex; align-items: center; justify-content: center; width: 100%; aspect-ratio: 16/9; border: 1px solid rgba(0,0,0,0.05);"><p style="font-family: 'Inter', sans-serif; font-size: 0.75rem; color: #8e8e93; letter-spacing: 0.1em; text-transform: uppercase; margin: 0; text-align: center;">ASSET PENDING</p></div></div>
   </div>
 </div>
   </div>
@@ -208,15 +191,15 @@
           <h4>Product</h4>
           <a href="/#order">Starter Kit</a>
           <a href="/#order">Double Kit</a>
-          <a href="index.html#specs">The Cushion</a>
-          <a href="index.html#specs">The Controller</a>
+          <a href="the-cushion.html">The Cushion</a>
+          <a href="the-controller.html">The Controller</a>
         </div>
         <div class="footer-col">
           <h4>Explore</h4>
-          <a href="index.html#installation">How It Works</a>
-          <a href="index.html#specs">Tech Specs</a>
-          <a href="/#experience">The Experience</a>
-          <a href="vehicle-compatibility.html">Vehicle Compatibility</a>
+          <a href="how-it-works.html">How It Works</a>
+          <a href="tech-specs.html">Tech Specs</a>
+          <!-- <a href="/#experience">THE EXPERIENCE</a> -->
+          <!-- <a href="vehicle-compatibility.html">Vehicle Compatibility</a> -->
           <a href="tutorials.html">Tutorials</a>
         </div>
         <div class="footer-col">

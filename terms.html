@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Terms of Service — BASSCRAFT</title>
-  <meta name="description" content="The terms and conditions that govern your use of BASSCRAFT.co and purchase of our products.">
+  <meta name="description" content="Effective date: August 1, 2026 &middot; Entity: BASSCRAFT Audio LLC &middot; Contact: info@basscraft.co">
   <link rel="icon" href="favicon.ico">
   <link rel="stylesheet" href="styles.css">
   <style>
@@ -20,22 +20,17 @@
     .inner-section ul, .inner-section ol { padding-left:1.4em; margin-bottom:14px; }
     .inner-section li { font-family:'CalSansText',sans-serif; color:#6e6e73; line-height:1.7; font-size:clamp(.9rem,1.05vw,1rem); margin-bottom:6px; }
     .inner-divider { border:0; height:1px; background:rgba(0,0,0,0.08); margin:clamp(28px,3vw,40px) 0; }
-    .placeholder-badge { display:inline-block; background:rgba(255,180,0,0.1); border:1px solid rgba(255,160,0,0.25); color:#9a6700; font-size:.7rem; font-family:'CalSansText',sans-serif; letter-spacing:.06em; text-transform:uppercase; padding:4px 10px; border-radius:4px; margin-bottom:28px; }
     .faq-item { border-bottom:1px solid rgba(0,0,0,0.07); padding:20px 0; }
     .faq-item:first-child { padding-top:0; }
     .faq-q { font-family:'CalSansUI',sans-serif; font-weight:600; font-size:clamp(.95rem,1.2vw,1.05rem); color:#1d1d1f; margin-bottom:10px; }
     .faq-a { font-family:'CalSansText',sans-serif; color:#6e6e73; line-height:1.7; font-size:clamp(.88rem,1vw,.98rem); }
-    .track-form input, .track-form button { font-family:'CalSansText',sans-serif; }
-    .track-form { display:flex; gap:12px; flex-wrap:wrap; margin:24px 0; }
-    .track-form input { flex:1 1 260px; padding:13px 16px; border:1px solid rgba(0,0,0,0.15); border-radius:12px; background:#fff; font-size:.95rem; color:#1d1d1f; outline:none; }
-    .track-form button { padding:13px 26px; background:#1d1d1f; color:#fff; border:none; border-radius:12px; font-size:.9rem; font-weight:600; cursor:pointer; letter-spacing:.03em; }
   </style>
 </head>
 <body>
 <div id="site-wrapper">
-<nav class="navbar">
+<nav class="navbar inner-nav">
   <div class="nav-left">
-    <a href="index.html#experience" class="nav-logo" id="nav-logo" style="display: flex; align-items: center; gap: 10px;">
+    <a href="/" class="nav-logo" id="nav-logo-inner" style="display: flex; align-items: center; gap: 10px;">
       <!-- Over the hero the full white wordmark shows. Once scrolled (.navbar.scrolled) the
            wordmark cross-fades to just the B icon, held at low opacity so it reads as a
            discreet glassy mark rather than competing with the content. -->
@@ -44,15 +39,22 @@
     </a>
   </div>
   <div class="nav-links">
-    <a href="index.html">HOME</a>
-    <a href="index.html#social-proof">OWNERS</a>
-    <a href="index.html#problem">THE FEEL</a>
+    <a href="/">HOME</a>
+    <a href="/#social-proof">OWNERS</a>
+    <a href="/#problem">THE FEEL</a>
     <a href="index.html#installation">HOW IT WORKS</a>
     <a href="index.html#specs">TECH SPECS</a>
-    <a href="index.html#order">ORDER</a>
+    <a href="/#order">ORDER</a>
+  </div>
+  <div class="mega-nav-links">
+    <a href="/" class="mega-home-link">Home</a>
+    <button data-mega="product">Product</button>
+    <button data-mega="explore">Explore</button>
+    <button data-mega="brand">Business</button>
+    <button data-mega="support">Support</button>
   </div>
   <div class="nav-right">
-    <a href="index.html#order" class="nav-cta scroll-buy-btn k-pop-btn"><span>BUY NOW</span></a>
+    <a href="/#order" class="nav-cta scroll-buy-btn k-pop-btn"><span>BUY NOW</span></a>
   </div>
   <!-- Mobile only: .nav-links is display:none below 768px, so this is the
        only way to reach INSTALLATION/TECH SPECS/EXPERIENCE/ORDER there.
@@ -66,67 +68,135 @@
       <line class="bar bar-bot" x1="4" y1="17" x2="20" y2="17"></line>
     </svg>
   </button>
+  <!-- Mega-menu slide-down panel (NVIDIA-style) -->
+  <div class="mega-panel" id="mega-panel">
+    <!-- Product -->
+    <div class="mega-panel-inner" data-mega-section="product" style="display:none;">
+      <div>
+        <h4>Product</h4>
+        <a href="/#order">Starter Kit</a>
+        <a href="/#order">Double Kit</a>
+        <a href="the-cushion.html">The Cushion</a>
+        <a href="the-controller.html">The Controller</a>
+      </div>
+    </div>
+    <!-- Explore -->
+    <div class="mega-panel-inner" data-mega-section="explore" style="display:none;">
+      <div>
+        <h4>Explore</h4>
+        <a href="how-it-works.html">How It Works</a>
+        <a href="tech-specs.html">Tech Specs</a>
+        <a href="tutorials.html">Tutorials</a>
+      </div>
+    </div>
+    <!-- Brand -->
+    <div class="mega-panel-inner" data-mega-section="brand" style="display:none;">
+      <div>
+        <h4>Business</h4>
+        <a href="about-us.html">About Us</a>
+        <a href="become-a-dealer.html">Become a Dealer</a>
+        <a href="affiliate-program.html">Affiliate Program</a>
+        <a href="press.html">Press</a>
+      </div>
+    </div>
+    <!-- Support -->
+    <div class="mega-panel-inner" data-mega-section="support" style="display:none;">
+      <div>
+        <h4>Support</h4>
+        <a href="mailto:info@basscraft.co">Contact Us</a>
+        <a href="faq.html">FAQs</a>
+        <a href="warranty.html">Warranty</a>
+        <a href="returns.html">Returns &amp; Refunds</a>
+        <a href="shipping.html">Shipping Policy</a>
+      </div>
+    </div>
+  </div>
 </nav>
+<div class="mega-scrim" id="mega-scrim"></div>
 
 <!-- Mobile nav drawer: the same links as .nav-links, just reachable on mobile. -->
 <div class="mobile-nav-menu" id="mobile-nav-menu">
-  <a href="index.html">HOME</a>
-  <a href="index.html#social-proof">OWNERS</a>
-  <a href="index.html#problem">THE FEEL</a>
-  <a href="index.html#installation">HOW IT WORKS</a>
-  <a href="index.html#specs">TECH SPECS</a>
-  <a href="index.html#order">ORDER</a>
+  <a href="/" style="font-weight:700; margin-bottom:8px;">← Back to Home</a>
+  <span style="font-size:.65rem; letter-spacing:.1em; text-transform:uppercase; color:rgba(255,255,255,.35); margin-top:12px;">Product</span>
+  <a href="/#order">Starter Kit</a>
+  <a href="/#order">Double Kit</a>
+  <a href="the-cushion.html">The Cushion</a>
+  <a href="the-controller.html">The Controller</a>
+  <span style="font-size:.65rem; letter-spacing:.1em; text-transform:uppercase; color:rgba(255,255,255,.35); margin-top:12px;">Explore</span>
+  <a href="how-it-works.html">How It Works</a>
+  <a href="tech-specs.html">Tech Specs</a>
+  <a href="tutorials.html">Tutorials</a>
+  <span style="font-size:.65rem; letter-spacing:.1em; text-transform:uppercase; color:rgba(255,255,255,.35); margin-top:12px;">Business</span>
+  <a href="about-us.html">About Us</a>
+  <a href="become-a-dealer.html">Become a Dealer</a>
+  <a href="affiliate-program.html">Affiliate Program</a>
+  <a href="press.html">Press</a>
+  <span style="font-size:.65rem; letter-spacing:.1em; text-transform:uppercase; color:rgba(255,255,255,.35); margin-top:12px;">Support</span>
+  <a href="mailto:info@basscraft.co">Contact Us</a>
+  <a href="faq.html">FAQs</a>
+  <a href="warranty.html">Warranty</a>
+  <a href="returns.html">Returns &amp; Refunds</a>
+  <a href="shipping.html">Shipping Policy</a>
 </div>
 <main class="inner-page">
   <div class="container">
-    <p class="inner-eyebrow">Legal</p>
-    <h1>Terms of Service.</h1>
-    <p class="inner-intro">Welcome to BASSCRAFT. By accessing basscraft.co or purchasing our products, you agree to these Terms.</p>
-    <p class="policy-meta">Effective date: August&nbsp;1, 2026 · Entity: BASSCRAFT Audio LLC · Contact: <a href="mailto:info@basscraft.co">info@basscraft.co</a></p>
+    <p class="inner-eyebrow">BASSCRAFT</p>
+    <h1>Terms of Service</h1>
+    <p class="inner-intro">Effective date: August 1, 2026 &middot; Entity: BASSCRAFT Audio LLC &middot; Contact: info@basscraft.co</p>
     <div class="inner-section">
-      <h2>Eligibility</h2>
-      <p>You must be at least 18 years old (or the age of majority in your state) to purchase.</p>
-    </div>
-    <div class="inner-section">
-      <h2>Products &amp; pricing</h2>
-      <p>We strive for accuracy in product descriptions, images, and pricing but do not warrant they are error-free. We may correct errors, change prices, and update products at any time. Preorders are charged at the time of order; see our <a href="shipping.html">Shipping Policy</a> for fulfillment timing.</p>
-    </div>
-    <div class="inner-section">
-      <h2>Orders</h2>
-      <p>We reserve the right to refuse or cancel any order, including for suspected fraud or errors. Payment is processed by Stripe.</p>
-    </div>
-    <div class="inner-section">
-      <h2>Preorders</h2>
-      <p>By placing a preorder, you agree to the estimated lead times in our <a href="shipping.html">Shipping Policy</a>. You may cancel a preorder for a full refund any time before your unit ships.</p>
-    </div>
-    <div class="inner-section">
-      <h2>Returns &amp; warranty</h2>
-      <p>Governed by our <a href="returns.html">Returns &amp; Refunds Policy</a> and <a href="warranty.html">Warranty</a>, incorporated by reference.</p>
-    </div>
-    <div class="inner-section">
-      <h2>Intellectual property</h2>
-      <p>All content and IP on this site are owned by BASSCRAFT Audio LLC or its licensors — see our <a href="intellectual-property.html">Intellectual Property Policy</a>.</p>
-    </div>
-    <div class="inner-section">
-      <h2>Acceptable use</h2>
-      <p>You agree not to misuse the site, infringe our IP, or attempt to disrupt its operation.</p>
-    </div>
-    <div class="inner-section">
-      <h2>Disclaimers &amp; limitation of liability</h2>
-      <p>Products and the site are provided "as is" to the fullest extent permitted by law. BASSCRAFT is not liable for indirect, incidental, or consequential damages. Our total liability is limited to the amount you paid for the product.</p>
-    </div>
-    <div class="inner-section">
-      <h2>Governing law &amp; disputes</h2>
-      <p>These Terms are governed by the laws of the State of Texas, without regard to conflict-of-law rules.</p>
-    </div>
-    <div class="inner-section">
-      <h2>Changes</h2>
-      <p>We may update these Terms; continued use constitutes acceptance.</p>
-    </div>
-    <hr class="inner-divider">
-    <div class="inner-section">
-      <p>Questions? Email <a href="mailto:info@basscraft.co">info@basscraft.co</a>.<br>BASSCRAFT Audio LLC, 2205 Woodward Street, Austin, TX 78744.</p>
-    </div>
+  <p>Welcome to Basscraft. By accessing <a href="/" style="color:#1d1d1f;text-decoration:underline;">basscraft.co</a> or purchasing our products, you agree to these Terms.</p>
+</div>
+<hr class="inner-divider">
+<div class="inner-section">
+  <h2>Eligibility</h2>
+  <p>You must be at least 18 years old (or the age of majority in your state) to purchase.</p>
+</div>
+<hr class="inner-divider">
+<div class="inner-section">
+  <h2>Products &amp; pricing</h2>
+  <p>We strive for accuracy in product descriptions, images, and pricing but do not warrant they are error-free. We may correct errors, change prices, and update products at any time. Preorders are charged at the time of order; see our Shipping Policy for fulfillment timing.</p>
+</div>
+<hr class="inner-divider">
+<div class="inner-section">
+  <h2>Orders</h2>
+  <p>We reserve the right to refuse or cancel any order, including for suspected fraud or errors. Payment is processed by <strong>Stripe</strong>.</p>
+</div>
+<hr class="inner-divider">
+<div class="inner-section">
+  <h2>Preorders</h2>
+  <p>By placing a preorder, you agree to the estimated lead times in our Shipping Policy. You may cancel a preorder for a full refund any time before your unit ships.</p>
+</div>
+<hr class="inner-divider">
+<div class="inner-section">
+  <h2>Returns &amp; warranty</h2>
+  <p>Governed by our Returns &amp; Refunds Policy and Warranty, incorporated by reference.</p>
+</div>
+<hr class="inner-divider">
+<div class="inner-section">
+  <h2>Intellectual property</h2>
+  <p>All content and IP on this site are owned by BASSCRAFT Audio LLC or its licensors &mdash; see our Intellectual Property Policy.</p>
+</div>
+<hr class="inner-divider">
+<div class="inner-section">
+  <h2>Acceptable use</h2>
+  <p>You agree not to misuse the site, infringe our IP, or attempt to disrupt its operation.</p>
+</div>
+<hr class="inner-divider">
+<div class="inner-section">
+  <h2>Disclaimers &amp; limitation of liability</h2>
+  <p>Products and the site are provided "as is" to the fullest extent permitted by law. Basscraft is not liable for indirect, incidental, or consequential damages. Our total liability is limited to the amount you paid for the product.</p>
+</div>
+<hr class="inner-divider">
+<div class="inner-section">
+  <h2>Governing law &amp; disputes</h2>
+  <p>These Terms are governed by the laws of the <strong>State of Texas</strong>, without regard to conflict-of-law rules.</p>
+</div>
+<hr class="inner-divider">
+<div class="inner-section">
+  <h2>Changes</h2>
+  <p>We may update these Terms; continued use constitutes acceptance.</p>
+  <p>Contact: <a href="mailto:info@basscraft.co" style="color:#1d1d1f;text-decoration:underline;">info@basscraft.co</a> &middot; BASSCRAFT Audio LLC, 2205 Woodward Street, Austin, TX 78744.</p>
+</div>
   </div>
 </main>
 <footer class="footer">
@@ -137,8 +207,8 @@
       <nav class="footer-nav" aria-label="Footer">
         <div class="footer-col">
           <h4>Product</h4>
-          <a href="index.html#order">Starter Kit</a>
-          <a href="index.html#order">Double Kit</a>
+          <a href="/#order">Starter Kit</a>
+          <a href="/#order">Double Kit</a>
           <a href="index.html#specs">The Cushion</a>
           <a href="index.html#specs">The Controller</a>
         </div>
@@ -146,12 +216,12 @@
           <h4>Explore</h4>
           <a href="index.html#installation">How It Works</a>
           <a href="index.html#specs">Tech Specs</a>
-          <a href="index.html#experience">The Experience</a>
+          <a href="/#experience">The Experience</a>
           <a href="vehicle-compatibility.html">Vehicle Compatibility</a>
           <a href="tutorials.html">Tutorials</a>
         </div>
         <div class="footer-col">
-          <h4>Brand</h4>
+          <h4>Business</h4>
           <a href="about-us.html">About Us</a>
           <a href="become-a-dealer.html">Become a Dealer</a>
           <a href="affiliate-program.html">Affiliate Program</a>
@@ -171,7 +241,51 @@
           <a href="returns.html">Returns &amp; Refunds</a>
           <a href="shipping.html">Shipping Policy</a>
         </div>
-      </nav>
+        <!-- Mega-menu slide-down panel (NVIDIA-style) -->
+  <div class="mega-panel" id="mega-panel">
+    <!-- Product -->
+    <div class="mega-panel-inner" data-mega-section="product" style="display:none;">
+      <div>
+        <h4>Product</h4>
+        <a href="/#order">Starter Kit</a>
+        <a href="/#order">Double Kit</a>
+        <a href="the-cushion.html">The Cushion</a>
+        <a href="the-controller.html">The Controller</a>
+      </div>
+    </div>
+    <!-- Explore -->
+    <div class="mega-panel-inner" data-mega-section="explore" style="display:none;">
+      <div>
+        <h4>Explore</h4>
+        <a href="how-it-works.html">How It Works</a>
+        <a href="tech-specs.html">Tech Specs</a>
+        <a href="tutorials.html">Tutorials</a>
+      </div>
+    </div>
+    <!-- Brand -->
+    <div class="mega-panel-inner" data-mega-section="brand" style="display:none;">
+      <div>
+        <h4>Business</h4>
+        <a href="about-us.html">About Us</a>
+        <a href="become-a-dealer.html">Become a Dealer</a>
+        <a href="affiliate-program.html">Affiliate Program</a>
+        <a href="press.html">Press</a>
+      </div>
+    </div>
+    <!-- Support -->
+    <div class="mega-panel-inner" data-mega-section="support" style="display:none;">
+      <div>
+        <h4>Support</h4>
+        <a href="mailto:info@basscraft.co">Contact Us</a>
+        <a href="faq.html">FAQs</a>
+        <a href="warranty.html">Warranty</a>
+        <a href="returns.html">Returns &amp; Refunds</a>
+        <a href="shipping.html">Shipping Policy</a>
+      </div>
+    </div>
+  </div>
+</nav>
+<div class="mega-scrim" id="mega-scrim"></div>
 
       <!-- Newsletter. Mirrors LiberNovo's "unlock X% off" capture; the actual
            incentive is still Dan's call, so the copy stays offer-agnostic. -->

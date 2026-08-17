@@ -4,75 +4,29 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Affiliate Program — BASSCRAFT</title>
-  <meta name="description" content="Our affiliate program lets you earn a commission on every sale you refer. No minimums, no complicated tiers — just a link and a payout.">
+  <meta name="description" content="If your audience loves cars, audio, or tech, Basscraft is built to convert &mdash; it's visual, it's visceral, and there's nothing else like it. Join our affiliate program and earn on every sale you drive.">
   <link rel="icon" href="favicon.ico">
   <link rel="stylesheet" href="styles.css">
   <style>
-    /* Inner page layout */
-    .inner-page {
-      background: #f7f4ef;
-      min-height: 80vh;
-      padding: clamp(100px, 12vw, 160px) 0 clamp(60px, 8vw, 100px);
-    }
+    .inner-page { background: #f7f4ef; min-height: 80vh; padding: clamp(100px,12vw,160px) 0 clamp(60px,8vw,100px); }
     .inner-page .container { max-width: min(820px, 88vw); }
-    .inner-eyebrow {
-      font-family: 'CalSansText', sans-serif;
-      font-size: .75rem; letter-spacing: .12em; text-transform: uppercase;
-      color: var(--grey); margin-bottom: 18px;
-    }
-    .inner-page h1 {
-      font-family: 'CalSansUI', sans-serif; font-weight: 700;
-      font-size: clamp(2.2rem, 5vw, 3.6rem); letter-spacing: -0.025em;
-      line-height: 1.08; color: #1d1d1f; margin-bottom: 24px;
-    }
-    .inner-intro {
-      font-size: clamp(1rem, 1.3vw, 1.2rem); color: #6e6e73;
-      line-height: 1.65; margin-bottom: clamp(48px, 6vw, 72px);
-      border-bottom: 1px solid rgba(0,0,0,0.08); padding-bottom: clamp(32px,4vw,48px);
-    }
-    .inner-section { margin-bottom: clamp(36px, 4vw, 52px); }
-    .inner-section h2 {
-      font-family: 'CalSansUI', sans-serif; font-weight: 600;
-      font-size: clamp(1.1rem, 1.6vw, 1.4rem); color: #1d1d1f;
-      margin-bottom: 12px; letter-spacing: -0.01em;
-    }
-    .inner-section h3 {
-      font-family: 'CalSansUI', sans-serif; font-weight: 600;
-      font-size: clamp(1rem, 1.3vw, 1.15rem); color: #1d1d1f;
-      margin-bottom: 8px; margin-top: 24px;
-    }
-    .inner-section p {
-      font-family: 'CalSansText', sans-serif; color: #6e6e73;
-      line-height: 1.7; font-size: clamp(.9rem, 1.05vw, 1rem);
-      margin-bottom: 14px;
-    }
-    .inner-section ul, .inner-section ol {
-      padding-left: 1.4em; margin-bottom: 14px;
-    }
-    .inner-section li {
-      font-family: 'CalSansText', sans-serif; color: #6e6e73;
-      line-height: 1.7; font-size: clamp(.9rem, 1.05vw, 1rem);
-      margin-bottom: 6px;
-    }
-    .inner-divider {
-      border: 0; height: 1px;
-      background: rgba(0,0,0,0.08); margin: clamp(28px, 3vw, 40px) 0;
-    }
-    .placeholder-badge {
-      display: inline-block;
-      background: rgba(255,180,0,0.1); border: 1px solid rgba(255,160,0,0.25);
-      color: #9a6700; font-size: .7rem; font-family: 'CalSansText',sans-serif;
-      letter-spacing: .06em; text-transform: uppercase;
-      padding: 4px 10px; border-radius: 4px; margin-bottom: 28px;
-    }
+    .inner-eyebrow { font-family:'CalSansText',sans-serif; font-size:.75rem; letter-spacing:.12em; text-transform:uppercase; color:var(--grey); margin-bottom:18px; }
+    .inner-page h1 { font-family:'CalSansUI',sans-serif; font-weight:700; font-size:clamp(2.2rem,5vw,3.6rem); letter-spacing:-0.025em; line-height:1.08; color:#1d1d1f; margin-bottom:24px; }
+    .inner-intro { font-size:clamp(1rem,1.3vw,1.2rem); color:#6e6e73; line-height:1.65; margin-bottom:clamp(48px,6vw,72px); border-bottom:1px solid rgba(0,0,0,0.08); padding-bottom:clamp(32px,4vw,48px); }
+    .inner-section { margin-bottom:clamp(36px,4vw,52px); }
+    .inner-section h2 { font-family:'CalSansUI',sans-serif; font-weight:600; font-size:clamp(1.1rem,1.6vw,1.4rem); color:#1d1d1f; margin-bottom:12px; letter-spacing:-0.01em; }
+    .inner-section h3 { font-family:'CalSansUI',sans-serif; font-weight:600; font-size:clamp(1rem,1.3vw,1.15rem); color:#1d1d1f; margin-bottom:8px; margin-top:24px; }
+    .inner-section p { font-family:'CalSansText',sans-serif; color:#6e6e73; line-height:1.7; font-size:clamp(.9rem,1.05vw,1rem); margin-bottom:14px; }
+    .inner-section ul, .inner-section ol { padding-left:1.4em; margin-bottom:14px; }
+    .inner-section li { font-family:'CalSansText',sans-serif; color:#6e6e73; line-height:1.7; font-size:clamp(.9rem,1.05vw,1rem); margin-bottom:6px; }
+    .inner-divider { border:0; height:1px; background:rgba(0,0,0,0.08); margin:clamp(28px,3vw,40px) 0; }
   </style>
 </head>
 <body>
 <div id="site-wrapper">
-
-<nav class="navbar">
+<nav class="navbar inner-nav">
   <div class="nav-left">
-    <a href="index.html#experience" class="nav-logo" id="nav-logo" style="display: flex; align-items: center; gap: 10px;">
+    <a href="/" class="nav-logo" id="nav-logo-inner" style="display: flex; align-items: center; gap: 10px;">
       <!-- Over the hero the full white wordmark shows. Once scrolled (.navbar.scrolled) the
            wordmark cross-fades to just the B icon, held at low opacity so it reads as a
            discreet glassy mark rather than competing with the content. -->
@@ -81,15 +35,22 @@
     </a>
   </div>
   <div class="nav-links">
-    <a href="index.html">HOME</a>
-    <a href="index.html#social-proof">OWNERS</a>
-    <a href="index.html#problem">THE FEEL</a>
+    <a href="/">HOME</a>
+    <a href="/#social-proof">OWNERS</a>
+    <a href="/#problem">THE FEEL</a>
     <a href="index.html#installation">HOW IT WORKS</a>
     <a href="index.html#specs">TECH SPECS</a>
-    <a href="index.html#order">ORDER</a>
+    <a href="/#order">ORDER</a>
+  </div>
+  <div class="mega-nav-links">
+    <a href="/" class="mega-home-link">Home</a>
+    <button data-mega="product">Product</button>
+    <button data-mega="explore">Explore</button>
+    <button data-mega="brand">Business</button>
+    <button data-mega="support">Support</button>
   </div>
   <div class="nav-right">
-    <a href="index.html#order" class="nav-cta scroll-buy-btn k-pop-btn"><span>BUY NOW</span></a>
+    <a href="/#order" class="nav-cta scroll-buy-btn k-pop-btn"><span>BUY NOW</span></a>
   </div>
   <!-- Mobile only: .nav-links is display:none below 768px, so this is the
        only way to reach INSTALLATION/TECH SPECS/EXPERIENCE/ORDER there.
@@ -103,59 +64,114 @@
       <line class="bar bar-bot" x1="4" y1="17" x2="20" y2="17"></line>
     </svg>
   </button>
+  <!-- Mega-menu slide-down panel (NVIDIA-style) -->
+  <div class="mega-panel" id="mega-panel">
+    <!-- Product -->
+    <div class="mega-panel-inner" data-mega-section="product" style="display:none;">
+      <div>
+        <h4>Product</h4>
+        <a href="/#order">Starter Kit</a>
+        <a href="/#order">Double Kit</a>
+        <a href="the-cushion.html">The Cushion</a>
+        <a href="the-controller.html">The Controller</a>
+      </div>
+    </div>
+    <!-- Explore -->
+    <div class="mega-panel-inner" data-mega-section="explore" style="display:none;">
+      <div>
+        <h4>Explore</h4>
+        <a href="how-it-works.html">How It Works</a>
+        <a href="tech-specs.html">Tech Specs</a>
+        <a href="tutorials.html">Tutorials</a>
+      </div>
+    </div>
+    <!-- Brand -->
+    <div class="mega-panel-inner" data-mega-section="brand" style="display:none;">
+      <div>
+        <h4>Business</h4>
+        <a href="about-us.html">About Us</a>
+        <a href="become-a-dealer.html">Become a Dealer</a>
+        <a href="affiliate-program.html">Affiliate Program</a>
+        <a href="press.html">Press</a>
+      </div>
+    </div>
+    <!-- Support -->
+    <div class="mega-panel-inner" data-mega-section="support" style="display:none;">
+      <div>
+        <h4>Support</h4>
+        <a href="mailto:info@basscraft.co">Contact Us</a>
+        <a href="faq.html">FAQs</a>
+        <a href="warranty.html">Warranty</a>
+        <a href="returns.html">Returns &amp; Refunds</a>
+        <a href="shipping.html">Shipping Policy</a>
+      </div>
+    </div>
+  </div>
 </nav>
+<div class="mega-scrim" id="mega-scrim"></div>
 
 <!-- Mobile nav drawer: the same links as .nav-links, just reachable on mobile. -->
 <div class="mobile-nav-menu" id="mobile-nav-menu">
-  <a href="index.html">HOME</a>
-  <a href="index.html#social-proof">OWNERS</a>
-  <a href="index.html#problem">THE FEEL</a>
-  <a href="index.html#installation">HOW IT WORKS</a>
-  <a href="index.html#specs">TECH SPECS</a>
-  <a href="index.html#order">ORDER</a>
+  <a href="/" style="font-weight:700; margin-bottom:8px;">← Back to Home</a>
+  <span style="font-size:.65rem; letter-spacing:.1em; text-transform:uppercase; color:rgba(255,255,255,.35); margin-top:12px;">Product</span>
+  <a href="/#order">Starter Kit</a>
+  <a href="/#order">Double Kit</a>
+  <a href="the-cushion.html">The Cushion</a>
+  <a href="the-controller.html">The Controller</a>
+  <span style="font-size:.65rem; letter-spacing:.1em; text-transform:uppercase; color:rgba(255,255,255,.35); margin-top:12px;">Explore</span>
+  <a href="how-it-works.html">How It Works</a>
+  <a href="tech-specs.html">Tech Specs</a>
+  <a href="tutorials.html">Tutorials</a>
+  <span style="font-size:.65rem; letter-spacing:.1em; text-transform:uppercase; color:rgba(255,255,255,.35); margin-top:12px;">Business</span>
+  <a href="about-us.html">About Us</a>
+  <a href="become-a-dealer.html">Become a Dealer</a>
+  <a href="affiliate-program.html">Affiliate Program</a>
+  <a href="press.html">Press</a>
+  <span style="font-size:.65rem; letter-spacing:.1em; text-transform:uppercase; color:rgba(255,255,255,.35); margin-top:12px;">Support</span>
+  <a href="mailto:info@basscraft.co">Contact Us</a>
+  <a href="faq.html">FAQs</a>
+  <a href="warranty.html">Warranty</a>
+  <a href="returns.html">Returns &amp; Refunds</a>
+  <a href="shipping.html">Shipping Policy</a>
 </div>
-
 <main class="inner-page">
   <div class="container">
-    <p class="inner-eyebrow">Partners</p>
+    <p class="inner-eyebrow">BASSCRAFT</p>
     <h1>Get paid to share the experience.</h1>
-    <p class="inner-intro">If your audience loves cars, audio, or tech, BASSCRAFT is built to convert — it's visual, it's visceral, and there's nothing else like it. Join our affiliate program and earn on every sale you drive.</p>
-    
+    <p class="inner-intro">If your audience loves cars, audio, or tech, Basscraft is built to convert &mdash; it's visual, it's visceral, and there's nothing else like it. Join our affiliate program and earn on every sale you drive.</p>
     <div class="inner-section">
-      <h2>What you get</h2>
-      <ul>
-        <li><strong>20% commission</strong> on every sale from your link</li>
-        <li><strong>30-day cookie window</strong> — you get credit even if they buy later</li>
-        <li>Unique tracking link + real-time dashboard</li>
-        <li>Free product for approved creators with an established audience, so you can make authentic content</li>
-        <li>Creative assets — hero footage, product shots, and hooks you can use or remix</li>
-      </ul>
-    </div>
-    <div class="inner-section">
-      <h2>Who it's for</h2>
-      <p>Creators and publishers in automotive, car audio, music, tech, and lifestyle — TikTok, Instagram, YouTube, and beyond. Whether you've got 5K engaged followers or 5M, if your people trust your taste, apply.</p>
-    </div>
-    <div class="inner-section">
-      <h2>How it works</h2>
-      <ol>
-        <li>Apply below — tell us where you create.</li>
-        <li>Get approved and receive your link + dashboard.</li>
-        <li>Share BASSCRAFT; earn commission on every sale.</li>
-        <li>Get paid monthly, net-30.</li>
-      </ol>
-    </div>
-    <div class="inner-section">
-      <h2>Apply</h2>
-      <p class="form-note">Form fields: Name · Email · Primary platform + handle · Audience size · Niche · Why BASSCRAFT</p>
-      <p class="form-note"><em>Form not yet wired to a back end — needs a provider before launch.</em></p>
-    </div>
-    <hr class="inner-divider">
-    <div class="inner-section">
-      <p>Questions? Email <a href="mailto:info@basscraft.co">info@basscraft.co</a>.<br>BASSCRAFT Audio LLC, 2205 Woodward Street, Austin, TX 78744.</p>
-    </div>
+  <h2>What you get</h2>
+  <ul>
+    <li><strong>20% commission</strong> on every sale from your link</li>
+    <li><strong>30-day cookie window</strong> &mdash; you get credit even if they buy later</li>
+    <li><strong>Unique tracking link + real-time dashboard</strong></li>
+    <li><strong>Free product</strong> for approved creators with an established audience, so you can make authentic content</li>
+    <li><strong>Creative assets</strong> &mdash; hero footage, product shots, and hooks you can use or remix</li>
+  </ul>
+</div>
+<hr class="inner-divider">
+<div class="inner-section">
+  <h2>Who it's for</h2>
+  <p>Creators and publishers in automotive, car audio, music, tech, and lifestyle &mdash; TikTok, Instagram, YouTube, and beyond. Whether you've got 5K engaged followers or 5M, if your people trust your taste, apply.</p>
+</div>
+<hr class="inner-divider">
+<div class="inner-section">
+  <h2>How it works</h2>
+  <ol>
+    <li>Apply below &mdash; tell us where you create.</li>
+    <li>Get approved and receive your link + dashboard.</li>
+    <li>Share Basscraft; earn commission on every sale.</li>
+    <li>Get paid monthly, net-30.</li>
+  </ol>
+</div>
+<hr class="inner-divider">
+<div class="inner-section">
+  <h2>Apply</h2>
+  <p><em>(Form fields: Name &middot; Email &middot; Primary platform + handle &middot; Audience size &middot; Niche &middot; Why Basscraft)</em></p>
+  <p>Questions? Email <a href="mailto:info@basscraft.co" style="color:#1d1d1f;text-decoration:underline;">info@basscraft.co</a>.</p>
+</div>
   </div>
 </main>
-
 <footer class="footer">
   <div class="container">
 
@@ -164,8 +180,8 @@
       <nav class="footer-nav" aria-label="Footer">
         <div class="footer-col">
           <h4>Product</h4>
-          <a href="index.html#order">Starter Kit</a>
-          <a href="index.html#order">Double Kit</a>
+          <a href="/#order">Starter Kit</a>
+          <a href="/#order">Double Kit</a>
           <a href="index.html#specs">The Cushion</a>
           <a href="index.html#specs">The Controller</a>
         </div>
@@ -173,12 +189,12 @@
           <h4>Explore</h4>
           <a href="index.html#installation">How It Works</a>
           <a href="index.html#specs">Tech Specs</a>
-          <a href="index.html#experience">The Experience</a>
+          <a href="/#experience">The Experience</a>
           <a href="vehicle-compatibility.html">Vehicle Compatibility</a>
           <a href="tutorials.html">Tutorials</a>
         </div>
         <div class="footer-col">
-          <h4>Brand</h4>
+          <h4>Business</h4>
           <a href="about-us.html">About Us</a>
           <a href="become-a-dealer.html">Become a Dealer</a>
           <a href="affiliate-program.html">Affiliate Program</a>
@@ -198,7 +214,51 @@
           <a href="returns.html">Returns &amp; Refunds</a>
           <a href="shipping.html">Shipping Policy</a>
         </div>
-      </nav>
+        <!-- Mega-menu slide-down panel (NVIDIA-style) -->
+  <div class="mega-panel" id="mega-panel">
+    <!-- Product -->
+    <div class="mega-panel-inner" data-mega-section="product" style="display:none;">
+      <div>
+        <h4>Product</h4>
+        <a href="/#order">Starter Kit</a>
+        <a href="/#order">Double Kit</a>
+        <a href="the-cushion.html">The Cushion</a>
+        <a href="the-controller.html">The Controller</a>
+      </div>
+    </div>
+    <!-- Explore -->
+    <div class="mega-panel-inner" data-mega-section="explore" style="display:none;">
+      <div>
+        <h4>Explore</h4>
+        <a href="how-it-works.html">How It Works</a>
+        <a href="tech-specs.html">Tech Specs</a>
+        <a href="tutorials.html">Tutorials</a>
+      </div>
+    </div>
+    <!-- Brand -->
+    <div class="mega-panel-inner" data-mega-section="brand" style="display:none;">
+      <div>
+        <h4>Business</h4>
+        <a href="about-us.html">About Us</a>
+        <a href="become-a-dealer.html">Become a Dealer</a>
+        <a href="affiliate-program.html">Affiliate Program</a>
+        <a href="press.html">Press</a>
+      </div>
+    </div>
+    <!-- Support -->
+    <div class="mega-panel-inner" data-mega-section="support" style="display:none;">
+      <div>
+        <h4>Support</h4>
+        <a href="mailto:info@basscraft.co">Contact Us</a>
+        <a href="faq.html">FAQs</a>
+        <a href="warranty.html">Warranty</a>
+        <a href="returns.html">Returns &amp; Refunds</a>
+        <a href="shipping.html">Shipping Policy</a>
+      </div>
+    </div>
+  </div>
+</nav>
+<div class="mega-scrim" id="mega-scrim"></div>
 
       <!-- Newsletter. Mirrors LiberNovo's "unlock X% off" capture; the actual
            incentive is still Dan's call, so the copy stays offer-agnostic. -->
@@ -268,7 +328,6 @@
 
   </div>
 </footer>
-
 </div>
 <script src="app.js"></script>
 </body>

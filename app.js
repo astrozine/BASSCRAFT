@@ -1,31 +1,31 @@
-/* ==========================================================================
-   BASSCRAFT — Front-end v4
-   Responsive media swap · Overlays & lightboxes · Video power management · Cart
+﻿/* ==========================================================================
+   BASSCRAFT â€” Front-end v4
+   Responsive media swap Â· Overlays & lightboxes Â· Video power management Â· Cart
    ========================================================================== */
 
 /* GSAP only drives the homepage's scroll fade-ins, and only index.html loads it.
    The inner pages (policies, About, dealer/affiliate) load this same file without
-   it — and because this call sits at top level, an undefined `gsap` threw here and
+   it â€” and because this call sits at top level, an undefined `gsap` threw here and
    aborted the WHOLE file, taking the mobile nav toggle down with it on every one
    of those pages. Feature-detect instead so the rest of the script always runs. */
 const HAS_GSAP = typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined';
 if (HAS_GSAP) gsap.registerPlugin(ScrollTrigger);
 
-/* ══════════════════════════════════════════════════════════════
-   0. SCROLL LOCK — shared by every full-screen overlay
-   ══════════════════════════════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   0. SCROLL LOCK â€” shared by every full-screen overlay
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    `overflow: hidden` on <body> alone does NOT stop the page scrolling
-   behind a fixed overlay on mobile Safari — a swipe over the backdrop
+   behind a fixed overlay on mobile Safari â€” a swipe over the backdrop
    still scrolls the real page underneath it. The fix that actually holds
    there is pinning <body> itself with position:fixed and restoring the
    saved scrollY on release.
 
-   Keyed by owner (not a bare counter) so nested overlays — the cart, then
-   its product-photo viewer opened on top of it — hold independent claims:
+   Keyed by owner (not a bare counter) so nested overlays â€” the cart, then
+   its product-photo viewer opened on top of it â€” hold independent claims:
    the inner one closing doesn't unlock the page while the cart is still
    open underneath, and re-locking with a key that's already held is just
    a no-op instead of requiring every call site to track "did I already
-   lock this?" itself. `reset(...keys)` releases specific claims at once —
+   lock this?" itself. `reset(...keys)` releases specific claims at once â€”
    the chrome's own nav/buy controls use it to drop every VIEWER on top of
    the cart without touching the cart's own claim, since the two disagree
    about what should happen to the cart next. */
@@ -53,11 +53,11 @@ const scrollLock = (() => {
     holders.add(key);
   };
   const unlock = (key) => {
-    // Bail before touching anything if this key was never actually held —
+    // Bail before touching anything if this key was never actually held â€”
     // callers that unlock defensively/unconditionally (setSpecFullscreen(el,
     // false) runs on every tab switch whether or not fullscreen was ever
     // entered) would otherwise still see holders.size hit 0 and fire
-    // release(), which unconditionally scrollTo(0, savedY)'s the page —
+    // release(), which unconditionally scrollTo(0, savedY)'s the page â€”
     // savedY being 0 (or stale) since nothing genuinely locked it. That's
     // what caused desktop Tech Specs clicks to jump the page to the top.
     if (!holders.has(key)) return;
@@ -65,7 +65,7 @@ const scrollLock = (() => {
     if (holders.size === 0) release();
   };
   const reset = (...keys) => {
-    if (holders.size === 0) return; // nothing held — same guard as unlock()
+    if (holders.size === 0) return; // nothing held â€” same guard as unlock()
     keys.forEach(k => holders.delete(k));
     if (holders.size === 0) release();
   };
@@ -74,7 +74,7 @@ const scrollLock = (() => {
 
 // The video-lightbox and doc-lightbox each define their real close function
 // (with its display:none-after-fade teardown) inside their own IIFE further
-// down — not reachable from the shared chrome's "close whatever's open"
+// down â€” not reachable from the shared chrome's "close whatever's open"
 // logic otherwise. Each IIFE registers itself here once it runs; the chrome
 // calls through this rather than touching those overlays' DOM/classes
 // directly, so there's exactly one close path per overlay, not two that can
@@ -97,10 +97,10 @@ document.querySelectorAll('video').forEach(vid => {
 // video. Client feedback (July 24 meeting) was explicit that the Buy button
 // must be ever-present, so the hero overlay no longer hides on loop.
 
-/* ══════════════════════════════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    1. RESPONSIVE VIDEO SOURCE SWAP
-   ══════════════════════════════════════════════════════════════ */
-/* Mobile browsers fire `resize` continuously while you scroll — collapsing and
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+/* Mobile browsers fire `resize` continuously while you scroll â€” collapsing and
    re-expanding the URL bar changes innerHeight, which counts as a resize. Every
    responsive handler here keys off innerWidth ONLY, so those height-only events
    are pure waste: each one re-ran querySelectorAll over every video plus a
@@ -121,7 +121,7 @@ function onWidthResize(fn) {
 function setResponsiveVideoSources() {
   const isMobile = window.innerWidth <= 768;
   // #hero-video handles its own responsive source swap + load/play timing
-  // (inline script next to its markup) — this generic handler's speculative
+  // (inline script next to its markup) â€” this generic handler's speculative
   // play()-then-pause()-if-not-autoplay would fight it now that it no longer
   // autoplays natively.
   document.querySelectorAll('video[data-h]:not(#hero-video)').forEach(v => {
@@ -130,7 +130,7 @@ function setResponsiveVideoSources() {
     const sq = v.dataset.sq;
     // Videos in a narrow column (Tech Specs accordion panels, or any 2-column layout
     // explicitly marked data-prefer-tall) render small as horizontal clips even on
-    // desktop — they always prefer vertical/square over horizontal, any breakpoint.
+    // desktop â€” they always prefer vertical/square over horizontal, any breakpoint.
     // data-prefer-wide opts back out: the controller-placement diagram lives in
     // a Tech Specs panel but is a wide document, so the vertical cut would be
     // the wrong asset for it.
@@ -151,7 +151,7 @@ function setResponsiveVideoSources() {
       source.type = 'video/mp4';
       v.appendChild(source);
       // Swap the source and stop there. This used to also strip preload="none"
-      // and call play() outright to "force metadata load for scrub videos" —
+      // and call play() outright to "force metadata load for scrub videos" â€”
       // but the scrub engine is long gone, and on mobile that fired at page
       // load for clips sitting far below the fold, downloading and decoding
       // them immediately and defeating the exact preload="none" the markup
@@ -166,7 +166,7 @@ setResponsiveVideoSources();
 onWidthResize(setResponsiveVideoSources);
 
 /* Same idea as setResponsiveVideoSources, for plain <img data-h> elements
-   (e.g. the controller diagram still) — kept JS-driven rather than a
+   (e.g. the controller diagram still) â€” kept JS-driven rather than a
    <picture>/media-query source, to match how every other responsive swap
    on this page works. */
 function setResponsiveImageSources() {
@@ -180,9 +180,9 @@ function setResponsiveImageSources() {
 setResponsiveImageSources();
 onWidthResize(setResponsiveImageSources);
 
-/* ══════════════════════════════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    2. NAV
-   ══════════════════════════════════════════════════════════════ */
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 // Nav starts transparent over the hero (so the video isn't cropped by a solid bar)
 // and picks up its solid/blurred background once scrolled past it.
 const navbarEl = document.querySelector('.navbar');
@@ -201,7 +201,7 @@ if (navbarEl) {
 }
 
 // Scroll-spy: subtly marks whichever nav link matches the section currently
-// centered in the viewport (.nav-active — see the glow/particle styling in
+// centered in the viewport (.nav-active â€” see the glow/particle styling in
 // styles.css), so people can tell where they are on the page.
 (() => {
   const navLinks = document.querySelectorAll('.nav-links a[href^="#"]');
@@ -231,7 +231,7 @@ if (navbarEl) {
   sections.forEach(s => observer.observe(s));
 })();
 
-document.getElementById('nav-logo').addEventListener('click', (e) => {
+const _navLogo = document.getElementById('nav-logo'); if (_navLogo) _navLogo.addEventListener('click', (e) => {
   e.preventDefault();
   window.scrollTo({ top: 0, behavior: 'smooth' });
 });
@@ -258,7 +258,7 @@ document.querySelectorAll('.nav-links a').forEach(link => {
   });
 });
 
-// Mobile hamburger menu — same destinations as .nav-links, just reachable
+// Mobile hamburger menu â€” same destinations as .nav-links, just reachable
 // below the 768px breakpoint where that bar is hidden.
 (() => {
   const btn = document.getElementById('mobile-menu-btn');
@@ -303,9 +303,9 @@ document.querySelectorAll('.nav-links a').forEach(link => {
   });
 })();
 
-/* ══════════════════════════════════════════════════════════════
-   3. HERO — CTA
-   ══════════════════════════════════════════════════════════════ */
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   3. HERO â€” CTA
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 // Hero CTA smooth scroll
 const heroCta = document.getElementById('hero-cta');
 if (heroCta) {
@@ -319,8 +319,8 @@ if (heroCta) {
    4. SCROLL-TRIGGERED FADE-INS
    -------------------------------------------------------------- */
 if (HAS_GSAP) document.querySelectorAll('.s-dark, .s-light').forEach(section => {
-  // Trimmed to the classes this page actually has — the list had accumulated a
-  // dozen selectors (.genre-grid, .specs-tbl, .duo-grid, .controller-demo …)
+  // Trimmed to the classes this page actually has â€” the list had accumulated a
+  // dozen selectors (.genre-grid, .specs-tbl, .duo-grid, .controller-demo â€¦)
   // belonging to sections that no longer exist in the markup.
   const targets = section.querySelectorAll('h2, p, .vid-r');
   if (targets.length === 0) return;
@@ -339,9 +339,9 @@ if (HAS_GSAP) document.querySelectorAll('.s-dark, .s-light').forEach(section => 
 
 
 
-/* ══════════════════════════════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    5. CART & UPSELL LOGIC
-   ══════════════════════════════════════════════════════════════ */
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 const cartOverlay = document.getElementById('cart-overlay');
 const cartUpsellView = document.getElementById('cart-upsell-view');
 const cartCheckoutView = document.getElementById('cart-checkout-view');
@@ -357,9 +357,9 @@ const cartSubtotal = document.getElementById('cart-subtotal');
 function openCart(view) {
   if (!cartOverlay) return;
   // Also called to switch views (upsell -> checkout) on an already-open
-  // cart — re-locking with the same key is a no-op, so no need to guard it.
+  // cart â€” re-locking with the same key is a no-op, so no need to guard it.
   cartOverlay.classList.add('is-active');
-  // Lets CSS lift the navbar above the cart's scrim — see body.cart-open.
+  // Lets CSS lift the navbar above the cart's scrim â€” see body.cart-open.
   document.body.classList.add('cart-open');
   scrollLock.lock('cart');
   if (view === 'upsell') {
@@ -452,7 +452,7 @@ if (cartOverlay) {
   });
 }
 
-/* Shared lightbox chrome — the nav's B mark + BUY NOW, floated into whichever
+/* Shared lightbox chrome â€” the nav's B mark + BUY NOW, floated into whichever
    expanded viewer is open so the site's two anchors stay reachable instead of
    vanishing behind a full-screen overlay. Tracked as a set rather than a
    boolean: the cart's photo viewer opens on top of the cart modal, so "is
@@ -466,7 +466,7 @@ const lightboxChrome = (() => {
     el.classList.toggle('is-active', any);
     document.body.classList.toggle('lightbox-active', any);
     // The cart's product-photo viewer is the one lightbox whose background is
-    // the photo itself — shot on near-white — rather than a dark backdrop, so
+    // the photo itself â€” shot on near-white â€” rather than a dark backdrop, so
     // the mark needs the opposite treatment there (see .chrome-on-light in CSS).
     el.classList.toggle('chrome-on-light', openIds.has('cart-image') || openIds.has('doc'));
     el.setAttribute('aria-hidden', any ? 'false' : 'true');
@@ -483,12 +483,12 @@ const lightboxChrome = (() => {
 (() => {
   const logo = document.getElementById('lightbox-chrome-logo');
   const buy = document.getElementById('lightbox-chrome-buy');
-  // Dismiss whichever viewer is open, without touching the cart — the two
+  // Dismiss whichever viewer is open, without touching the cart â€” the two
   // controls disagree about what should happen to it next.
   const closeViewers = () => {
     // Each of these already no-ops if it isn't the one currently open, and
     // each already unlocks its own scrollLock claim and schedules its own
-    // display:none teardown — calling through them (rather than reaching
+    // display:none teardown â€” calling through them (rather than reaching
     // into their DOM/classes directly) is what keeps that teardown firing
     // no matter which control the user actually closed with.
     closeCartLightbox();
@@ -537,7 +537,7 @@ document.querySelectorAll('.cart-media-btn').forEach(btn => {
   });
 });
 // The pricing cards' product shots open the same full-screen viewer as the
-// cart's own photo — the one that keeps the floating B mark and BUY NOW on top.
+// cart's own photo â€” the one that keeps the floating B mark and BUY NOW on top.
 document.querySelectorAll('.pricing-card-image img').forEach(img => {
   img.addEventListener('click', (e) => {
     e.stopPropagation();
@@ -572,16 +572,16 @@ document.addEventListener('keydown', (e) => {
     if (p !== undefined) p.catch(() => {});
   }
 
-  // Multi-clip playlists still advance/loop via 'ended' — each clip is a
+  // Multi-clip playlists still advance/loop via 'ended' â€” each clip is a
   // genuinely different file, so a reload between them is unavoidable.
   // Single clips use the native `loop` property instead (set in
   // openVideoLightbox below): reassigning the SAME .src every cycle here
   // forced a full reload each loop, which flashed the aspect ratio (box
   // sizing depends on videoWidth/videoHeight, unknown again until
   // 'loadedmetadata' re-fires) and the native play button, and was tied up
-  // with audio dropping on restart too. Native loop reloads nothing — the
+  // with audio dropping on restart too. Native loop reloads nothing â€” the
   // media element just seeks back to 0 and keeps playing, 'ended' never
-  // fires at all — which is what "as seamless as possible" actually needs.
+  // fires at all â€” which is what "as seamless as possible" actually needs.
   player.addEventListener('ended', () => {
     if (queue.length <= 1) return;
     queueIdx = queueIdx < queue.length - 1 ? queueIdx + 1 : 0;
@@ -613,7 +613,7 @@ document.addEventListener('keydown', (e) => {
     queue = sources;
     queueIdx = 0;
     // playOnce mirrors the inline video's own .play-once behaviour (the first
-    // four Tech Specs panels — reveal/exploded-view animations that read as
+    // four Tech Specs panels â€” reveal/exploded-view animations that read as
     // finished once they've run, rather than ambient loops).
     player.loop = queue.length === 1 && !playOnce;
     player.muted = false;
@@ -687,9 +687,9 @@ document.addEventListener('keydown', (e) => {
   });
 })();
 
-/* ══════════════════════════════════════════════════════════════
-   DOCUMENT LIGHTBOX — drag-to-pan / pinch-to-zoom viewer
-   ══════════════════════════════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   DOCUMENT LIGHTBOX â€” drag-to-pan / pinch-to-zoom viewer
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    The controller-placement scans are dense multi-panel documents: at page size
    you can tell there are three options but can't read any of them. This opens
    the full-resolution file on a pannable stage.
@@ -724,11 +724,11 @@ document.addEventListener('keydown', (e) => {
 
      Coordinates are fractions of the image, not pixels, so they survive the
      responsive swap and any future re-export at a different resolution. The
-     two scans are laid out completely differently — the vertical stacks its
-     panels, the wide one puts 1 and 2 down the left and 3 on the right — so
+     two scans are laid out completely differently â€” the vertical stacks its
+     panels, the wide one puts 1 and 2 down the left and 3 on the right â€” so
      each gets its own list, chosen by aspect ratio when the image loads.
 
-     `mx/my` is where the marker sits — placed directly over the number already
+     `mx/my` is where the marker sits â€” placed directly over the number already
      printed on the sheet, so the badge covers it and you read one number
      rather than two. `x/y/w/h` is the separate region it frames, which stays
      on the placement itself. The two are deliberately not the same point: the
@@ -737,7 +737,7 @@ document.addEventListener('keydown', (e) => {
 
      The regions frame the cushion-plus-controller-and-cable assembly rather
      than the whole panel: a panel spans almost the full width of the sheet, so
-     on a phone "fit the panel" is width-constrained and buys only about 1.2x —
+     on a phone "fit the panel" is width-constrained and buys only about 1.2x â€”
      barely a zoom at all. */
   const HOTSPOTS = {
     tall: [
@@ -757,7 +757,7 @@ document.addEventListener('keydown', (e) => {
     if (zoomInBtn) zoomInBtn.disabled = scale >= maxScale - 0.0005;
     if (zoomOutBtn) zoomOutBtn.disabled = scale <= fitScale + 0.0005;
     // The markers ride inside the transformed paper so they stay glued to the
-    // artwork, which also means they'd balloon with it — counter-scale each one
+    // artwork, which also means they'd balloon with it â€” counter-scale each one
     // so it holds a constant size on screen at any zoom.
     if (hotspotLayer) {
       hotspotLayer.style.setProperty('--hs-counter', 1 / (scale || 1));
@@ -774,20 +774,20 @@ document.addEventListener('keydown', (e) => {
      on-screen corner so they'd sit on the paper when zoomed out. That was the
      wrong model: the sheet's corner moves with every pan and zoom, so the
      controls crept around the screen and slid off as you zoomed in. Controls
-     belong to the viewer, not to the artwork — they get one fixed home and
+     belong to the viewer, not to the artwork â€” they get one fixed home and
      hold it at every zoom level. */
 
   /* Size the window to the loaded scan's shape.
 
      This is what makes the whole thing behave like the small rounded card on
      the page: a frame with a definite size and place, that you look at the
-     document THROUGH. The sheet fills it exactly at rest — no grey gutter down
-     the sides — and zooming happens strictly inside it. Everything else here
+     document THROUGH. The sheet fills it exactly at rest â€” no grey gutter down
+     the sides â€” and zooming happens strictly inside it. Everything else here
      measures against the stage, which is now this frame, so the fit maths and
      the pan clamp both fall out of it for free.
 
-     The top gutter is the chrome strip (B mark + BUY NOW), so the frame — and
-     therefore the close button pinned to its corner — always starts clear of
+     The top gutter is the chrome strip (B mark + BUY NOW), so the frame â€” and
+     therefore the close button pinned to its corner â€” always starts clear of
      the pill without any element having to know the pill exists. */
   function sizeFrame() {
     if (!frame || !nw || !nh) return;
@@ -852,7 +852,7 @@ document.addEventListener('keydown', (e) => {
 
   // Centre on whichever axis the document is smaller than the stage; otherwise
   // pin it so panning can never expose empty space past an edge.
-  /* Strict clamp — the window is always completely filled with artwork. The old
+  /* Strict clamp â€” the window is always completely filled with artwork. The old
      rule allowed up to 150px of overscroll past each edge, which was fine when
      the sheet floated in a large grey stage but would now let you drag the
      document off its own frame and expose bare white inside the window. */
@@ -869,7 +869,7 @@ document.addEventListener('keydown', (e) => {
     // The frame already carries the margin, and it matches the scan's aspect
     // ratio, so "fit" here means fill the window exactly, edge to edge.
     fitScale = Math.min(sw / nw, sh / nh);
-    // Always allow at least native 1:1 — that's the zoom where the fibre reads.
+    // Always allow at least native 1:1 â€” that's the zoom where the fibre reads.
     maxScale = Math.max(fitScale * 4, 1);
   }
 
@@ -891,7 +891,7 @@ document.addEventListener('keydown', (e) => {
   }
 
   function dismissHint() { hint?.classList.add('is-hidden'); }
-  // The hint itself is pointer-events:none (it used to block the pan outright —
+  // The hint itself is pointer-events:none (it used to block the pan outright â€”
   // see .doc-hint in the CSS), so it can't be clicked away directly. Touching
   // the stage at all is the signal that the instruction has landed.
 
@@ -917,7 +917,7 @@ document.addEventListener('keydown', (e) => {
 
   // The document is a full-resolution scan (up to ~3770x2936px) that can end
   // up zoomed in well past its own footprint. .doc-lightbox only ever went
-  // opacity:0 + pointer-events:none when closed — never display:none — so
+  // opacity:0 + pointer-events:none when closed â€” never display:none â€” so
   // that huge transformed layer, and its own GPU-promoted compositing layer
   // (see .doc-paper's `will-change: transform`), stayed fully alive and
   // composited behind the entire site indefinitely after first use, invisible
@@ -960,7 +960,7 @@ document.addEventListener('keydown', (e) => {
   stage.addEventListener('pointerdown', (e) => {
     pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
     // Read the true target BEFORE setPointerCapture starts retargeting, and
-    // note whether the instructions were still up — the tap that clears them
+    // note whether the instructions were still up â€” the tap that clears them
     // is a tap that means "got it", not "take me back to the page".
     downTarget = e.target;
     hintTookThisTap = !!hint && !hint.classList.contains('is-hidden');
@@ -1023,13 +1023,13 @@ document.addEventListener('keydown', (e) => {
     dismissHint();
   });
 
-  /* Clicking the empty margin around the sheet closes — but never when that
+  /* Clicking the empty margin around the sheet closes â€” but never when that
      "click" was the tail end of a drag that happened to finish off-sheet, and
      never when it was the tap that dismissed the instructions.
 
      This tests `downTarget`, captured on pointerdown, rather than the click
-     event's own target. setPointerCapture() — which is what keeps a drag alive
-     when the finger leaves the stage — RETARGETS every later event in the
+     event's own target. setPointerCapture() â€” which is what keeps a drag alive
+     when the finger leaves the stage â€” RETARGETS every later event in the
      gesture to the capturing element, so by the time the click arrives its
      target is always the stage, whether you tapped the sheet or the margin.
      Reading it there meant any tap at all closed the viewer. */
@@ -1041,7 +1041,7 @@ document.addEventListener('keydown', (e) => {
   /* Click-outside-to-close. This used to be the rule above, back when the sheet
      floated inside a full-bleed stage and the bare stage WAS the backdrop. Now
      the artwork fills its window exactly, so nothing outside the window belongs
-     to the stage at all — the backdrop is the lightbox itself, and the test has
+     to the stage at all â€” the backdrop is the lightbox itself, and the test has
      to live here or dismissing by clicking away stops working entirely. */
   lb.addEventListener('click', (e) => { if (e.target === lb) closeDoc(); });
 
@@ -1081,12 +1081,13 @@ document.getElementById('upsell-decline-btn')?.addEventListener('click', () => {
 });
 
 document.querySelectorAll('a[href="#order"], .hero-cta, .buy-btn, .nav-cta').forEach(btn => {
+  if (!document.getElementById('cart-overlay')) return; // if no cart, let link work normally
   if (btn.closest('#cart-overlay')) return;
   // The lightbox chrome's BUY NOW is also an a[href="#order"], but it has to
-  // dismiss the open viewer first — it runs its own handler instead of this one.
+  // dismiss the open viewer first â€” it runs its own handler instead of this one.
   if (btn.closest('#lightbox-chrome')) return;
   // The plain "ORDER" link in the nav list / mobile drawer is also an
-  // a[href="#order"] — but it's a section-navigation link like its HOME/
+  // a[href="#order"] â€” but it's a section-navigation link like its HOME/
   // INSTALLATION/etc. siblings, not a buy CTA, and already has its own
   // scrollIntoView handler. Without this, both handlers fired on the same
   // click: this one opened the cart and locked scroll mid-animation, which
@@ -1108,14 +1109,14 @@ document.querySelectorAll('a[href="#order"], .hero-cta, .buy-btn, .nav-cta').for
     }
   });
 });
-/* ══════════════════════════════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    6. VIDEO POWER MANAGEMENT
-   ══════════════════════════════════════════════════════════════
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    Every inline clip on this page is a muted, autoplaying ambient loop, so the
    only thing keeping the page cheap is being strict about which of them is
    allowed to decode at any moment. Mobile SoCs have a small number of hardware
    video decoders (commonly 2-4); once you exceed that, the extra streams fall
-   back to software decode and EVERY video on the page turns choppy at once —
+   back to software decode and EVERY video on the page turns choppy at once â€”
    the reported "all the videos get slow and laggy".
 
    Three things can make a video unnecessary, and all three funnel through here:
@@ -1123,8 +1124,8 @@ document.querySelectorAll('a[href="#order"], .hero-cta, .buy-btn, .nav-cta').for
      2. something covers the page        -> suspend()/resume(), keyed by owner
      3. the tab/app went to the background -> the visibilitychange hook
 
-   (2) is keyed the same way scrollLock is, so nested owners — the cart with a
-   photo viewer opened on top of it — each hold an independent claim and the
+   (2) is keyed the same way scrollLock is, so nested owners â€” the cart with a
+   photo viewer opened on top of it â€” each hold an independent claim and the
    inner one closing doesn't resume playback while the outer is still up. */
 // A clip has to be at least this much on screen to be worth decoding.
 const VISIBLE_ENOUGH = 0.25;
@@ -1134,7 +1135,7 @@ const videoPower = (() => {
   let suspended = [];
 
   // A video inside the thing that's covering the page is the whole point of
-  // that overlay — it must keep playing. Only what's *behind* gets suspended.
+  // that overlay â€” it must keep playing. Only what's *behind* gets suspended.
   const isForeground = (v) =>
     v.id === 'video-lightbox-player' || !!v.closest('.fullscreen-overlay');
 
@@ -1144,7 +1145,7 @@ const videoPower = (() => {
     suspended.forEach(v => v.pause());
   };
 
-  // Same "is it worth decoding" rule the observer uses, measured directly —
+  // Same "is it worth decoding" rule the observer uses, measured directly â€”
   // the observer can't answer for us here because nothing has scrolled, so it
   // has no fresh entry to hand over.
   const visibleEnough = (v) => {
@@ -1158,7 +1159,7 @@ const videoPower = (() => {
     suspended.forEach(v => {
       // The page can still move under an overlay, so something suspended may
       // have left the viewport since. Restarting it would undo the observer's
-      // work — resume only what is genuinely still on screen.
+      // work â€” resume only what is genuinely still on screen.
       if (v.isConnected && visibleEnough(v)) v.play().catch(() => {});
     });
     suspended = [];
@@ -1166,7 +1167,7 @@ const videoPower = (() => {
 
   /* THE important guard.
 
-     `autoplay` is not a one-time instruction — the browser re-applies it every
+     `autoplay` is not a one-time instruction â€” the browser re-applies it every
      time the element has enough data to start, which includes each load() from
      the responsive source swap and each src change from the playlist/power
      rotations. So a clip the observer had correctly paused would quietly start
@@ -1176,11 +1177,11 @@ const videoPower = (() => {
      Measured on a 390x844 viewport before this existed: 15 of the 16 videos on
      the page were playing at once, most of them at intersection ratio 0 and
      several inside display:none panels. That is the "all the videos get slow
-     and lag" report — every one of them downloading and decoding in parallel,
+     and lag" report â€” every one of them downloading and decoding in parallel,
      far past any mobile decoder budget.
 
      Catching it on the 'play' event is what makes this airtight: whatever
-     starts a video — autoplay, a stray play() call, a source swap — has to
+     starts a video â€” autoplay, a stray play() call, a source swap â€” has to
      pass the same test, and there's no path around it. */
   const allowed = (v) =>
     isForeground(v) || (suspenders.size === 0 && visibleEnough(v));
@@ -1208,7 +1209,7 @@ const videoPower = (() => {
 })();
 
 // Switching apps / locking the phone leaves every on-screen video decoding in
-// the background — the observer never fires because nothing scrolled.
+// the background â€” the observer never fires because nothing scrolled.
 document.addEventListener('visibilitychange', () => {
   if (document.hidden) videoPower.suspend('page-hidden');
   else videoPower.resume('page-hidden');
@@ -1232,7 +1233,7 @@ document.addEventListener('visibilitychange', () => {
    purely in transit; a quarter is roughly where a clip is actually being
    looked at, and it also stands them down sooner on the way out.
 
-   The test is `intersectionRatio`, NOT `entry.isIntersecting` — those are not
+   The test is `intersectionRatio`, NOT `entry.isIntersecting` â€” those are not
    the same question. isIntersecting is true for any overlap at all, however
    slight, no matter what threshold the observer was given; the threshold only
    decides when the callback fires. Keying off it would have played a video
@@ -1262,7 +1263,7 @@ document.querySelectorAll('video').forEach(vid => videoObserver.observe(vid));
 /* REMOVED: legacy updateVideoSources().
    It duplicated setResponsiveVideoSources() (top of this file) but ran AFTER it,
    selected video[data-v], had no tall-preference logic, and on desktop force-
-   reloaded data-h — silently clobbering the vertical sources on every Tech Specs
+   reloaded data-h â€” silently clobbering the vertical sources on every Tech Specs
    panel. setResponsiveVideoSources() selects video[data-h] (a superset here) and
    already handles h/v/sq plus preferTall, so this was pure redundancy. */
 
@@ -1277,7 +1278,7 @@ document.querySelectorAll('video').forEach(vid => videoObserver.observe(vid));
 // ==========================================================================
 // Diagram animation: plays once filling the frame completely (object-fit:cover +
 // the frame's aspect-ratio matched to the video's real dimensions), then on 'ended'
-// fades out and the frame reshapes to the still image's real dimensions instead —
+// fades out and the frame reshapes to the still image's real dimensions instead â€”
 // so neither asset ever gets cropped or letterboxed against a mismatched box.
 document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('.diagram-frame-inner').forEach(frame => {
@@ -1346,16 +1347,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // ==========================================================================
 // Tech Specs panel sizing: rather than guessing a fixed shape per panel (some
-// panels' active clip differs by breakpoint AND by playlist position — e.g. a
+// panels' active clip differs by breakpoint AND by playlist position â€” e.g. a
 // square-only clip followed by one with a real horizontal export), size each
 // .spec-visual-item from whatever video is actually loaded, every time it
-// changes (responsive swap, power-options alternation, or playlist advance —
+// changes (responsive swap, power-options alternation, or playlist advance â€”
 // all of these already fire a native 'loadedmetadata' event on src change).
 // ==========================================================================
 document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('.spec-visual-item video, .playlist-video, [data-prefer-tall]').forEach(vid => {
     // .spec-visual-video-box (when present) is the inner box that should be sized to
-    // the video — e.g. a panel with a caption below needs the caption to sit outside
+    // the video â€” e.g. a panel with a caption below needs the caption to sit outside
     // the ratio-locked area, not squeezed inside it.
     const panel = vid.closest('.spec-visual-video-box') || vid.closest('.spec-visual-item, .vid-r');
     if (!panel) return;
@@ -1371,7 +1372,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // ==========================================================================
 // Playlist videos: like the Power Options alternation above, but each clip in
-// the list can itself have horizontal/square/vertical variants — so a panel
+// the list can itself have horizontal/square/vertical variants â€” so a panel
 // can both cycle through multiple clips AND stay responsive per breakpoint.
 // data-playlist='[{"h":"...","sq":"...","v":"..."}, ...]'
 // ==========================================================================
@@ -1390,7 +1391,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // Resolve the FIRST clip immediately. Without this the element kept whatever
-    // src= the HTML shipped with until an 'ended' or 'resize' fired — so on initial
+    // src= the HTML shipped with until an 'ended' or 'resize' fired â€” so on initial
     // load a panel could show the wrong ratio (e.g. horizontal in a tall column).
     const applyCurrent = () => {
       const isMobile = window.innerWidth <= 768;
@@ -1480,7 +1481,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // ==========================================================================
-// Video captions overlaid on muted clips where someone is talking — e.g. the
+// Video captions overlaid on muted clips where someone is talking â€” e.g. the
 // No Bluetooth actor clip. data-captions is a JSON array of {start,end,text}
 // in seconds, and applies only to the FIRST clip of that video's playlist.
 // ==========================================================================
@@ -1494,7 +1495,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const captionEl = v.closest('.media-with-caption')?.querySelector('.video-caption');
     if (!captionEl) return;
 
-    // Use data-playlist-idx to know which clip is active — set by the playlist engine
+    // Use data-playlist-idx to know which clip is active â€” set by the playlist engine
     // above on every transition. idx===0 means first clip (captions on), else off.
     const onFirstClip = () => {
       const idx = parseInt(v.dataset.playlistIdx || '0', 10);
@@ -1533,12 +1534,12 @@ document.addEventListener('DOMContentLoaded', () => {
   let activeIndex = 0;
 
   // The other Tech Specs panels (cushion/controller exploded views, cables,
-  // power options, etc.) had no chrome at all — the B mark and BUY NOW only
+  // power options, etc.) had no chrome at all â€” the B mark and BUY NOW only
   // showed up in the one panel ("No Bluetooth") that had already been moved
   // to the newer video-lightbox. Routing this legacy in-place toggle through
   // the same shared lightboxChrome/scrollLock (used everywhere else on the
   // site) closes that gap without changing how this feature itself works.
-  /* This overlay is the one viewer with no close button of its own — it was
+  /* This overlay is the one viewer with no close button of its own â€” it was
      built as "tap anywhere to dismiss" with a text pill saying so. Now that
      every other viewer on the site closes via the same silver X, it gets one
      too, injected on open and removed on close (the element it lives in is a
@@ -1600,12 +1601,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (item.classList.contains('active')) {
         // .vid-clickable panels (the "no bluetooth" demo) now open the real
-        // video-lightbox instead — that binds its own click handler directly
+        // video-lightbox instead â€” that binds its own click handler directly
         // on this element. Without this guard both fired on the same tap:
         // the lightbox opened (z-index 10000) ON TOP of this legacy in-place
-        // fullscreen (z-index 9999), which stayed alive underneath — still
+        // fullscreen (z-index 9999), which stayed alive underneath â€” still
         // full-viewport, still cycling its own separate copy of the same
-        // clips — so closing the lightbox dropped you into THAT instead of
+        // clips â€” so closing the lightbox dropped you into THAT instead of
         // the normal page. Exactly the "goes to a previous window, trips
         // between the 2 videos" report.
         if (clickedVideo && isMobile() && !ownsViewer) {
@@ -1628,7 +1629,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (visItems[index]) visItems[index].classList.add('active');
 
         // Play-once videos (cushion + controller exploded views) don't loop
-        // on their own anymore — replay them from the start whenever their
+        // on their own anymore â€” replay them from the start whenever their
         // panel is reopened, so they don't just sit frozen from last time.
         visItems[index]?.querySelectorAll('video.play-once').forEach(vid => vid.resetAndPlay?.());
 
@@ -1645,7 +1646,7 @@ document.addEventListener('DOMContentLoaded', () => {
   placeActiveVideo();
 });
 
-// Plain play-once videos (no native loop, no reverse — just start to end and
+// Plain play-once videos (no native loop, no reverse â€” just start to end and
 // stop there): gets a resetAndPlay() so the Tech Specs accordion below can
 // replay it from the start when reopened. An optional data-rate speeds
 // specific clips up (the controller exploded view played too slowly at 1x).
@@ -1655,14 +1656,110 @@ document.addEventListener('DOMContentLoaded', () => {
     vid.playbackRate = rate;
     // Belt-and-suspenders: some browsers silently reset playbackRate back to
     // 1 once real playback actually starts, even though it was set correctly
-    // beforehand — re-assert it every time so a custom rate actually sticks.
+    // beforehand â€” re-assert it every time so a custom rate actually sticks.
     if (rate !== 1) vid.addEventListener('playing', () => { vid.playbackRate = rate; });
     vid.resetAndPlay = () => {
       vid.currentTime = 0;
       vid.playbackRate = rate;
-      // Swallow the "play() interrupted by a new load request" rejection —
+      // Swallow the "play() interrupted by a new load request" rejection â€”
       // switching panels quickly replaces the source mid-play by design.
       vid.play()?.catch(() => {});
     };
   });
 });
+
+/* ═══════════════════════════════════════════════════════════════
+   MEGA-MENU (inner pages, NVIDIA-style slide-down)
+   ═══════════════════════════════════════════════════════════════ */
+(() => {
+  const panel = document.getElementById('mega-panel');
+  const scrim = document.getElementById('mega-scrim');
+  const buttons = document.querySelectorAll('[data-mega]');
+  if (!panel || !buttons.length) return;
+
+  let activeCategory = null;
+  let openTimer = null;
+  let closeTimer = null;
+  const OPEN_DELAY = 0;   // ms before hover-open fires
+  const CLOSE_DELAY = 100;  // ms grace period when mouse leaves
+
+  const cancelTimers = () => {
+    clearTimeout(openTimer);
+    clearTimeout(closeTimer);
+  };
+
+  const open = (cat) => {
+    cancelTimers();
+    panel.querySelectorAll('[data-mega-section]').forEach(s => {
+      s.style.display = s.dataset.megaSection === cat ? '' : 'none';
+    });
+    panel.classList.add('mega-open');
+    scrim?.classList.add('mega-open');
+    buttons.forEach(b => b.classList.toggle('mega-active', b.dataset.mega === cat));
+    activeCategory = cat;
+  };
+
+  const close = () => {
+    cancelTimers();
+    panel.classList.remove('mega-open');
+    scrim?.classList.remove('mega-open');
+    buttons.forEach(b => b.classList.remove('mega-active'));
+    activeCategory = null;
+  };
+
+  const scheduleClose = () => {
+    clearTimeout(closeTimer);
+    closeTimer = setTimeout(close, CLOSE_DELAY);
+  };
+
+  const cancelClose = () => {
+    clearTimeout(closeTimer);
+  };
+
+  // ── Button interactions ──
+  buttons.forEach(btn => {
+    // Click: toggle immediately
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      cancelTimers();
+      if (activeCategory === btn.dataset.mega) {
+        close();
+      } else {
+        open(btn.dataset.mega);
+      }
+    });
+
+    // Hover: open with a small delay to avoid twitchiness
+    btn.addEventListener('mouseenter', () => {
+      cancelClose();
+      clearTimeout(openTimer);
+      const cat = btn.dataset.mega;
+      if (activeCategory && activeCategory !== cat) {
+        // Already open on a different category — switch instantly
+        open(cat);
+      } else if (!activeCategory) {
+        openTimer = setTimeout(() => open(cat), OPEN_DELAY);
+      }
+    });
+
+    btn.addEventListener('mouseleave', () => {
+      clearTimeout(openTimer);
+    });
+  });
+
+  // ── Hover zone: navbar + panel are one continuous area ──
+  const navbar = document.querySelector('.navbar');
+  // Wrap both in a shared "intent" zone — leaving either starts close,
+  // entering either cancels it.
+  [navbar, panel].forEach(el => {
+    if (!el) return;
+    el.addEventListener('mouseleave', scheduleClose);
+    el.addEventListener('mouseenter', cancelClose);
+  });
+
+  // ── Dismissal ──
+  scrim?.addEventListener('click', close);
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && activeCategory) close();
+  });
+})();

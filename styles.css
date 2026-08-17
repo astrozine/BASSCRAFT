@@ -59,8 +59,15 @@ body {
   overflow-x: hidden; line-height: 1.5;
   display: flex; flex-direction: column; align-items: center;
 }
+/* The 1600px ceiling here was what made the whole site read as a centred card
+   on a desktop monitor: at 1920 the page stopped 160px short on each side, so
+   even the hero video never reached the screen edge. Raised to the same 2560px
+   ultra-wide cap LiberNovo puts on its <main>, so sections are genuinely
+   full-bleed at every normal desktop width and only start to letterbox on
+   very large displays. The nav is pinned to the same number below — the two
+   must match or the bar stops lining up with the content. */
 #site-wrapper {
-  width: 100%; max-width: 1600px;
+  width: 100%; max-width: 2560px;
   background: #f7f4ef;
   position: relative;
   box-shadow: 0 0 60px rgba(0,0,0,0.12);
@@ -71,12 +78,22 @@ img { max-width: 100%; display: block; }
 video { display: block; width: 100%; }
 button { font-family: inherit; }
 
-/* ── Containers — 4K-ready with wider bounds ── */
-.container { max-width: min(1400px, 88vw); margin: 0 auto; padding: 0 5%; }
+/* ── Containers ──
+   Matched to LiberNovo's own measurements: a 1440px box with 80px of side
+   padding, so the readable column lands at ~1280px. The old min(1400px, 88vw)
+   with 5% padding was already close (~1260px) — the section backgrounds around
+   it were the real problem, not this — but the padding now scales properly on
+   narrow screens instead of shrinking as a percentage of a shrinking box. */
+.container { max-width: 1440px; margin: 0 auto; padding: 0 clamp(20px, 4vw, 80px); }
 
 /* ── Sections ── */
 .s-dark { background: var(--bg); color: var(--white); padding: clamp(80px,10vw,140px) 0; position: relative; }
-.s-light { background: var(--bg-light); color: var(--dark); padding: clamp(80px,10vw,140px) 0; border-radius: 24px; overflow: hidden; margin: 0 12px; }
+/* Full-bleed, like every .shopify-section on LiberNovo. The old 12px side
+   margin + 24px radius turned each light section into a floating card with a
+   sliver of page showing down both edges — the single biggest reason the
+   desktop layout read as "boxed in" rather than full screen. Mobile already
+   overrode both to 0 further down; this just makes desktop agree. */
+.s-light { background: var(--bg-light); color: var(--dark); padding: clamp(80px,10vw,140px) 0; overflow: hidden; }
 
 /* ── Typography ── */
 h2 {
@@ -101,7 +118,9 @@ p {
 /* ═══ NAV ═══ */
 .navbar {
   position: fixed; top: 0; left: 50%; transform: translateX(-50%);
-  width: 100%; max-width: 1600px; height: 90px;
+  /* Must stay equal to #site-wrapper's max-width — the bar is centred with
+     left:50%/translateX(-50%), so any mismatch shifts it off the content. */
+  width: 100%; max-width: 2560px; height: 90px;
   /* Transparent (just a soft top scrim for legibility) over the hero so the video isn't
      cropped by a solid bar; goes solid+blurred once scrolled past the hero (.scrolled). */
   background: linear-gradient(to bottom, rgba(0,0,0,0.32) 0%, rgba(0,0,0,0) 100%);
@@ -229,7 +248,7 @@ p {
   max-height: 0; overflow: hidden;
   transition: max-height 0.35s ease;
 }
-.mobile-nav-menu.is-open { max-height: 400px; border-bottom: 0.5px solid rgba(255,255,255,0.04); }
+.mobile-nav-menu.is-open { max-height: 85vh; overflow-y: auto; border-bottom: 0.5px solid rgba(255,255,255,0.04); }
 .mobile-nav-menu a {
   color: #fff; font-family: 'CalSansText',sans-serif; font-size: 0.95rem;
   letter-spacing: 0.06em; text-transform: uppercase;
@@ -353,7 +372,7 @@ p {
     overflow: hidden;
   }
   .hero-text-group { display: contents; }
-  .hero-center .hero-cta { order: 1; }
+  .hero-center .hero-cta { order: 2; }
   .hero-center .hero-title { order: 2; }
   .hero-center .hero-tagline { order: 3; }
   .hero-center h1 { font-size: clamp(1.25rem, 3.8vw, 1.8rem) !important; line-height: 1.1; max-width: min(85vw, 400px); margin-top: 0; margin-bottom: 0; text-align: center; }
@@ -562,7 +581,11 @@ p {
 
 /* ═══ PRICING GRID ═══ */
 .pricing-grid {
-  display: grid; grid-template-columns: 1fr; gap: 2rem; max-width: 800px; margin: 0 auto;
+  /* Was 800px, which left the pricing cards sitting well inside an already
+     centred container — a narrow column in the middle of a wide screen. Each
+     card is a horizontal image|info layout, so the extra width goes straight
+     into a bigger product shot rather than over-long lines of text. */
+  display: grid; grid-template-columns: 1fr; gap: 2rem; max-width: 1120px; margin: 0 auto;
 }
 .pricing-card {
   background: var(--white); border-radius: var(--r); padding: clamp(1.5rem, 3vw, 2.5rem); text-align: left;
@@ -687,7 +710,7 @@ p {
   /* Make background videos flow naturally so cards sit cleanly right under them */ #ctrl-hero-vid, #stealth-bg-vid, #nobt-bg-vid, #hand-bg-vid {
     position: relative !important;
     top: auto !important; left: auto !important;
-    transform: none !important;
+    transform: translateY(-50%) !important;
     width: 100vw !important;
     height: 100vh !important;
     max-height: none !important;
@@ -699,7 +722,7 @@ p {
   /* Force Text Overlays and Skit Cards to stack cleanly on Mobile */
   #command-central-text, #hand-text, #stealth-text{ 
     opacity: 1 !important; 
-    transform: none !important; 
+    transform: translateY(-50%) !important; 
     position: relative !important;
     left: auto !important; top: auto !important; right: auto !important; bottom: auto !important;
     margin: 2rem auto !important;
@@ -1840,7 +1863,9 @@ body.cart-open .nav-links { opacity: 0; pointer-events: none; }
    PROBLEM SECTION — the "why would I want this" beat, above #installation
    ========================================================================== */
 
-.problem-head { max-width: 780px; margin: 0 auto clamp(36px, 5vw, 60px); }
+/* Nudged rather than widened to the container: these are reading measures, and
+   a 1280px line of body copy is worse than a 880px one, full-screen or not. */
+.problem-head { max-width: 880px; margin: 0 auto clamp(36px, 5vw, 60px); }
 .problem-sub {
   margin-top: 18px; font-size: clamp(1rem, 1.6vw, 1.15rem);
   line-height: 1.55; color: var(--grey-dark);
@@ -1889,7 +1914,7 @@ body.cart-open .nav-links { opacity: 0; pointer-events: none; }
 }
 
 .problem-turn {
-  margin: clamp(38px, 5vw, 58px) auto 0; max-width: 720px;
+  margin: clamp(38px, 5vw, 58px) auto 0; max-width: 820px;
   font-family: 'CalSansUI', sans-serif;
   font-size: clamp(1.1rem, 2.1vw, 1.5rem); font-weight: 500;
   line-height: 1.45; color: var(--dark);
@@ -2165,6 +2190,20 @@ body.cart-open .nav-links { opacity: 0; pointer-events: none; }
   padding: 10px;
 }
 
+/* The product renders are tall portraits (2336x3504). Once .pricing-grid went
+   from 800px to 1120px the image column grew to ~500px, which at that aspect
+   made the shot ~750px tall and left a large empty gap beside the copy. Cap the
+   height and let the plate hug the image, so the extra card width lands in the
+   info column instead of stretching the card vertically. */
+#order .pricing-card-image { flex: 0 1 auto; align-self: center; }
+#order .pricing-card-image img {
+  max-height: 420px;
+  width: auto;
+  max-width: 100%;
+  margin: 0 auto;
+  object-fit: contain;
+}
+
 
 /* ==========================================================================
    MOBILE SWIPE CAROUSELS
@@ -2285,11 +2324,13 @@ body.cart-open .nav-links { opacity: 0; pointer-events: none; }
    ========================================================================== */
 
 .genre-intro {
-  max-width: 640px; margin: 0 auto 44px auto;
+  max-width: 720px; margin: 0 auto 44px auto;
   line-height: 1.55; color: var(--grey-light);
 }
 
-.genre-stage { max-width: 1100px; margin: 0 auto; }
+/* 1100 → 1280: matches the container's readable column, so the spotlight's
+   centre clip gets meaningfully larger instead of floating in dead space. */
+.genre-stage { max-width: 1280px; margin: 0 auto; }
 
 .genre-item { margin: 0; min-width: 0; }
 .genre-item .vid-r { cursor: pointer; }
@@ -2480,7 +2521,7 @@ body.cart-open .nav-links { opacity: 0; pointer-events: none; }
    elsewhere: heading → row → pricing, with the row reading as support for the
    heading rather than as a separate band. */
 #order .trust-grid {
-  max-width: 800px;              /* line up with .pricing-grid, not full bleed */
+  max-width: 1120px;             /* stays locked to .pricing-grid's width above */
   margin: clamp(28px, 3.5vw, 44px) auto clamp(44px, 5.5vw, 68px);
 }
 /* Pinned to three columns rather than left to auto-fit: inside the 800px
@@ -2535,4 +2576,178 @@ body.cart-open .nav-links { opacity: 0; pointer-events: none; }
 .form-note {
   font-size: .84rem !important;
   color: #8a8a8f !important;
+}
+
+/* Inner page navbar overrides */
+.inner-nav {
+  background: #1d1d1f !important;
+  border-bottom: none !important;
+}
+.inner-nav .nav-links a,
+.inner-nav #global-mute-btn {
+  color: #ffffff !important;
+}
+.inner-nav.scrolled {
+  background: rgba(29, 29, 31, 0.95) !important;
+}
+.inner-nav.scrolled .logo-white {
+  opacity: 0 !important;
+}
+.inner-nav.scrolled .logo-icon {
+  opacity: 1 !important;
+  transform: scale(1) !important;
+  background: #ffffff !important;
+}
+/* ═══════════════════════════════════════════════════════════════
+   MEGA-MENU (inner pages only — NVIDIA-style slide-down)
+   ═══════════════════════════════════════════════════════════════ */
+.inner-nav .nav-links { display: none !important; }
+
+
+
+.mega-nav-links {
+  display: flex; align-items: center; gap: clamp(18px, 2.5vw, 36px);
+}
+/* HOME link in mega-nav */
+.mega-home-link {
+  font-family: 'CalSansText', sans-serif;
+  font-size: 11px; font-weight: 600; letter-spacing: .08em;
+  text-transform: uppercase; color: #fff !important;
+  text-decoration: none; padding: 6px 0;
+  border-right: 1px solid rgba(255,255,255,.15);
+  padding-right: clamp(14px, 2vw, 28px);
+  margin-right: clamp(4px, 0.5vw, 8px);
+  transition: opacity .2s;
+}
+.mega-home-link:hover { opacity: .7; }
+
+.mega-nav-links > button {
+  background: none; border: none; cursor: pointer;
+  font-family: 'CalSansText', sans-serif;
+  font-size: 11px; font-weight: 600; letter-spacing: .08em;
+  text-transform: uppercase; color: rgba(255,255,255,.7);
+  padding: 6px 0; position: relative;
+  transition: color .25s;
+}
+.mega-nav-links > button:hover,
+.mega-nav-links > button.mega-active {
+  color: #fff;
+}
+.mega-nav-links > button::after {
+  content: ''; position: absolute; bottom: 0; left: 0;
+  width: 100%; height: 2px; background: #ff6a1a;
+  transform: scaleX(0); transform-origin: left;
+  transition: transform .25s ease;
+}
+.mega-nav-links > button.mega-active::after {
+  transform: scaleX(1);
+}
+
+/* The slide-down panel */
+.mega-panel {
+  position: absolute; top: 100%; left: 0; width: 100%;
+  background: #1d1d1f;
+  border-top: 1px solid rgba(255,255,255,.06);
+  max-height: 0; overflow: hidden; opacity: 0;
+  transition: max-height .35s cubic-bezier(.25,.8,.25,1),
+              opacity .25s ease;
+  z-index: 9998;
+}
+.mega-panel.mega-open {
+  max-height: 320px; opacity: 1;
+}
+
+.mega-panel-inner {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 12px 48px;
+  padding: clamp(24px, 3vw, 40px) 6%;
+  max-width: 960px;
+}
+
+.mega-panel-inner h4 {
+  font-family: 'CalSansText', sans-serif;
+  font-size: .7rem; letter-spacing: .1em; text-transform: uppercase;
+  color: rgba(255,255,255,.35); margin: 0 0 12px; font-weight: 600;
+}
+.mega-panel-inner a {
+  display: block; color: rgba(255,255,255,.8);
+  font-family: 'CalSansText', sans-serif;
+  font-size: .85rem; text-decoration: none;
+  padding: 5px 0; transition: color .2s, padding-left .2s;
+}
+.mega-panel-inner a:hover {
+  color: #ff6a1a; padding-left: 6px;
+}
+
+/* Scrim behind mega-panel to close on click-away */
+.mega-scrim {
+  position: fixed; inset: 0; z-index: 9997;
+  background: rgba(0,0,0,.35);
+  opacity: 0; pointer-events: none;
+  transition: opacity .3s ease;
+}
+.mega-scrim.mega-open {
+  opacity: 1; pointer-events: auto;
+}
+
+/* Mobile: stack the mega-nav-links vertically in mobile drawer instead */
+@media (max-width: 768px) {
+  .mega-nav-links { display: none !important; }
+  .mega-panel { display: none !important; }
+  .mega-scrim { display: none !important; }
+}
+/* ── Inner-page mobile: always show hamburger + differentiated drawer ── */
+@media (max-width: 768px) {
+  .inner-nav .mobile-menu-btn {
+    display: flex !important;
+    color: #ffffff !important;
+    z-index: 9999 !important;
+  }
+  .inner-nav ~ .mobile-nav-menu.is-open {
+    max-height: 85vh !important;
+    overflow-y: auto !important;
+  }
+
+  .inner-nav ~ .mobile-nav-menu {
+    background: #1d1d1f !important;
+    border-top: 1px solid rgba(255,255,255,.06);
+  }
+  .inner-nav ~ .mobile-nav-menu span {
+    display: block;
+    padding: 6px 5%;
+    margin-top: 8px;
+  }
+  .inner-nav ~ .mobile-nav-menu a {
+    padding-left: 8% !important;
+  }
+}
+/* Show BUY NOW on inner pages ONLY when scrolled */
+.inner-nav.scrolled .nav-right { flex: 1 1 0 !important; width: auto !important; opacity: 1 !important; overflow: visible !important; }
+
+/* ── Inner-page mobile layout overrides ── */
+@media (max-width: 768px) {
+  /* Fix navbar alignment: logo on left instead of center */
+  .navbar.inner-nav { justify-content: space-between !important; }
+  .inner-nav .nav-left { justify-content: flex-start !important; flex: 1 1 0 !important; }
+
+  /* At top: hamburger on right */
+  .inner-nav:not(.scrolled) .mobile-menu-btn {
+    display: flex !important;
+    left: auto !important;
+    right: 5% !important;
+    transform: translateY(-50%) !important;
+    color: #ffffff !important;
+    z-index: 9999 !important;
+  }
+  
+  /* Scrolled: hamburger centered */
+  .inner-nav.scrolled .mobile-menu-btn {
+    display: flex !important;
+    left: 48.5% !important;
+    right: auto !important;
+    transform: translate(-50%, -50%) !important;
+    color: #ffffff !important;
+    z-index: 9999 !important;
+  }
 }

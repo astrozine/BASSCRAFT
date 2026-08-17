@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Warranty — BASSCRAFT</title>
-  <meta name="description" content="BASSCRAFT stands behind its products. Here is what our warranty covers and how to make a claim.">
+  <meta name="description" content="Effective date: August 1, 2026 &middot; Contact: info@basscraft.co">
   <link rel="icon" href="favicon.ico">
   <link rel="stylesheet" href="styles.css">
   <style>
@@ -20,22 +20,17 @@
     .inner-section ul, .inner-section ol { padding-left:1.4em; margin-bottom:14px; }
     .inner-section li { font-family:'CalSansText',sans-serif; color:#6e6e73; line-height:1.7; font-size:clamp(.9rem,1.05vw,1rem); margin-bottom:6px; }
     .inner-divider { border:0; height:1px; background:rgba(0,0,0,0.08); margin:clamp(28px,3vw,40px) 0; }
-    .placeholder-badge { display:inline-block; background:rgba(255,180,0,0.1); border:1px solid rgba(255,160,0,0.25); color:#9a6700; font-size:.7rem; font-family:'CalSansText',sans-serif; letter-spacing:.06em; text-transform:uppercase; padding:4px 10px; border-radius:4px; margin-bottom:28px; }
     .faq-item { border-bottom:1px solid rgba(0,0,0,0.07); padding:20px 0; }
     .faq-item:first-child { padding-top:0; }
     .faq-q { font-family:'CalSansUI',sans-serif; font-weight:600; font-size:clamp(.95rem,1.2vw,1.05rem); color:#1d1d1f; margin-bottom:10px; }
     .faq-a { font-family:'CalSansText',sans-serif; color:#6e6e73; line-height:1.7; font-size:clamp(.88rem,1vw,.98rem); }
-    .track-form input, .track-form button { font-family:'CalSansText',sans-serif; }
-    .track-form { display:flex; gap:12px; flex-wrap:wrap; margin:24px 0; }
-    .track-form input { flex:1 1 260px; padding:13px 16px; border:1px solid rgba(0,0,0,0.15); border-radius:12px; background:#fff; font-size:.95rem; color:#1d1d1f; outline:none; }
-    .track-form button { padding:13px 26px; background:#1d1d1f; color:#fff; border:none; border-radius:12px; font-size:.9rem; font-weight:600; cursor:pointer; letter-spacing:.03em; }
   </style>
 </head>
 <body>
 <div id="site-wrapper">
-<nav class="navbar">
+<nav class="navbar inner-nav">
   <div class="nav-left">
-    <a href="index.html#experience" class="nav-logo" id="nav-logo" style="display: flex; align-items: center; gap: 10px;">
+    <a href="/" class="nav-logo" id="nav-logo-inner" style="display: flex; align-items: center; gap: 10px;">
       <!-- Over the hero the full white wordmark shows. Once scrolled (.navbar.scrolled) the
            wordmark cross-fades to just the B icon, held at low opacity so it reads as a
            discreet glassy mark rather than competing with the content. -->
@@ -44,15 +39,22 @@
     </a>
   </div>
   <div class="nav-links">
-    <a href="index.html">HOME</a>
-    <a href="index.html#social-proof">OWNERS</a>
-    <a href="index.html#problem">THE FEEL</a>
+    <a href="/">HOME</a>
+    <a href="/#social-proof">OWNERS</a>
+    <a href="/#problem">THE FEEL</a>
     <a href="index.html#installation">HOW IT WORKS</a>
     <a href="index.html#specs">TECH SPECS</a>
-    <a href="index.html#order">ORDER</a>
+    <a href="/#order">ORDER</a>
+  </div>
+  <div class="mega-nav-links">
+    <a href="/" class="mega-home-link">Home</a>
+    <button data-mega="product">Product</button>
+    <button data-mega="explore">Explore</button>
+    <button data-mega="brand">Business</button>
+    <button data-mega="support">Support</button>
   </div>
   <div class="nav-right">
-    <a href="index.html#order" class="nav-cta scroll-buy-btn k-pop-btn"><span>BUY NOW</span></a>
+    <a href="/#order" class="nav-cta scroll-buy-btn k-pop-btn"><span>BUY NOW</span></a>
   </div>
   <!-- Mobile only: .nav-links is display:none below 768px, so this is the
        only way to reach INSTALLATION/TECH SPECS/EXPERIENCE/ORDER there.
@@ -66,45 +68,106 @@
       <line class="bar bar-bot" x1="4" y1="17" x2="20" y2="17"></line>
     </svg>
   </button>
+  <!-- Mega-menu slide-down panel (NVIDIA-style) -->
+  <div class="mega-panel" id="mega-panel">
+    <!-- Product -->
+    <div class="mega-panel-inner" data-mega-section="product" style="display:none;">
+      <div>
+        <h4>Product</h4>
+        <a href="/#order">Starter Kit</a>
+        <a href="/#order">Double Kit</a>
+        <a href="the-cushion.html">The Cushion</a>
+        <a href="the-controller.html">The Controller</a>
+      </div>
+    </div>
+    <!-- Explore -->
+    <div class="mega-panel-inner" data-mega-section="explore" style="display:none;">
+      <div>
+        <h4>Explore</h4>
+        <a href="how-it-works.html">How It Works</a>
+        <a href="tech-specs.html">Tech Specs</a>
+        <a href="tutorials.html">Tutorials</a>
+      </div>
+    </div>
+    <!-- Brand -->
+    <div class="mega-panel-inner" data-mega-section="brand" style="display:none;">
+      <div>
+        <h4>Business</h4>
+        <a href="about-us.html">About Us</a>
+        <a href="become-a-dealer.html">Become a Dealer</a>
+        <a href="affiliate-program.html">Affiliate Program</a>
+        <a href="press.html">Press</a>
+      </div>
+    </div>
+    <!-- Support -->
+    <div class="mega-panel-inner" data-mega-section="support" style="display:none;">
+      <div>
+        <h4>Support</h4>
+        <a href="mailto:info@basscraft.co">Contact Us</a>
+        <a href="faq.html">FAQs</a>
+        <a href="warranty.html">Warranty</a>
+        <a href="returns.html">Returns &amp; Refunds</a>
+        <a href="shipping.html">Shipping Policy</a>
+      </div>
+    </div>
+  </div>
 </nav>
+<div class="mega-scrim" id="mega-scrim"></div>
 
 <!-- Mobile nav drawer: the same links as .nav-links, just reachable on mobile. -->
 <div class="mobile-nav-menu" id="mobile-nav-menu">
-  <a href="index.html">HOME</a>
-  <a href="index.html#social-proof">OWNERS</a>
-  <a href="index.html#problem">THE FEEL</a>
-  <a href="index.html#installation">HOW IT WORKS</a>
-  <a href="index.html#specs">TECH SPECS</a>
-  <a href="index.html#order">ORDER</a>
+  <a href="/" style="font-weight:700; margin-bottom:8px;">← Back to Home</a>
+  <span style="font-size:.65rem; letter-spacing:.1em; text-transform:uppercase; color:rgba(255,255,255,.35); margin-top:12px;">Product</span>
+  <a href="/#order">Starter Kit</a>
+  <a href="/#order">Double Kit</a>
+  <a href="the-cushion.html">The Cushion</a>
+  <a href="the-controller.html">The Controller</a>
+  <span style="font-size:.65rem; letter-spacing:.1em; text-transform:uppercase; color:rgba(255,255,255,.35); margin-top:12px;">Explore</span>
+  <a href="how-it-works.html">How It Works</a>
+  <a href="tech-specs.html">Tech Specs</a>
+  <a href="tutorials.html">Tutorials</a>
+  <span style="font-size:.65rem; letter-spacing:.1em; text-transform:uppercase; color:rgba(255,255,255,.35); margin-top:12px;">Business</span>
+  <a href="about-us.html">About Us</a>
+  <a href="become-a-dealer.html">Become a Dealer</a>
+  <a href="affiliate-program.html">Affiliate Program</a>
+  <a href="press.html">Press</a>
+  <span style="font-size:.65rem; letter-spacing:.1em; text-transform:uppercase; color:rgba(255,255,255,.35); margin-top:12px;">Support</span>
+  <a href="mailto:info@basscraft.co">Contact Us</a>
+  <a href="faq.html">FAQs</a>
+  <a href="warranty.html">Warranty</a>
+  <a href="returns.html">Returns &amp; Refunds</a>
+  <a href="shipping.html">Shipping Policy</a>
 </div>
 <main class="inner-page">
   <div class="container">
-    <p class="inner-eyebrow">Policy</p>
-    <h1>Warranty.</h1>
-    <p class="inner-intro">One-Year Limited Manufacturing Warranty. BASSCRAFT warrants that your product will be free from defects in materials and workmanship under normal use for one (1) year from the date of delivery.</p>
-    <p class="policy-meta">Effective date: August&nbsp;1, 2026 · Contact: <a href="mailto:info@basscraft.co">info@basscraft.co</a></p>
+    <p class="inner-eyebrow">BASSCRAFT</p>
+    <h1>Warranty</h1>
+    <p class="inner-intro">Effective date: August 1, 2026 &middot; Contact: info@basscraft.co</p>
     <div class="inner-section">
-      <h2>What's covered</h2>
-      <p>Manufacturing defects in the cushion, controller, and included electronics and cabling — including failures in the haptic transducers, amplifier, or wiring that occur under normal use.</p>
-    </div>
-    <div class="inner-section">
-      <h2>What's not covered</h2>
-      <ul>
-        <li>Damage from misuse, accidents, unauthorized modification, or improper installation</li>
-        <li>Normal cosmetic wear (fabric wear, minor scuffs)</li>
-        <li>Damage from liquid exposure or extreme temperatures beyond product specifications</li>
-        <li>Products purchased from unauthorized resellers</li>
-      </ul>
-    </div>
-    <div class="inner-section">
-      <h2>How to make a claim</h2>
-      <p>Email <a href="mailto:info@basscraft.co">info@basscraft.co</a> with your order number, a description of the issue, and photos or video if possible. If we confirm a covered defect, we'll repair or replace the unit at no cost, including shipping.</p>
-      <p>This warranty gives you specific legal rights; you may also have other rights that vary by state.</p>
-    </div>
-    <hr class="inner-divider">
-    <div class="inner-section">
-      <p>Questions? Email <a href="mailto:info@basscraft.co">info@basscraft.co</a>.<br>BASSCRAFT Audio LLC, 2205 Woodward Street, Austin, TX 78744.</p>
-    </div>
+  <h2>One-Year Limited Manufacturing Warranty</h2>
+  <p>Basscraft warrants that your product will be free from defects in materials and workmanship under normal use for <strong>one (1) year from the date of delivery</strong>.</p>
+</div>
+<hr class="inner-divider">
+<div class="inner-section">
+  <h2>What's covered</h2>
+  <p>Manufacturing defects in the cushion, controller, and included electronics and cabling &mdash; including failures in the haptic transducers, amplifier, or wiring that occur under normal use.</p>
+</div>
+<hr class="inner-divider">
+<div class="inner-section">
+  <h2>What's not covered</h2>
+  <ul>
+    <li>Damage from misuse, accidents, unauthorized modification, or improper installation</li>
+    <li>Normal cosmetic wear (fabric wear, minor scuffs)</li>
+    <li>Damage from liquid exposure or extreme temperatures beyond product specifications</li>
+    <li>Products purchased from unauthorized resellers</li>
+  </ul>
+</div>
+<hr class="inner-divider">
+<div class="inner-section">
+  <h2>How to make a claim</h2>
+  <p>Email <a href="mailto:info@basscraft.co" style="color:#1d1d1f;text-decoration:underline;">info@basscraft.co</a> with your order number, a description of the issue, and photos or video if possible. If we confirm a covered defect, we'll repair or replace the unit at no cost, including shipping.</p>
+  <p>This warranty gives you specific legal rights; you may also have other rights that vary by state.</p>
+</div>
   </div>
 </main>
 <footer class="footer">
@@ -115,8 +178,8 @@
       <nav class="footer-nav" aria-label="Footer">
         <div class="footer-col">
           <h4>Product</h4>
-          <a href="index.html#order">Starter Kit</a>
-          <a href="index.html#order">Double Kit</a>
+          <a href="/#order">Starter Kit</a>
+          <a href="/#order">Double Kit</a>
           <a href="index.html#specs">The Cushion</a>
           <a href="index.html#specs">The Controller</a>
         </div>
@@ -124,12 +187,12 @@
           <h4>Explore</h4>
           <a href="index.html#installation">How It Works</a>
           <a href="index.html#specs">Tech Specs</a>
-          <a href="index.html#experience">The Experience</a>
+          <a href="/#experience">The Experience</a>
           <a href="vehicle-compatibility.html">Vehicle Compatibility</a>
           <a href="tutorials.html">Tutorials</a>
         </div>
         <div class="footer-col">
-          <h4>Brand</h4>
+          <h4>Business</h4>
           <a href="about-us.html">About Us</a>
           <a href="become-a-dealer.html">Become a Dealer</a>
           <a href="affiliate-program.html">Affiliate Program</a>
@@ -149,7 +212,51 @@
           <a href="returns.html">Returns &amp; Refunds</a>
           <a href="shipping.html">Shipping Policy</a>
         </div>
-      </nav>
+        <!-- Mega-menu slide-down panel (NVIDIA-style) -->
+  <div class="mega-panel" id="mega-panel">
+    <!-- Product -->
+    <div class="mega-panel-inner" data-mega-section="product" style="display:none;">
+      <div>
+        <h4>Product</h4>
+        <a href="/#order">Starter Kit</a>
+        <a href="/#order">Double Kit</a>
+        <a href="the-cushion.html">The Cushion</a>
+        <a href="the-controller.html">The Controller</a>
+      </div>
+    </div>
+    <!-- Explore -->
+    <div class="mega-panel-inner" data-mega-section="explore" style="display:none;">
+      <div>
+        <h4>Explore</h4>
+        <a href="how-it-works.html">How It Works</a>
+        <a href="tech-specs.html">Tech Specs</a>
+        <a href="tutorials.html">Tutorials</a>
+      </div>
+    </div>
+    <!-- Brand -->
+    <div class="mega-panel-inner" data-mega-section="brand" style="display:none;">
+      <div>
+        <h4>Business</h4>
+        <a href="about-us.html">About Us</a>
+        <a href="become-a-dealer.html">Become a Dealer</a>
+        <a href="affiliate-program.html">Affiliate Program</a>
+        <a href="press.html">Press</a>
+      </div>
+    </div>
+    <!-- Support -->
+    <div class="mega-panel-inner" data-mega-section="support" style="display:none;">
+      <div>
+        <h4>Support</h4>
+        <a href="mailto:info@basscraft.co">Contact Us</a>
+        <a href="faq.html">FAQs</a>
+        <a href="warranty.html">Warranty</a>
+        <a href="returns.html">Returns &amp; Refunds</a>
+        <a href="shipping.html">Shipping Policy</a>
+      </div>
+    </div>
+  </div>
+</nav>
+<div class="mega-scrim" id="mega-scrim"></div>
 
       <!-- Newsletter. Mirrors LiberNovo's "unlock X% off" capture; the actual
            incentive is still Dan's call, so the copy stays offer-agnostic. -->

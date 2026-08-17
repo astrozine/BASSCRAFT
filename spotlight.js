@@ -1,4 +1,4 @@
-/* ==========================================================================
+﻿/* ==========================================================================
    BASSCRAFT — genre spotlight
    --------------------------------------------------------------------------
    Holds one clip large in the centre of a row with the rest smaller either
@@ -51,11 +51,11 @@
       const item = e.target.closest('.genre-item');
       if (!item) return;
       const idx = items.indexOf(item);
-      if (idx === -1 || idx === active) return; // centre click → let the lightbox open
-      e.preventDefault();
-      e.stopPropagation();
-      active = idx;
-      paint();
+      if (idx === -1) return;
+      if (idx !== active) {
+        active = idx;
+        paint();
+      }
     };
 
     stage.addEventListener('click', onCapture, true);
@@ -68,11 +68,11 @@
       const item = e.target.closest('.genre-item');
       if (!item) return;
       const idx = items.indexOf(item);
-      if (idx === -1 || idx === active) return;
-      e.preventDefault();
-      e.stopPropagation();
-      active = idx;
-      paint();
+      if (idx === -1) return;
+      if (idx !== active) {
+        active = idx;
+        paint();
+      }
     }, true);
 
     return {
