@@ -1635,7 +1635,7 @@ body.cart-open .nav-links { opacity: 0; pointer-events: none; }
 /* Wordmark ⇄ B-icon cross-fade. Both are stacked in the same grid cell so neither
    reflows the nav while the other fades. The icon sits at low opacity with a soft
    glass ring — present but discreet. */
-.nav-logo { display: grid !important; place-items: center start; }
+.nav-logo { display: grid !important; place-items: center start; position: relative; }
 .nav-logo > * { grid-area: 1 / 1; transition: opacity .45s ease, transform .45s ease; }
 .nav-logo .logo-white { 
   width: 250px; height: 24px; opacity: 1; 
