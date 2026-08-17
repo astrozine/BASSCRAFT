@@ -2776,3 +2776,48 @@ body.cart-open .nav-links { opacity: 0; pointer-events: none; }
     z-index: 9999 !important;
   }
 }
+/* TRADEMARK SYMBOLS FOR NAV LOGOS */
+.nav-logo::before {
+  content: "®";
+  position: absolute;
+  left: 252px;
+  top: 0px;
+  font-size: 11px;
+  color: #ffffff;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+  font-family: sans-serif;
+}
+.nav-logo::after {
+  content: "™";
+  position: absolute;
+  left: 56px;
+  top: 5px;
+  font-size: 12px;
+  color: #1d1d1f;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  font-family: sans-serif;
+}
+
+/* On inner pages, the nav icon is white even when scrolled */
+.inner-nav .nav-logo::after {
+  color: #ffffff !important;
+}
+
+/* Fade rules */
+.navbar.scrolled .nav-logo::before { opacity: 0; }
+.navbar.scrolled .nav-logo::after { opacity: 1; }
+
+@media (max-width: 768px) {
+  .nav-logo::before {
+    left: 162px;
+    top: -2px;
+    font-size: 9px;
+  }
+  .nav-logo::after {
+    left: 36px;
+    top: 2px;
+    font-size: 10px;
+  }
+}
