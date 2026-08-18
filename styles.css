@@ -2799,3 +2799,98 @@ body.cart-open .nav-links { opacity: 0; pointer-events: none; }
   .nav-mark-reg { right: -6px; top: -2px; font-size: 8px; }
   .nav-mark-tm { right: -9px; top: 0; font-size: 8px; }
 }
+/* Minimal Shopping Area for Footer Pages */
+#global-shopping-area {
+  background-color: #fff;
+  padding: 80px 20px;
+  border-top: 1px solid #eaeaea;
+}
+#global-shopping-area .minimal-title {
+  text-align: center;
+  font-family: 'CalSansUI', sans-serif;
+  font-size: 2.2rem;
+  margin-top: 0;
+  margin-bottom: 40px;
+  color: #000;
+}
+#global-shopping-area .pricing-grid {
+  display: flex !important;
+  flex-direction: row !important;
+  justify-content: center;
+  gap: 20px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+#global-shopping-area .pricing-card {
+  flex: 1;
+  background: #fcfcfc !important;
+  border: 1px solid rgba(0,0,0,0.06) !important;
+  box-shadow: none !important;
+  display: flex;
+  flex-direction: column;
+}
+#global-shopping-area .pricing-card-inner {
+  padding: 24px !important;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+#global-shopping-area .pricing-card-info {
+  align-items: center;
+  text-align: center;
+  margin-top: auto;
+}
+#global-shopping-area .pricing-card-info h3 {
+  color: #000 !important;
+  font-size: 1.6rem !important;
+  margin-bottom: 6px !important;
+}
+#global-shopping-area .pricing-desc {
+  color: #666 !important;
+  font-size: 0.95rem !important;
+}
+#global-shopping-area .pricing-price {
+  color: #000 !important;
+  margin: 20px 0 !important;
+}
+#global-shopping-area .pricing-was {
+  color: #999 !important;
+}
+#global-shopping-area .buy-btn {
+  background: #000 !important;
+  color: #fff !important;
+  width: 100%;
+}
+#global-shopping-area .pricing-badge {
+  display: none !important;
+}
+@media (max-width: 768px) {
+  #global-shopping-area {
+    padding: 50px 10px;
+  }
+  #global-shopping-area .pricing-grid {
+    gap: 12px;
+  }
+  #global-shopping-area .pricing-card-inner {
+    padding: 12px !important;
+  }
+  #global-shopping-area .pricing-card-info h3 {
+    font-size: 1.15rem !important;
+  }
+  #global-shopping-area .pricing-desc {
+    font-size: 0.8rem !important;
+    margin-bottom: 12px !important;
+  }
+  #global-shopping-area .pricing-price {
+    font-size: 1.25rem !important;
+    margin: 12px 0 !important;
+  }
+  #global-shopping-area .buy-btn {
+    padding: 12px 0 !important;
+    font-size: 0.85rem !important;
+  }
+  #global-shopping-area .minimal-title {
+    font-size: 1.6rem;
+    margin-bottom: 24px;
+  }
+}

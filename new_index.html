@@ -278,13 +278,107 @@
 
 <!-- ═══ FOOTER ═══ -->
 <footer class="footer">
-  <div class="container tc">
-    <p>&copy; 2026 BASSCRAFT. All rights reserved.</p>
-    <div class="footer-links mt-3">
-      <a href="#">Privacy</a>
-      <a href="#">Terms</a>
-      <a href="#">Support</a>
+  <div class="container">
+
+    <!-- ── Top: link groups + newsletter ── -->
+    <div class="footer-top">
+      <nav class="footer-nav" aria-label="Footer">
+        <div class="footer-col">
+          <h4>Product</h4>
+          <a href="/#order">Starter Kit</a>
+          <a href="/#order">Double Kit</a>
+          <a href="the-cushion.html">The Cushion</a>
+          <a href="the-controller.html">The Controller</a>
+        </div>
+        <div class="footer-col">
+          <h4>Explore</h4>
+          <a href="how-it-works.html">How It Works</a>
+          <a href="tech-specs.html">Tech Specs</a>
+          <!-- <a href="#experience">THE EXPERIENCE</a> -->
+          <!-- <a href="vehicle-compatibility.html">Vehicle Compatibility</a> -->
+          <a href="tutorials.html">Tutorials</a>
+        </div>
+        <div class="footer-col">
+          <h4>Business</h4>
+          <a href="about-us.html">About Us</a>
+          <a href="become-a-dealer.html">Become a Dealer</a>
+          <a href="affiliate-program.html">Affiliate Program</a>
+          <!-- Hidden per the client brief ("Hide for now: Refer a Friend, Where to Buy,
+               Track Order"). Page file is kept, just unlinked — restore this line
+               when the referral programme actually exists.
+          <a href="refer-a-friend.html">Refer a Friend</a> -->
+          <a href="press.html">Press</a>
+        </div>
+        <div class="footer-col">
+          <h4>Support</h4>
+          <a href="mailto:info@basscraft.co">Contact Us</a>
+          <a href="faq.html">FAQs</a>
+          <!-- Hidden per the client brief; there is no order-tracking back end yet.
+          <a href="track-order.html">Track Order</a> -->
+          <a href="warranty.html">Warranty</a>
+          <a href="returns.html">Returns &amp; Refunds</a>
+          <a href="shipping.html">Shipping Policy</a>
+        </div>
+      </nav>
+
+      <!-- Newsletter. Mirrors LiberNovo's "unlock X% off" capture; the actual
+           incentive is still Dan's call, so the copy stays offer-agnostic. -->
+      <div class="footer-subscribe">
+        <h4>Get first access.</h4>
+        <p>Founding-buyer pricing and launch updates, straight to your inbox.</p>
+        <form class="footer-sub-form" id="footer-sub-form" novalidate>
+          <label class="sr-only" for="footer-sub-email">Email address</label>
+          <input type="email" id="footer-sub-email" name="email" placeholder="Email address" autocomplete="email" required>
+          <button type="submit" aria-label="Subscribe">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </button>
+        </form>
+        <p class="footer-sub-consent">
+          <input type="checkbox" id="footer-sub-consent" name="consent">
+          <label for="footer-sub-consent">I agree to receive marketing emails and accept the <a href="privacy.html">Privacy Policy</a>.</label>
+        </p>
+        <div class="footer-contact">
+          <a href="mailto:info@basscraft.co">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 6 10-6"/></svg>
+            info@basscraft.co
+          </a>
+        </div>
+      </div>
     </div>
+
+    <!-- ── Wordmark ── -->
+    <div class="footer-brand">
+      <div style="display: flex; align-items: flex-start;"><span class="footer-wordmark" role="img" aria-label="BASSCRAFT&reg;"></span><span style="font-size: 11px; color: #1d1d1f; margin-left: 2px; margin-top: -2px; font-weight: bold; font-family: sans-serif;">&reg;</span></div>
+      <div class="footer-social">
+        <a href="https://www.instagram.com/basscraft.co/" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1.1" fill="currentColor" stroke="none"/></svg></a>
+        <a href="https://www.tiktok.com/@basscraftaudio" target="_blank" rel="noopener" aria-label="TikTok"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16.5 3a5.6 5.6 0 0 0 4 3.2v3a8.6 8.6 0 0 1-4-1.2v6.4a5.9 5.9 0 1 1-5.9-5.9c.3 0 .6 0 .9.1v3.1a2.9 2.9 0 1 0 2 2.7V3h3Z"/></svg></a>
+      </div>
+    </div>
+
+    <!-- ── Bottom: payments + legal ── -->
+    <div class="footer-bottom">
+      <div class="footer-pay" aria-label="Accepted payment methods">
+        <span class="pay-chip">Visa</span>
+        <span class="pay-chip">Mastercard</span>
+        <span class="pay-chip">Amex</span>
+        <span class="pay-chip">Discover</span>
+        <span class="pay-chip">Apple&nbsp;Pay</span>
+        <span class="pay-chip">G&nbsp;Pay</span>
+        <span class="pay-chip">Shop&nbsp;Pay</span>
+      </div>
+      <div class="footer-legal">
+        <p>&copy; 2026 BASSCRAFT&reg; Audio LLC. All rights reserved.<br>BASSCRAFT is a registered trademark of BASSCRAFT Audio LLC. The Basscraft icon is a trademark of BASSCRAFT Audio LLC. U.S. patent pending.</p>
+        <div class="footer-links">
+          <a href="shipping.html">Shipping Policy</a>
+          <a href="privacy.html">Privacy Policy</a>
+          <a href="terms.html">Terms of Service</a>
+          <a href="intellectual-property.html">Intellectual Property</a>
+        </div>
+      </div>
+    </div>
+
   </div>
 </footer>
 

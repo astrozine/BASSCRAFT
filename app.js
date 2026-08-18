@@ -342,17 +342,17 @@ if (HAS_GSAP) document.querySelectorAll('.s-dark, .s-light').forEach(section => 
 /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    5. CART & UPSELL LOGIC
    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
-const cartOverlay = document.getElementById('cart-overlay');
-const cartUpsellView = document.getElementById('cart-upsell-view');
-const cartCheckoutView = document.getElementById('cart-checkout-view');
-const cartClose = document.getElementById('cart-close');
+let cartOverlay = document.getElementById('cart-overlay');
+let cartUpsellView = document.getElementById('cart-upsell-view');
+let cartCheckoutView = document.getElementById('cart-checkout-view');
+let cartClose = document.getElementById('cart-close');
 
-const itemImg = document.getElementById('cart-item-img');
-const itemImgBlur = document.getElementById('cart-item-img-blur');
-const itemTitle = document.getElementById('cart-item-title');
-const itemDesc = document.getElementById('cart-item-desc');
-const itemPrice = document.getElementById('cart-item-price');
-const cartSubtotal = document.getElementById('cart-subtotal');
+let itemImg = document.getElementById('cart-item-img');
+let itemImgBlur = document.getElementById('cart-item-img-blur');
+let itemTitle = document.getElementById('cart-item-title');
+let itemDesc = document.getElementById('cart-item-desc');
+let itemPrice = document.getElementById('cart-item-price');
+let cartSubtotal = document.getElementById('cart-subtotal');
 
 function openCart(view) {
   if (!cartOverlay) return;
@@ -515,8 +515,8 @@ const lightboxChrome = (() => {
 })();
 
 // Tap the product photo (either cart view) to see it full screen.
-const cartLightbox = document.getElementById('cart-image-lightbox');
-const cartLightboxImg = document.getElementById('cart-lightbox-img');
+let cartLightbox = document.getElementById('cart-image-lightbox');
+let cartLightboxImg = document.getElementById('cart-lightbox-img');
 function openCartLightbox(src) {
   if (!cartLightbox || !cartLightboxImg || !src) return;
   cartLightboxImg.src = src;
@@ -1060,7 +1060,11 @@ document.addEventListener('keydown', (e) => {
     // variant is currently on screen, not a hardcoded one.
     const srcOf = () => {
       const still = el.querySelector('.diagram-still');
-      return still ? (still.currentSrc || still.src) : el.dataset.docSrc;
+      if (!still) return el.dataset.docSrc;
+      const w = window.innerWidth;
+      if (w > 768 && still.dataset.h) return still.dataset.h;
+      if (w <= 768 && still.dataset.v) return still.dataset.v;
+      return still.currentSrc || still.src;
     };
     el.addEventListener('click', () => openDoc(srcOf()));
     el.addEventListener('keydown', (e) => {
@@ -1763,3 +1767,95 @@ document.addEventListener('DOMContentLoaded', () => {
     if (e.key === 'Escape' && activeCategory) close();
   });
 })();
+// Minimal Shopping Area for Footer Pages
+document.addEventListener("DOMContentLoaded", () => {
+  const shopArea = document.getElementById('global-shopping-area');
+  if (shopArea) {
+    fetch('index.html')
+      .then(r => r.text())
+      .then(html => {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+        
+        // 1. Inject Cart Overlay if not present
+        if (!document.getElementById('cart-overlay')) {
+          const fetchedCartOverlay = doc.getElementById('cart-overlay');
+          if (fetchedCartOverlay) {
+            document.body.appendChild(fetchedCartOverlay);
+            
+            // Re-assign global let variables
+            cartOverlay = document.getElementById('cart-overlay');
+            cartUpsellView = document.getElementById('cart-upsell-view');
+            cartCheckoutView = document.getElementById('cart-checkout-view');
+            cartClose = document.getElementById('cart-close');
+            itemImg = document.getElementById('cart-item-img');
+            itemImgBlur = document.getElementById('cart-item-img-blur');
+            itemTitle = document.getElementById('cart-item-title');
+            itemDesc = document.getElementById('cart-item-desc');
+            itemPrice = document.getElementById('cart-item-price');
+            cartSubtotal = document.getElementById('cart-subtotal');
+            cartLightbox = document.getElementById('cart-image-lightbox');
+            cartLightboxImg = document.getElementById('cart-lightbox-img');
+            
+            // Re-bind cart close/qty buttons which are normally bound on DOMContentLoaded
+            if (cartClose) cartClose.addEventListener('click', closeCart);
+            if (cartOverlay) {
+              cartOverlay.addEventListener('click', e => {
+                if (e.target === cartOverlay) closeCart();
+              });
+            }
+            
+            document.getElementById('cart-qty-minus')?.addEventListener('click', () => {
+              if (cartQty > 1) { cartQty--; updateCartUI(); }
+            });
+            document.getElementById('cart-qty-plus')?.addEventListener('click', () => {
+              cartQty++; updateCartUI();
+            });
+            
+            document.getElementById('upsell-accept-btn')?.addEventListener('click', () => {
+              cartQty = 2; updateCartUI(); openCart('checkout');
+            });
+            document.getElementById('upsell-decline-btn')?.addEventListener('click', () => {
+              cartQty = 1; updateCartUI(); openCart('checkout');
+            });
+          }
+        }
+
+        // 2. Inject Pricing Grid
+        const grid = doc.querySelector('.pricing-grid');
+        if (grid) {
+          const title = document.createElement('h2');
+          title.className = 'minimal-title';
+          title.textContent = 'Choose your kit.';
+          shopArea.appendChild(title);
+          shopArea.appendChild(grid);
+          
+          // 3. Bind all buy buttons (new and existing) to open the cart
+          document.querySelectorAll('a[href="#order"], a[href="/#order"], .hero-cta, .buy-btn, .nav-cta, .lightbox-chrome-buy').forEach(btn => {
+            if (btn.closest('#cart-overlay')) return;
+            
+            const newBtn = btn.cloneNode(true);
+            btn.parentNode.replaceChild(newBtn, btn);
+            
+            newBtn.addEventListener('click', e => {
+              e.preventDefault();
+              if (newBtn.closest('#lightbox-chrome')) {
+                if (typeof closeViewers === 'function') closeViewers();
+              }
+              
+              const isStarterBtn = newBtn.closest('.pricing-card') && !newBtn.closest('.pricing-card').classList.contains('featured');
+              
+              if (isStarterBtn) {
+                if (typeof openCart === 'function') openCart('upsell');
+              } else {
+                cartQty = 2; 
+                if (typeof updateCartUI === 'function') updateCartUI();
+                if (typeof openCart === 'function') openCart('checkout');
+              }
+            });
+          });
+        }
+      })
+      .catch(err => console.error('Failed to load shop section', err));
+  }
+});
