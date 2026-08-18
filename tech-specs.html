@@ -33,7 +33,10 @@
       .tut-grid-2, .tut-grid-2--reverse { grid-template-columns: 1fr; gap: 20px; }
       .tut-grid-2--reverse .tut-text, .tut-grid-2--reverse .tut-media { order: unset; }
     }
-  </style>
+  
+    .filler-copy { color: #9c9c9c; font-style: italic; text-decoration: underline dashed rgba(156,156,156,0.5); font-size: 0.95em; margin-top: 10px; }
+    .filler-copy::before { content: "[PENDING REVIEW] "; font-weight: bold; text-decoration: none; color: #f97316; font-style: normal; font-size: 0.85em; letter-spacing: 0.05em; text-transform: uppercase; }
+</style>
 </head>
 <body>
 <div id="site-wrapper">
@@ -148,37 +151,146 @@
   <a href="shipping.html">Shipping Policy</a>
 </div>
 <main class="inner-page">
-  <div class="container" style="max-width: min(940px, 90vw);">
-    <p class="inner-eyebrow">BASSCRAFT&reg;</p>
-    <h1>Tech Specs</h1>
-    <p class="inner-intro">Built with high-fidelity haptic transducers and premium materials.</p>
-    <div class="tut-media tut-media--wide" style="aspect-ratio: 21/9;">
-  <div style="background: repeating-linear-gradient(45deg, #e8e8eb, #e8e8eb 10px, #f2f2f5 10px, #f2f2f5 20px); border-radius: 16px; display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; border: 1px solid rgba(0,0,0,0.05);"><p style="font-family: 'Inter', sans-serif; font-size: 0.75rem; color: #8e8e93; letter-spacing: 0.1em; text-transform: uppercase; margin: 0; text-align: center;">HERO ASSET PENDING</p></div>
-</div>
-<hr class="inner-divider">
-<div class="tut-step">
-  <div class="tut-step-head"><h2>Cushion Specifications</h2></div>
-  <div class="tut-grid-2">
-    <div class="tut-text"><p><strong>Frequency Response:</strong> 10Hz &ndash; 200Hz<br><strong>Power Handling:</strong> 50W RMS per transducer<br><strong>Materials:</strong> High-density memory foam core, breathable ballistic mesh cover<br><strong>Mounting:</strong> Universal headrest hook, adjustable nylon straps</p></div>
-    <div class="tut-media"><div style="background: repeating-linear-gradient(45deg, #e8e8eb, #e8e8eb 10px, #f2f2f5 10px, #f2f2f5 20px); border-radius: 16px; display: flex; align-items: center; justify-content: center; width: 100%; aspect-ratio: 16/9; border: 1px solid rgba(0,0,0,0.05);"><p style="font-family: 'Inter', sans-serif; font-size: 0.75rem; color: #8e8e93; letter-spacing: 0.1em; text-transform: uppercase; margin: 0; text-align: center;">ASSET PENDING</p></div></div>
-  </div>
-</div>
-<hr class="inner-divider">
-<div class="tut-step">
-  <div class="tut-step-head"><h2>Controller & Amplifier</h2></div>
-  <div class="tut-grid-2 tut-grid-2--reverse">
-    <div class="tut-text"><p><strong>Controls:</strong> Frequency Crossover, Noise Gate, Output Intensity<br><strong>Audio Inputs:</strong> Built-in Microphone, 3.5mm Aux Line-In<br><strong>Power:</strong> 12V DC input (via included cigarette lighter adapter or USB-C)</p></div>
-    <div class="tut-media"><div style="background: repeating-linear-gradient(45deg, #e8e8eb, #e8e8eb 10px, #f2f2f5 10px, #f2f2f5 20px); border-radius: 16px; display: flex; align-items: center; justify-content: center; width: 100%; aspect-ratio: 16/9; border: 1px solid rgba(0,0,0,0.05);"><p style="font-family: 'Inter', sans-serif; font-size: 0.75rem; color: #8e8e93; letter-spacing: 0.1em; text-transform: uppercase; margin: 0; text-align: center;">ASSET PENDING</p></div></div>
-  </div>
-</div>
-<hr class="inner-divider">
-<div class="tut-step">
-  <div class="tut-step-head"><h2>What's in the Box</h2></div>
-  <div class="tut-grid-2">
-    <div class="tut-text"><p><strong>Starter Kit:</strong> 1x Basscraft Cushion, 1x Controller, 1x Power Adapter, Cable Management Ties.<br><strong>Double Kit:</strong> 2x Basscraft Cushions, 1x Controller (supports dual output), 1x Power Adapter, Cable Management Ties.</p></div>
-    <div class="tut-media"><div style="background: repeating-linear-gradient(45deg, #e8e8eb, #e8e8eb 10px, #f2f2f5 10px, #f2f2f5 20px); border-radius: 16px; display: flex; align-items: center; justify-content: center; width: 100%; aspect-ratio: 16/9; border: 1px solid rgba(0,0,0,0.05);"><p style="font-family: 'Inter', sans-serif; font-size: 0.75rem; color: #8e8e93; letter-spacing: 0.1em; text-transform: uppercase; margin: 0; text-align: center;">ASSET PENDING</p></div></div>
-  </div>
-</div>
+  <div class="container" style="max-width: min(1020px, 90vw);">
+    <p class="inner-eyebrow">Explore</p>
+    <h1>Technical Specifications</h1>
+    <p class="inner-intro">A deep dive into the engineering behind BASSCRAFT.</p>
+
+    <!-- 1. The Engine -->
+    <div class="tut-step">
+      <div class="tut-step-head"><h2>1. The Engine</h2></div>
+      <div class="tut-grid-2">
+        <div class="tut-text">
+          <p>Dual high-torque haptic transducers deliver precise frequencies (10Hz&ndash;200Hz), tucked inside the cushion itself.</p>
+          <p class="filler-copy">Driven by a custom 50W RMS neodymium motor structure, these transducers reach peak excursion in just 4.2ms. The 3.2G of sustained force delivers ultra-responsive kicks, ensuring 98% resonance translation to the human body.</p>
+        </div>
+        <div class="tut-media">
+          <video poster="assets/July 2026 website video exports/cushion/haptic speakers inside/haptic speakers inside - vertical-poster.webp" autoplay loop muted playsinline style="width: 100%; height: 100%; object-fit: cover; border-radius: 16px;">
+            <source src="assets/July 2026 website video exports/cushion/haptic speakers inside/haptic speakers inside - horizontal - h264.mp4" type="video/mp4">
+          </video>
+        </div>
+      </div>
+    </div>
+    <hr class="inner-divider">
+
+    <!-- 2. Cushion Breakdown -->
+    <div class="tut-step">
+      <div class="tut-step-head"><h2>2. Cushion Breakdown</h2></div>
+      <div class="tut-grid-2 tut-grid-2--reverse">
+        <div class="tut-text">
+          <p>Memory foam core, breathable mesh, and embedded transducers &mdash; layered for all-day comfort and full-body bass.</p>
+          <p class="filler-copy">Engineered with multi-density foam that absorbs 70% of vehicle road vibrations while channeling 100% of the transducer energy forward. The ballistic mesh cover is rated for 50,000 abrasion cycles, offering maximum durability.</p>
+        </div>
+        <div class="tut-media">
+          <video poster="assets/July 2026 website video exports/cushion/cushion - exploded view/cushion - exploded view - vertical-poster.webp" autoplay loop muted playsinline style="width: 100%; height: 100%; object-fit: cover; border-radius: 16px;">
+            <source src="assets/July 2026 website video exports/cushion/cushion - exploded view/cushion - exploded view - horizontal - h264.mp4" type="video/mp4">
+          </video>
+        </div>
+      </div>
+    </div>
+    <hr class="inner-divider">
+
+    <!-- 3. Controller Breakdown -->
+    <div class="tut-step">
+      <div class="tut-step-head"><h2>3. Controller Breakdown</h2></div>
+      <div class="tut-grid-2">
+        <div class="tut-text">
+          <p>The basscraft controller box and frequency sensor houses the amplifier, DAC, and intensity electronics that drive both cushions.</p>
+          <p class="filler-copy">Featuring a 32-bit internal DSP operating at 48kHz, the controller processes low-end frequencies with less than 0.8ms latency. Its Class-D amplifier module guarantees 90% power efficiency, minimizing heat output in closed consoles.</p>
+        </div>
+        <div class="tut-media">
+          <video poster="assets/July 2026 website video exports/controller/exploded view/exploded view - vertical-poster.webp" autoplay loop muted playsinline style="width: 100%; height: 100%; object-fit: cover; border-radius: 16px;">
+            <source src="assets/July 2026 website video exports/controller/exploded view/exploded view - horizontal - h264.mp4" type="video/mp4">
+          </video>
+        </div>
+      </div>
+    </div>
+    <hr class="inner-divider">
+
+    <!-- 4. Where the Controller Goes -->
+    <div class="tut-step">
+      <div class="tut-step-head"><h2>4. Where the Controller Goes</h2></div>
+      <div class="tut-grid-2 tut-grid-2--reverse">
+        <div class="tut-text">
+          <p>The controller tucks discreetly out of sight &mdash; drivers and passengers can each run their own.</p>
+          <p class="filler-copy">Measuring just 4.2" x 2.8" x 1.1", the unit can be mounted in 95% of standard vehicle center consoles, under seats, or inside glove compartments. High-tensile Velcro strips are included for secure mounting up to 5G of cornering force.</p>
+        </div>
+        <div class="tut-media">
+          <video poster="assets/July 2026 website video exports/controller/controller location diagram example/controller location diagram example - horizontal-poster.webp" autoplay loop muted playsinline style="width: 100%; height: 100%; object-fit: cover; border-radius: 16px;">
+            <source src="assets/July 2026 website video exports/controller/controller location diagram example/controller location diagram example - horizontal - h264.mp4" type="video/mp4">
+          </video>
+        </div>
+      </div>
+    </div>
+    <hr class="inner-divider">
+
+    <!-- 5. Tactile Control -->
+    <div class="tut-step">
+      <div class="tut-step-head"><h2>5. Tactile Control</h2></div>
+      <div class="tut-grid-2">
+        <div class="tut-text">
+          <p>Three analog knobs let you adjust intensity by feel &mdash; no app, no screen, no distraction.</p>
+          <p class="filler-copy">Machined from solid aluminum, the knobs provide tactile detents every 5 degrees for blind adjustments while driving. The potentiometers are rated for 100,000 turns and deliver a perfectly linear control curve.</p>
+        </div>
+        <div class="tut-media">
+          <video poster="assets/July 2026 website video exports/controller/controller knobs/controller knobs - horizontal-poster.webp" autoplay loop muted playsinline style="width: 100%; height: 100%; object-fit: cover; border-radius: 16px;">
+            <source src="assets/July 2026 website video exports/controller/controller knobs/controller knobs - horizontal - h264.mp4" type="video/mp4">
+          </video>
+        </div>
+      </div>
+    </div>
+    <hr class="inner-divider">
+
+    <!-- 6. Cables & Connectivity -->
+    <div class="tut-step">
+      <div class="tut-step-head"><h2>6. Cables &amp; Connectivity</h2></div>
+      <div class="tut-grid-2 tut-grid-2--reverse">
+        <div class="tut-text">
+          <p>Familiar, standard cable types &mdash; fully wired for zero-latency response. No Bluetooth to pair, drop, or lag.</p>
+          <p class="filler-copy">The 3.5mm TRS connections feature gold-plated contacts preventing oxidation over a 10-year lifespan. The 6-foot heavy-gauge braided cables boast a 50lb tensile strength, ensuring they won't pinch or fray in seat tracks.</p>
+        </div>
+        <div class="tut-media">
+          <video poster="assets/July 2026 website video exports/controller/controller ports/cable inputs reveal/cable inputs reveal - horizontal-poster.webp" autoplay loop muted playsinline style="width: 100%; height: 100%; object-fit: cover; border-radius: 16px;">
+            <source src="assets/July 2026 website video exports/controller/controller ports/cable inputs reveal/cable inputs reveal - horizontal - h264.mp4" type="video/mp4">
+          </video>
+        </div>
+      </div>
+    </div>
+    <hr class="inner-divider">
+
+    <!-- 7. Power Options -->
+    <div class="tut-step">
+      <div class="tut-step-head"><h2>7. Power Options</h2></div>
+      <div class="tut-grid-2">
+        <div class="tut-text">
+          <p>Plug into any 12V cigarette outlet or a USB-C port &mdash; universal power for any vehicle.</p>
+          <p class="filler-copy">The system accepts a wide input range from 10V to 15V. Using the supplied 12V adapter delivers a peak output of 5A, while the USB-C option requires a Power Delivery (PD) rated port of at least 30W for maximum excursion.</p>
+        </div>
+        <div class="tut-media">
+          <video poster="assets/July 2026 website video exports/controller/controller ports/2 power options/2 power options - usb c power - square-poster.webp" autoplay loop muted playsinline style="width: 100%; height: 100%; object-fit: cover; border-radius: 16px;">
+            <source src="assets/July 2026 website video exports/controller/controller ports/2 power options/2 power options - usb c power - square - h264.mp4" type="video/mp4">
+          </video>
+        </div>
+      </div>
+    </div>
+    <hr class="inner-divider">
+
+    <!-- 8. No Bluetooth -->
+    <div class="tut-step">
+      <div class="tut-step-head"><h2>8. No Bluetooth</h2></div>
+      <div class="tut-grid-2 tut-grid-2--reverse">
+        <div class="tut-text">
+          <p>Lag is the enemy of rhythm &mdash; that's why BASSCRAFT runs purely on a wired connection, so you feel the bass the exact millisecond it hits.</p>
+          <p class="filler-copy">Wireless audio protocols inherently introduce 40-120ms of latency, destroying the psychoacoustic sync between hearing a beat and feeling it. Our fully analog signal path ensures absolute 0ms delay, perfectly locking the haptics to the car's sound system.</p>
+        </div>
+        <div class="tut-media">
+          <video poster="assets/July 2026 website video exports/no bluetooth/full product demo with actor - square-poster.webp" autoplay loop muted playsinline style="width: 100%; height: 100%; object-fit: cover; border-radius: 16px;">
+            <source src="assets/July 2026 website video exports/no bluetooth/full product demo with actor - square - h264.mp4" type="video/mp4">
+          </video>
+        </div>
+      </div>
+    </div>
+
   </div>
 </main>
 <footer class="footer">
