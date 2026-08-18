@@ -8,30 +8,109 @@
   <link rel="icon" href="favicon.ico">
   <link rel="stylesheet" href="styles.css">
   <style>
-    .inner-page { background: #f7f4ef; min-height: 80vh; padding: clamp(100px,12vw,160px) 0 clamp(60px,8vw,100px); }
-    .inner-page .container { max-width: min(820px, 88vw); }
-    .inner-eyebrow { font-family:'CalSansText',sans-serif; font-size:.75rem; letter-spacing:.12em; text-transform:uppercase; color:var(--grey); margin-bottom:18px; }
-    .inner-page h1 { font-family:'CalSansUI',sans-serif; font-weight:700; font-size:clamp(2.2rem,5vw,3.6rem); letter-spacing:-0.025em; line-height:1.08; color:#1d1d1f; margin-bottom:24px; }
-    .inner-intro { font-size:clamp(1rem,1.3vw,1.2rem); color:#6e6e73; line-height:1.65; margin-bottom:clamp(48px,6vw,72px); border-bottom:1px solid rgba(0,0,0,0.08); padding-bottom:clamp(32px,4vw,48px); }
+    body { background: #000; color: #fff; margin: 0; padding: 0; }
     
-    .tut-step { margin-bottom: clamp(44px, 5vw, 64px); }
-    .tut-step-head { display: flex; align-items: baseline; gap: 16px; margin-bottom: clamp(24px, 3vw, 34px); }
-    .tut-step-head h2 { font-family:'CalSansUI',sans-serif; font-weight:600; font-size:clamp(1.2rem,1.8vw,1.6rem); color:#1d1d1f; margin: 0; }
+    .ts-fullscreen-sec {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+    }
     
-    .tut-grid-2 { display: grid; grid-template-columns: minmax(0,1.1fr) minmax(0,1fr); gap: clamp(28px, 4vw, 52px); align-items: center; }
-    .tut-grid-2--reverse { grid-template-columns: minmax(0,1fr) minmax(0,1.1fr); }
-    .tut-grid-2--reverse .tut-text { order: 1; }
-    .tut-grid-2--reverse .tut-media { order: 2; }
+    .ts-bg-video {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      object-fit: cover;
+      z-index: 0;
+    }
     
-    .tut-media { position: relative; border-radius: 16px; overflow: hidden; line-height: 0; }
-    .tut-media--wide { max-width: 100%; margin-bottom: clamp(28px,3.5vw,40px); }
+    .ts-scrim {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: linear-gradient(to right, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.5) 40%, rgba(0,0,0,0) 100%);
+      z-index: 1;
+    }
+    .ts-scrim.right {
+      background: linear-gradient(to left, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.5) 40%, rgba(0,0,0,0) 100%);
+    }
     
-    .tut-text p { font-family: 'CalSansText', sans-serif; color: #6e6e73; line-height: 1.7; font-size: clamp(.9rem, 1.05vw, 1rem); margin-bottom: 14px; }
-    .inner-divider { border:0; height:1px; background:rgba(0,0,0,0.08); margin:clamp(28px,3vw,40px) 0; }
+    .ts-content {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 5%;
+      display: flex;
+      flex-direction: column;
+    }
+    .ts-content.left { align-items: flex-start; text-align: left; }
+    .ts-content.right { align-items: flex-end; text-align: right; }
+    
+    .ts-text-box {
+      max-width: 550px;
+    }
+    
+    .ts-title {
+      font-family: 'CalSansUI', sans-serif;
+      font-weight: 700;
+      font-size: clamp(3rem, 7vw, 6rem);
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      margin-bottom: 24px;
+      color: #fff;
+      text-shadow: 0 4px 20px rgba(0,0,0,0.4);
+    }
+    
+    .ts-desc {
+      font-family: 'CalSansText', sans-serif;
+      font-size: clamp(1.1rem, 1.4vw, 1.3rem);
+      line-height: 1.6;
+      color: rgba(255,255,255,0.95);
+      margin-bottom: 24px;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+    }
+    
+    .ts-filler {
+      font-family: 'CalSansText', sans-serif;
+      font-size: clamp(0.95rem, 1.1vw, 1.05rem);
+      line-height: 1.6;
+      color: rgba(255,255,255,0.7);
+      font-style: italic;
+      text-decoration: underline dashed rgba(255,255,255,0.4);
+    }
+    
+    .ts-filler::before {
+      content: "[FILLER] ";
+      font-weight: bold;
+      color: #f97316;
+      font-style: normal;
+      text-decoration: none;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
     
     @media (max-width: 768px) {
-      .tut-grid-2, .tut-grid-2--reverse { grid-template-columns: 1fr; gap: 20px; }
-      .tut-grid-2--reverse .tut-text, .tut-grid-2--reverse .tut-media { order: unset; }
+      .ts-scrim, .ts-scrim.right {
+        background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.5) 50%, rgba(0,0,0,0.1) 100%);
+      }
+      .ts-content.left, .ts-content.right {
+        align-items: center; 
+        text-align: center; 
+        justify-content: flex-end; 
+        height: 100vh; 
+        padding-bottom: 12vh;
+      }
+      .ts-title { font-size: 3.5rem; }
+    }
+  
+    .ts-desktop-vid { display: block; }
+    .ts-mobile-vid { display: none; }
+    @media (max-width: 768px) {
+      .ts-desktop-vid { display: none; }
+      .ts-mobile-vid { display: block; }
     }
   </style>
 </head>
@@ -147,39 +226,80 @@
   <a href="returns.html">Returns &amp; Refunds</a>
   <a href="shipping.html">Shipping Policy</a>
 </div>
-<main class="inner-page">
-  <div class="container" style="max-width: min(940px, 90vw);">
-    <p class="inner-eyebrow">BASSCRAFT&reg;</p>
-    <h1>The Controller</h1>
-    <p class="inner-intro">Control intensity, frequency, and noise gating from a compact, intuitive interface.</p>
-    <div class="tut-media tut-media--wide" style="aspect-ratio: 21/9;">
-  <div style="background: repeating-linear-gradient(45deg, #e8e8eb, #e8e8eb 10px, #f2f2f5 10px, #f2f2f5 20px); border-radius: 16px; display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; border: 1px solid rgba(0,0,0,0.05);"><p style="font-family: 'Inter', sans-serif; font-size: 0.75rem; color: #8e8e93; letter-spacing: 0.1em; text-transform: uppercase; margin: 0; text-align: center;">HERO ASSET PENDING</p></div>
-</div>
-<hr class="inner-divider">
-<div class="tut-step">
-  <div class="tut-step-head"><h2>Tactile Control</h2></div>
-  <div class="tut-grid-2">
-    <div class="tut-media"><div style="background: repeating-linear-gradient(45deg, #e8e8eb, #e8e8eb 10px, #f2f2f5 10px, #f2f2f5 20px); border-radius: 16px; display: flex; align-items: center; justify-content: center; width: 100%; aspect-ratio: 16/9; border: 1px solid rgba(0,0,0,0.05);"><p style="font-family: 'Inter', sans-serif; font-size: 0.75rem; color: #8e8e93; letter-spacing: 0.1em; text-transform: uppercase; margin: 0; text-align: center;">ASSET PENDING</p></div></div>
-    <div class="tut-text"><p>Three analog knobs give you immediate, eyes-free control over your experience. Adjust frequency range, noise gating, and overall intensity without ever looking down at a screen.</p></div>
-  </div>
-</div>
-<hr class="inner-divider">
-<div class="tut-step">
-  <div class="tut-step-head"><h2>Zero-Lag Connectivity</h2></div>
-  <div class="tut-grid-2 tut-grid-2--reverse">
-    <div class="tut-text"><p>Everything routes cleanly through the rear panel. Power it via the included 12V adapter or any standard USB-C port. Hardwired audio connections guarantee zero latency between the beat and the bass.</p></div>
-    <div class="tut-media"><div style="background: repeating-linear-gradient(45deg, #e8e8eb, #e8e8eb 10px, #f2f2f5 10px, #f2f2f5 20px); border-radius: 16px; display: flex; align-items: center; justify-content: center; width: 100%; aspect-ratio: 16/9; border: 1px solid rgba(0,0,0,0.05);"><p style="font-family: 'Inter', sans-serif; font-size: 0.75rem; color: #8e8e93; letter-spacing: 0.1em; text-transform: uppercase; margin: 0; text-align: center;">ASSET PENDING</p></div></div>
-  </div>
-</div>
-<hr class="inner-divider">
-<div class="tut-step">
-  <div class="tut-step-head"><h2>Placement Options</h2></div>
-  <div class="tut-grid-2">
-    <div class="tut-media"><div style="background: repeating-linear-gradient(45deg, #e8e8eb, #e8e8eb 10px, #f2f2f5 10px, #f2f2f5 20px); border-radius: 16px; display: flex; align-items: center; justify-content: center; width: 100%; aspect-ratio: 16/9; border: 1px solid rgba(0,0,0,0.05);"><p style="font-family: 'Inter', sans-serif; font-size: 0.75rem; color: #8e8e93; letter-spacing: 0.1em; text-transform: uppercase; margin: 0; text-align: center;">ASSET PENDING</p></div></div>
-    <div class="tut-text"><p>Compact enough to tuck into a center console, cupholder, or door pocket. The built-in ambient microphone still picks up the music even when stowed out of sight.</p></div>
-  </div>
-</div>
-  </div>
+<main>
+
+  <!-- 1. The Controller (Left) -->
+  <section class="ts-fullscreen-sec">
+    <video class="ts-bg-video ts-desktop-vid" poster="assets/July 2026 website video exports/controller/exploded view/exploded view - horizontal-poster.webp" autoplay loop muted playsinline>
+      <source src="assets/July 2026 website video exports/controller/exploded view/exploded view - horizontal.mp4" type="video/mp4">
+    </video>
+    <video class="ts-bg-video ts-mobile-vid" autoplay loop muted playsinline>
+      <source src="assets/July 2026 website video exports/controller/exploded view/exploded view - vertical.mp4" type="video/mp4">
+    </video>
+    <div class="ts-scrim left"></div>
+    <div class="ts-content left">
+      <div class="ts-text-box">
+        <div class="ts-title">The Controller</div>
+        <div class="ts-desc">Control intensity, frequency, and noise gating from a compact, intuitive interface.</div>
+        <div class="ts-filler">Featuring a 32-bit internal DSP operating at 48kHz, the controller processes low-end frequencies with less than 0.8ms latency. Its Class-D amplifier module guarantees 90% power efficiency, minimizing heat output in closed consoles.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. Tactile Control (Right) -->
+  <section class="ts-fullscreen-sec">
+    <video class="ts-bg-video ts-desktop-vid" poster="assets/July 2026 website video exports/controller/controller knobs/controller knobs - horizontal-poster.webp" autoplay loop muted playsinline>
+      <source src="assets/July 2026 website video exports/controller/controller knobs/controller knobs - horizontal - h264.mp4" type="video/mp4">
+    </video>
+    <video class="ts-bg-video ts-mobile-vid" autoplay loop muted playsinline>
+      <source src="assets/July 2026 website video exports/controller/controller knobs/controller knobs - square - h264.mp4" type="video/mp4">
+    </video>
+    <div class="ts-scrim right"></div>
+    <div class="ts-content right">
+      <div class="ts-text-box">
+        <div class="ts-title">Tactile Control</div>
+        <div class="ts-desc">Three analog knobs give you immediate, eyes-free control over your experience. Adjust frequency range, noise gating, and overall intensity without ever looking down at a screen.</div>
+        <div class="ts-filler">Machined from solid aluminum, the knobs provide tactile detents every 5 degrees for blind adjustments while driving. The potentiometers are rated for 100,000 turns and deliver a perfectly linear control curve.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. Zero-Lag Connectivity (Left) -->
+  <section class="ts-fullscreen-sec">
+    <video class="ts-bg-video ts-desktop-vid" poster="assets/July 2026 website video exports/controller/controller ports/cable inputs reveal/cable inputs reveal - horizontal-poster.webp" autoplay loop muted playsinline>
+      <source src="assets/July 2026 website video exports/controller/controller ports/cable inputs reveal/cable inputs reveal - horizontal - h264.mp4" type="video/mp4">
+    </video>
+    <video class="ts-bg-video ts-mobile-vid" autoplay loop muted playsinline>
+      <source src="assets/July 2026 website video exports/controller/controller ports/cable inputs reveal/cable inputs reveal - square - h264.mp4" type="video/mp4">
+    </video>
+    <div class="ts-scrim left"></div>
+    <div class="ts-content left">
+      <div class="ts-text-box">
+        <div class="ts-title">Zero-Lag Connectivity</div>
+        <div class="ts-desc">Everything routes cleanly through the rear panel. Power it via the included 12V adapter or any standard USB-C port. Hardwired audio connections guarantee zero latency between the beat and the bass.</div>
+        <div class="ts-filler">The 3.5mm TRS connections feature gold-plated contacts preventing oxidation over a 10-year lifespan. Our fully analog signal path ensures absolute 0ms delay, perfectly locking the haptics to the car's sound system.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. Placement Options (Right) -->
+  <section class="ts-fullscreen-sec">
+    <video class="ts-bg-video ts-desktop-vid" poster="assets/July 2026 website video exports/controller/controller in reach/controller in reach - horizontal-poster.webp" autoplay loop muted playsinline>
+      <source src="assets/July 2026 website video exports/controller/controller in reach/controller in reach - horizontal - h264.mp4" type="video/mp4">
+    </video>
+    <video class="ts-bg-video ts-mobile-vid" autoplay loop muted playsinline>
+      <source src="assets/July 2026 website video exports/controller/controller in reach/controller in reach - vertical.mp4" type="video/mp4">
+    </video>
+    <div class="ts-scrim right"></div>
+    <div class="ts-content right">
+      <div class="ts-text-box">
+        <div class="ts-title">Placement Options</div>
+        <div class="ts-desc">Compact enough to tuck into a center console, cupholder, or door pocket. The built-in ambient microphone still picks up the music even when stowed out of sight.</div>
+        <div class="ts-filler">Measuring just 4.2" x 2.8" x 1.1", the unit can be mounted in 95% of standard vehicle center consoles. High-tensile Velcro strips are included for secure mounting up to 5G of cornering force.</div>
+      </div>
+    </div>
+  </section>
+
 </main>
 <footer class="footer">
   <div class="container">
