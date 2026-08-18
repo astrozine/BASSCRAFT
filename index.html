@@ -1,9 +1,9 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>BASSCRAFT&reg; — Haptic is the future</title>
+  <title>BASSCRAFT — Haptic is the future</title>
   <meta name="description" content="Feel every frequency. BASSCRAFT transforms your seat into a full-body haptic experience. No Bluetooth. Zero latency.">
   <!-- Link-preview card (Slack/iMessage/Facebook/etc.). og-image.jpg itself was
        committed earlier but nothing ever pointed at it — same bug as the
@@ -12,16 +12,16 @@
        Crawlers fetch this file directly, not through the page, so the image
        URL has to be absolute. -->
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://basscraft-v5.vercel.app/">
+  <meta property="og:url" content="https://www.basscraft.co/">
   <meta property="og:title" content="BASSCRAFT — Haptic is the future">
   <meta property="og:description" content="Feel every frequency. BASSCRAFT transforms your seat into a full-body haptic experience. No Bluetooth. Zero latency.">
-  <meta property="og:image" content="https://basscraft-v5.vercel.app/assets/images/og-image.jpg">
+  <meta property="og:image" content="https://www.basscraft.co/assets/images/og-image.jpg">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="BASSCRAFT — Haptic is the future">
   <meta name="twitter:description" content="Feel every frequency. BASSCRAFT transforms your seat into a full-body haptic experience. No Bluetooth. Zero latency.">
-  <meta name="twitter:image" content="https://basscraft-v5.vercel.app/assets/images/og-image.jpg">
+  <meta name="twitter:image" content="https://www.basscraft.co/assets/images/og-image.jpg">
   <!-- The icon files themselves were committed earlier (favicon.ico, favicon-16/32,
        apple-touch-icon, icon-192/512 — all the B mark, white on black) but nothing
        in <head> ever pointed at them, so browsers fell back to no icon at all. -->
@@ -39,19 +39,19 @@
 <!-- ═══ NAV ═══ -->
 <nav class="navbar">
   <div class="nav-left">
-    <a href="/" class="nav-logo" id="nav-logo" style="display: flex; align-items: center; gap: 10px;">
+    <a href="#experience" class="nav-logo" id="nav-logo" style="display: flex; align-items: center; gap: 10px;">
       <!-- Over the hero the full white wordmark shows. Once scrolled (.navbar.scrolled) the
            wordmark cross-fades to just the B icon, held at low opacity so it reads as a
            discreet glassy mark rather than competing with the content. -->
-      <div class="logo-white-wrap" style="position:relative;"><div class="logo-white" aria-label="BASSCRAFT&reg;" role="img"></div><span class="nav-mark nav-mark-reg">&reg;</span></div>
-      <div class="logo-icon-wrap" style="position:relative;"><div class="logo-icon" aria-label="Basscraft icon&trade;" role="img"></div><span class="nav-mark nav-mark-tm">&trade;</span></div>
+      <div class="logo-white" aria-label="BASSCRAFT" role="img"></div>
+      <div class="logo-icon" aria-label="BASSCRAFT" role="img"></div>
     </a>
   </div>
   <div class="nav-links">
     <a href="#home">HOME</a>
-    <a href="#social-proof">OWNERS</a>
     <a href="#installation">INSTALLATION</a>
     <a href="#specs">TECH SPECS</a>
+    <a href="#experience">EXPERIENCE</a>
     <a href="#order">ORDER</a>
   </div>
   <div class="nav-right">
@@ -74,9 +74,9 @@
 <!-- Mobile nav drawer: the same links as .nav-links, just reachable on mobile. -->
 <div class="mobile-nav-menu" id="mobile-nav-menu">
   <a href="#home">HOME</a>
-  <a href="#social-proof">OWNERS</a>
   <a href="#installation">INSTALLATION</a>
   <a href="#specs">TECH SPECS</a>
+  <a href="#experience">EXPERIENCE</a>
   <a href="#order">ORDER</a>
 </div>
 
@@ -98,9 +98,9 @@
       style="width: 100%; height: 100%;"
       data-poster-h="assets/July 2026 website video exports/v4 hero/v4-hero-poster-desktop-B.webp"
       data-poster-v="assets/July 2026 website video exports/v4 hero/v4-hero-poster-mobile-B.webp"
-      data-h="assets/July 2026 website video exports/v4 hero/v4 - hero - horizontal - B - h264.mp4"
+      data-h="assets/July 2026 website video exports/v4 hero/v4 hero - grain - 1080p - compressed v2.mp4"
       data-v="assets/July 2026 website video exports/v4 hero/v4 - hero - vertical - B - h264.mp4">
-      <source src="assets/July 2026 website video exports/v4 hero/v4 - hero - horizontal - B - h264.mp4" type="video/mp4">
+      <source src="assets/July 2026 website video exports/v4 hero/v4 hero - grain - 1080p - compressed v2.mp4" type="video/mp4">
     </video>
     <script>
       (function() {
@@ -151,126 +151,9 @@
          product) per client feedback: graphics/buttons shouldn't sit on top of the hero video. -->
     <div class="hero-text-group">
       <h1 class="hero-title k-pop-text">Feel every frequency.</h1>
+      <p class="hero-tagline">Turn your car seat into a subwoofer.</p>
     </div>
     <a href="#order" class="hero-cta k-pop-btn" id="hero-cta"><span>BUY NOW</span></a>
-    <!-- Sibling of .hero-text-group, not nested inside it: this sits centred
-         under the button (grid column 2), not left-aligned under the headline
-         (column 1) — a deliberate split from the title, per client direction. -->
-    <p class="hero-tagline">Turn your car seat into a subwoofer.</p>
-  </div>
-</section>
-
-<!-- ═══ SOCIAL PROOF — Roadmap Priority 2 (press) + Priority 3 (UGC) ═══
-     BLOCKED ON ASSETS. This is layout only.
-
-     Deliberately NOT included, and not to be added until the real thing exists:
-       · press logos (IGN / CNET / PC Gamer etc.) — no coverage has run yet, so
-         putting their marks up would be claiming endorsements we don't have
-       · star ratings, review counts, testimonial quotes — no reviews exist yet
-       · creator handles — seeding hasn't happened (Dan: early October)
-     The slots below are neutral placeholders so the section can be judged on
-     rhythm and spacing. Fill them from real assets, never from invented ones. -->
-<section class="s-light" id="social-proof" style="padding: clamp(56px,7vw,90px) 0;">
-  <div class="container">
-
-
-
-    <h2 class="tc glow" style="color: var(--dark); margin-bottom: clamp(32px,4vw,48px);">Hear from BASSCRAFT owners</h2>
-    <div class="ugc-grid" data-carousel>
-      <figure class="ugc-card">
-        <div class="ugc-media" data-placeholder="creator clip — pending seeding"></div>
-        <figcaption>Creator handle and quote go here once product is in real hands.</figcaption>
-      </figure>
-      <figure class="ugc-card">
-        <div class="ugc-media" data-placeholder="creator clip — pending seeding"></div>
-        <figcaption>Creator handle and quote go here once product is in real hands.</figcaption>
-      </figure>
-      <figure class="ugc-card">
-        <div class="ugc-media" data-placeholder="creator clip — pending seeding"></div>
-        <figcaption>Creator handle and quote go here once product is in real hands.</figcaption>
-      </figure>
-      <figure class="ugc-card">
-        <div class="ugc-media" data-placeholder="creator clip — pending seeding"></div>
-        <figcaption>Creator handle and quote go here once product is in real hands.</figcaption>
-      </figure>
-    </div>
-
-  </div>
-</section>
-
-
-
-<!-- AS SEEN IN - press bar, between UGC and problem
-     Hidden for now (no real press logos yet) — kept in place, not deleted,
-     so it's a one-line flip back on once we have real assets. -->
-<section class="s-light" id="press" style="display: none; padding: clamp(32px,4vw,56px) 0; margin-top: -12px;">
-  <div class="container">
-    <div class="asset-flag">Placeholder section - awaiting real press &amp; creator assets</div>
-    <p class="press-eyebrow tc">As seen in</p>
-    <div class="press-bar">
-      <span class="press-slot">press logo</span>
-      <span class="press-slot">press logo</span>
-      <span class="press-slot">press logo</span>
-      <span class="press-slot">press logo</span>
-      <span class="press-slot">press logo</span>
-    </div>
-  </div>
-</section>
-<!-- ═══ 2. THE PROBLEM ═══
-     The single biggest gap against LiberNovo: their page makes you sit through
-     "Where Sitting Hurts" before it names a product. Ours went hero → "Setup in
-     seconds", i.e. it answered "how do I install it" before it ever answered
-     "why would I want it". This section is that missing beat, and it has to
-     stay ABOVE #installation to do its job.
-
-     Copy only — the visuals are deliberately CSS placeholders. Andrew's
-     "VISCERAL / mime marketing" clips (earbuds not cutting it, sub too loud,
-     etc.) drop into .problem-media when they're shot.
-
-     Hidden for now (placeholder clip cards read as unfinished) — kept in
-     place, not deleted, so it's a one-line flip back on once the real clips
-     are shot. -->
-<section class="s-light" id="problem" style="display: none; padding: clamp(72px,9vw,120px) 0;">
-  <div class="container">
-    <div class="problem-head tc">
-      <h2 class="glow" style="color: var(--dark);">You hear the bass. You never feel it.</h2>
-      <p class="problem-sub">Factory speakers move air. They don't move you. And every real fix costs
-        you your trunk, your weekend, or your neighbours.</p>
-    </div>
-
-    <div class="problem-grid" data-carousel>
-      <article class="problem-card">
-        <div class="problem-media" data-placeholder="clip: thin factory sound"></div>
-        <h3>Factory speakers stop short</h3>
-        <p>Stock door speakers roll off long before the low end arrives. The part of the
-          track you're supposed to feel in your chest simply isn't being played.</p>
-      </article>
-
-      <article class="problem-card">
-        <div class="problem-media" data-placeholder="clip: trunk full of sub box"></div>
-        <h3>A real sub costs you the trunk</h3>
-        <p>A proper box eats your cargo space, then asks for an amp, a wiring run, a
-          shop appointment and a few hundred dollars before it makes a sound.</p>
-      </article>
-
-      <article class="problem-card">
-        <div class="problem-media" data-placeholder="clip: neighbour reaction / distortion"></div>
-        <h3>Loud is not the same as deep</h3>
-        <p>Turning it up just pushes the mids into distortion and broadcasts your
-          playlist to the entire street. Volume was never the thing you were missing.</p>
-      </article>
-
-      <article class="problem-card">
-        <div class="problem-media" data-placeholder="clip: earbuds in car"></div>
-        <h3>Headphones aren't an option</h3>
-        <p>The one place you actually want the low end wrapped around you is the one
-          place you can't wear them.</p>
-      </article>
-    </div>
-
-    <p class="problem-turn tc">
-      So we stopped trying to make the car louder — and made the seat itself the speaker.
-    </p>
   </div>
 </section>
 
@@ -285,7 +168,7 @@
            overflowing ~8px past its container and leaving every step sitting a
            few px right of centre. min(…,100%) lets that floor collapse to the
            container's own width when it's the narrower of the two. -->
-      <div class="install-steps-grid" data-carousel style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr)); gap: 30px; margin-top: 20px;">
+      <div class="install-steps-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr)); gap: 30px; margin-top: 20px;">
         <div class="install-step">
           <h3 class="glow" style="color: var(--black); margin-top: 0; margin-bottom: 8px;">1. Hook it</h3>
           <p style="color: var(--grey-dark); margin-bottom: 16px;">Simply slip the integrated hook under your driver or passenger headrest.</p>
@@ -333,8 +216,30 @@
       </div>
     </div>
 
-    <!-- The "Where does your controller box go?" block that used to close this
-         section now lives inside Tech Specs as its own accordion panel. -->
+    <!-- Controller box placement diagrams (per July 24 meeting: 3-4 diagrams requested, 2 exist so far) -->
+    <div class="controller-placement">
+      <hr class="section-divider">
+      <h3 class="tc glow" style="color: var(--black); margin-bottom: 10px;">Where does your <br class="mobile-break">controller box go?</h3>
+      <p class="tc controller-placement-desc" style="color: var(--grey-dark); max-width: 600px;">The controller tucks discreetly out of sight &mdash; drivers and passengers can each run their own.</p>
+      <!-- Plays the animated walkthrough once, filling the frame completely. When it ends,
+           the frame's own aspect-ratio morphs to match the still diagram exactly (see app.js),
+           so the image is then shown in full with no cropping — one box, two assets, no letterboxing. -->
+      <div class="diagram-card doc-clickable" id="diagram-card" role="button" tabindex="0"
+        aria-label="Enlarge the controller placement document to explore it">
+        <div class="diagram-frame-inner">
+          <img class="diagram-still" alt="Possible controller box locations"
+            data-h="assets/where to put the controller box/possible lcoations for boxes - wide.png"
+            data-v="assets/where to put the controller box/possible lcoations for boxes - vertical.png"
+            src="assets/where to put the controller box/possible lcoations for boxes - wide.png">
+          <video poster="assets/July 2026 website video exports/controller/controller location diagram example/controller location diagram example - horizontal-poster.webp" preload="none" class="diagram-anim" autoplay muted playsinline
+            data-h="assets/July 2026 website video exports/controller/controller location diagram example/controller location diagram example - horizontal - h264.mp4"
+            data-v="assets/July 2026 website video exports/controller/controller location diagram example/controller location diagrams - vertical - h264.mp4"
+            data-sq="assets/July 2026 website video exports/controller/controller location diagram example/controller location diagram example - square - h264.mp4">
+            <source src="assets/July 2026 website video exports/controller/controller location diagram example/controller location diagram example - horizontal - h264.mp4" type="video/mp4">
+          </video>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -361,14 +266,6 @@
         <div class="tech-item">
           <h3><div class="tech-icon">+</div> Controller Breakdown</h3>
           <p>The basscraft controller box and frequency sensor houses the amplifier, DAC, and intensity electronics that drive both cushions.</p>
-        </div>
-        <!-- Controller placement — moved here from the Installation section.
-             IMPORTANT: .tech-item and .spec-visual-item are paired purely by
-             DOM index (app.js does visItems[index]), so this panel's visual
-             must stay at the matching position in .tech-specs-visual below. -->
-        <div class="tech-item">
-          <h3><div class="tech-icon">+</div> Where the Controller Goes</h3>
-          <p>The controller tucks discreetly out of sight &mdash; drivers and passengers can each run their own. Tap the diagram to explore the placement options full screen.</p>
         </div>
         <!-- Tactile Control -->
         <div class="tech-item">
@@ -414,27 +311,6 @@
             data-v="assets/July 2026 website video exports/controller/exploded view/exploded view - vertical - h264.mp4">
             <source src="assets/July 2026 website video exports/controller/exploded view/exploded view - vertical - h264.mp4" type="video/mp4">
           </video>
-        </div>
-        <!-- Controller placement diagram (index-matched to the "Where the
-             Controller Goes" accordion item above). Keeps its original
-             doc-clickable behaviour: the animation plays once, the frame then
-             reshapes to the still, and tapping opens the zoomable document
-             viewer with its placement hotspots. -->
-        <div class="spec-visual-item shape-square-always diagram-spec-panel">
-          <div class="diagram-card doc-clickable" id="diagram-card" role="button" tabindex="0" aria-label="Enlarge the controller placement document to explore it">
-            <div class="diagram-frame-inner">
-              <img class="diagram-still" alt="Possible controller box locations"
-                data-h="assets/where to put the controller box/possible lcoations for boxes - wide.png"
-                data-v="assets/where to put the controller box/possible lcoations for boxes - vertical.png"
-                src="assets/where to put the controller box/possible lcoations for boxes - vertical.png">
-              <video poster="assets/July 2026 website video exports/controller/controller location diagram example/controller location diagrams - vertical-poster.webp" preload="none" class="diagram-anim play-once" autoplay muted playsinline data-prefer-wide
-                data-h="assets/July 2026 website video exports/controller/controller location diagram example/controller location diagram example - horizontal - h264.mp4"
-                data-v="assets/July 2026 website video exports/controller/controller location diagram example/controller location diagrams - vertical - h264.mp4"
-                data-sq="assets/July 2026 website video exports/controller/controller location diagram example/controller location diagram example - square - h264.mp4">
-                <source src="assets/July 2026 website video exports/controller/controller location diagram example/controller location diagrams - vertical - h264.mp4" type="video/mp4">
-              </video>
-            </div>
-          </div>
         </div>
         <div class="spec-visual-item shape-square-mobile vid-clickable" data-title="Tactile Control" data-subtitle="Three analog knobs let you adjust intensity by feel &mdash; no app, no screen, no distraction." data-lightbox-src="assets/July 2026 website video exports/controller/controller knobs/controller knobs - horizontal - h264.mp4">
           <video poster="assets/July 2026 website video exports/controller/controller knobs/controller knobs - horizontal-poster.webp" preload="none" class="play-once" autoplay muted playsinline style="width: 100%; height: 100%; object-fit: cover; border-radius: 24px;"
@@ -490,115 +366,36 @@
 <!-- ═══ 2. EXPERIENCE ═══ -->
 <section class="s-dark" id="experience" style="padding: 100px 0;">
   <div class="container tc">
-    <h2 class="glow mb-5">Every genre has a low end you've never felt.</h2>
-    <p class="mb-5 genre-intro">Log drums, hang drums, distorted 808s &mdash; whatever you put on, the deepest
-      part of it has only ever been something you heard. BASSCRAFT is what turns it into something you feel.</p>
+    <h2 class="glow mb-5">Music, activated.</h2>
+    <p class="mb-5" style="max-width: 600px; margin: 0 auto 40px auto; line-height: 1.5; color: var(--grey-light);">Experience your favorite tracks like never before. Every 808, every bass drop, felt directly in your core.</p>
     <!-- The "lead hero with people" clip that used to sit here is now played as the second
          half of the hero sequence above, so the two don't read as duplicate videos. -->
 
-    <!-- Genre spotlight: one clip held large in the centre, the rest smaller either
-         side. Clicking a side clip promotes it to the centre (spotlight.js); clicking
-         the centre one opens it in the video lightbox as before. Three deliberately
-         unalike genres, because the point of the section is that this isn't a
-         bass-music accessory — it's every genre's missing bottom octave.
-         Still data-carousel: below 768px this reverts to the swipeable strip,
-         where a shrunken side-by-side spotlight would be unreadable. -->
-    <div class="genre-stage" data-spotlight data-carousel>
-      <figure class="genre-item">
-        <div class="vid-r vid-clickable" style="aspect-ratio: 1;" data-title="Amapiano" data-subtitle="The ultimate way to experience refined percussion and deeply sync with African club music." data-lightbox-src="assets/July 2026 website video exports/sub cultural/amapiano - square - compressed.mp4">
-          <video poster="assets/July 2026 website video exports/sub cultural/amapiano - square-poster.webp" preload="none" autoplay loop muted playsinline style="width: 100%; height: 100%; object-fit: cover;">
-            <source src="assets/July 2026 website video exports/sub cultural/amapiano - square - compressed.mp4" type="video/mp4">
-          </video>
-        </div>
-        <figcaption class="genre-label">
-          <span class="genre-name">Amapiano</span>
-          <span class="genre-note">Log drums that sit under the beat.</span>
-        </figcaption>
-      </figure>
-
-      <figure class="genre-item">
-        <div class="vid-r vid-clickable" style="aspect-ratio: 1;" data-title="Frequency Healing" data-subtitle="Connect with resonant hang drum vibrations for deeply therapeutic, full-body frequency healing." data-lightbox-src="assets/July 2026 website video exports/sub cultural/hang drum - square - compressed.mp4">
-          <video poster="assets/July 2026 website video exports/sub cultural/hang drum - square-poster.webp" preload="none" autoplay loop muted playsinline style="width: 100%; height: 100%; object-fit: cover;">
-            <source src="assets/July 2026 website video exports/sub cultural/hang drum - square - compressed.mp4" type="video/mp4">
-          </video>
-        </div>
-        <figcaption class="genre-label">
-          <span class="genre-name">Hang Drum</span>
-          <span class="genre-note">Sustained tones you feel more than hear.</span>
-        </figcaption>
-      </figure>
-
-      <figure class="genre-item">
-        <div class="vid-r vid-clickable" style="aspect-ratio: 1;" data-title="Maximum Stimulation" data-subtitle="Underground phonk and heavy electronic bass—crank up the stimulation of every moment." data-lightbox-src="assets/July 2026 website video exports/sub cultural/phonk - square - compressed.mp4">
-          <video poster="assets/July 2026 website video exports/sub cultural/phonk - square-poster.webp" preload="none" autoplay loop muted playsinline style="width: 100%; height: 100%; object-fit: cover;">
-            <source src="assets/July 2026 website video exports/sub cultural/phonk - square - compressed.mp4" type="video/mp4">
-          </video>
-        </div>
-        <figcaption class="genre-label">
-          <span class="genre-name">Phonk</span>
-          <span class="genre-note">Distorted 808s, straight through your chest.</span>
-        </figcaption>
-      </figure>
+    <!-- Sub-cultural clips: different people/genres feeling it -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px; max-width: 1000px; margin: 0 auto;">
+      <div class="vid-r vid-clickable" style="aspect-ratio: 1;" data-title="Amapiano" data-subtitle="The ultimate way to experience refined percussion and deeply sync with African club music." data-lightbox-src="assets/July 2026 website video exports/sub cultural/amapiano - square - compressed.mp4">
+        <video poster="assets/July 2026 website video exports/sub cultural/amapiano - square-poster.webp" preload="none" autoplay loop muted playsinline style="width: 100%; height: 100%; object-fit: cover;">
+          <source src="assets/July 2026 website video exports/sub cultural/amapiano - square - compressed.mp4" type="video/mp4">
+        </video>
+      </div>
+      <div class="vid-r vid-clickable" style="aspect-ratio: 1;" data-title="Frequency Healing" data-subtitle="Connect with resonant hang drum vibrations for deeply therapeutic, full-body frequency healing." data-lightbox-src="assets/July 2026 website video exports/sub cultural/hang drum - square - compressed.mp4">
+        <video poster="assets/July 2026 website video exports/sub cultural/hang drum - square-poster.webp" preload="none" autoplay loop muted playsinline style="width: 100%; height: 100%; object-fit: cover;">
+          <source src="assets/July 2026 website video exports/sub cultural/hang drum - square - compressed.mp4" type="video/mp4">
+        </video>
+      </div>
+      <div class="vid-r vid-clickable" style="aspect-ratio: 1;" data-title="Maximum Stimulation" data-subtitle="Underground phonk and heavy electronic bass—crank up the stimulation of every moment." data-lightbox-src="assets/July 2026 website video exports/sub cultural/phonk - square - compressed.mp4">
+        <video poster="assets/July 2026 website video exports/sub cultural/phonk - square-poster.webp" preload="none" autoplay loop muted playsinline style="width: 100%; height: 100%; object-fit: cover;">
+          <source src="assets/July 2026 website video exports/sub cultural/phonk - square - compressed.mp4" type="video/mp4">
+        </video>
+      </div>
     </div>
-    <p class="genre-hint">Pick a sound to bring it front and centre &mdash; tap it again to play it full screen.</p>
   </div>
 </section>
 
-<!-- ═══ 6. ORDER (always the final section) ═══
-     Runs on the dark colourway so the page closes the way it opens — white
-     type over black, matching the hero. (Inline `color: var(--black)` was
-     dropped from the heading: --black was never defined as a token, so it
-     resolved to nothing, and it would now fight the white text anyway.) -->
-<section class="s-dark" id="order" style="padding-top: 100px; padding-bottom: 100px;">
+<!-- ═══ 6. ORDER (always the final section) ═══ -->
+<section class="s-light" id="order" style="padding-top: 100px; padding-bottom: 100px;">
   <div class="container tc">
-    <h2 class="glow">Choose your kit.</h2>
-
-    <!-- Trust row, relocated out of its own "Why choose BASSCRAFT" section to sit
-         under this heading instead: these are the three objections that fire at
-         the exact moment someone looks at the price, so they belong beside it
-         rather than in a band of their own.
-
-         NOTE: the terms are placeholders shaped after the LiberNovo band — NOT
-         confirmed policy. They read as a commitment to the buyer, so Dan needs to
-         sign off before this goes anywhere public. -->
-    <div class="trust-grid" data-carousel>
-      <!-- These three now match the written policies exactly. The first card
-           used to claim "Free shipping — every pre-order ships free", which the
-           Shipping Policy contradicts outright (cost is calculated at checkout,
-           no free or flat rate). Replaced with the preorder cancellation right,
-           which is real and is the stronger reassurance while the product is
-           still preorder-only. -->
-      <div class="trust-card">
-        <div class="trust-icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/>
-          </svg>
-        </div>
-        <h3>Cancel any time before it ships</h3>
-        <p>Pre-orders can be cancelled for a full refund right up until your unit leaves our Austin facility.</p>
-      </div>
-
-      <div class="trust-card">
-        <div class="trust-icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M12 2a10 10 0 1 0 10 10"/><path d="M22 4 12 14l-3-3"/>
-          </svg>
-        </div>
-        <h3>30-day returns, shipping on us</h3>
-        <p>Drive with it for a month. If it doesn't change how your music feels, we send a prepaid label.</p>
-      </div>
-
-      <div class="trust-card">
-        <div class="trust-icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/>
-          </svg>
-        </div>
-        <h3>1-year warranty</h3>
-        <p>Covered against manufacturing defects in the cushion, controller and wiring for a full year.</p>
-      </div>
-    </div>
-
+    <h2 class="glow mb-5" style="color: var(--black);">Choose your kit.</h2>
     <div class="pricing-grid">
       <!-- DOUBLE KIT -->
       <div class="pricing-card featured">
@@ -633,173 +430,17 @@
   </div>
 </section>
 
-<!-- ═══ FOOTER ═══
-     Roadmap Priority 5 — the "involved footer". Benchmarked against LiberNovo's:
-     four nav groups, newsletter capture, contact, socials, accepted-payment row,
-     legal line. Every href below is a placeholder (#) on purpose — the pages
-     don't exist yet, and the point of this pass is the layout/credibility read.
-     Swap them for real routes as those pages land. -->
+<!-- ═══ FOOTER ═══ -->
 <footer class="footer">
-  <div class="container">
-
-    <!-- ── Top: link groups + newsletter ── -->
-    <div class="footer-top">
-      <nav class="footer-nav" aria-label="Footer">
-        <div class="footer-col">
-          <h4>Product</h4>
-          <a href="#order">Starter Kit</a>
-          <a href="#order">Double Kit</a>
-          <a href="the-cushion.html">The Cushion</a>
-          <a href="the-controller.html">The Controller</a>
-        </div>
-        <div class="footer-col">
-          <h4>Explore</h4>
-          <a href="how-it-works.html">How It Works</a>
-          <a href="tech-specs.html">Tech Specs</a>
-          <!-- <a href="#experience">THE EXPERIENCE</a> -->
-          <!-- <a href="vehicle-compatibility.html">Vehicle Compatibility</a> -->
-          <a href="tutorials.html">Tutorials</a>
-        </div>
-        <div class="footer-col">
-          <h4>Business</h4>
-          <a href="about-us.html">About Us</a>
-          <a href="become-a-dealer.html">Become a Dealer</a>
-          <a href="affiliate-program.html">Affiliate Program</a>
-          <!-- Hidden per the client brief ("Hide for now: Refer a Friend, Where to Buy,
-               Track Order"). Page file is kept, just unlinked — restore this line
-               when the referral programme actually exists.
-          <a href="refer-a-friend.html">Refer a Friend</a> -->
-          <a href="press.html">Press</a>
-        </div>
-        <div class="footer-col">
-          <h4>Support</h4>
-          <a href="mailto:info@basscraft.co">Contact Us</a>
-          <a href="faq.html">FAQs</a>
-          <!-- Hidden per the client brief; there is no order-tracking back end yet.
-          <a href="track-order.html">Track Order</a> -->
-          <a href="warranty.html">Warranty</a>
-          <a href="returns.html">Returns &amp; Refunds</a>
-          <a href="shipping.html">Shipping Policy</a>
-        </div>
-      </nav>
-
-      <!-- Newsletter. Mirrors LiberNovo's "unlock X% off" capture; the actual
-           incentive is still Dan's call, so the copy stays offer-agnostic. -->
-      <div class="footer-subscribe">
-        <h4>Get first access.</h4>
-        <p>Founding-buyer pricing and launch updates, straight to your inbox.</p>
-        <form class="footer-sub-form" id="footer-sub-form" novalidate>
-          <label class="sr-only" for="footer-sub-email">Email address</label>
-          <input type="email" id="footer-sub-email" name="email" placeholder="Email address" autocomplete="email" required>
-          <button type="submit" aria-label="Subscribe">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline>
-            </svg>
-          </button>
-        </form>
-        <p class="footer-sub-consent">
-          <input type="checkbox" id="footer-sub-consent" name="consent">
-          <label for="footer-sub-consent">I agree to receive marketing emails and accept the <a href="privacy.html">Privacy Policy</a>.</label>
-        </p>
-        <div class="footer-contact">
-          <a href="mailto:info@basscraft.co">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 6 10-6"/></svg>
-            info@basscraft.co
-          </a>
-        </div>
-      </div>
+  <div class="container tc">
+    <p>&copy; 2026 BASSCRAFT. All rights reserved.</p>
+    <div class="footer-links mt-3">
+      <a href="#">Privacy</a>
+      <a href="#">Terms</a>
+      <a href="#">Support</a>
     </div>
-
-    <!-- ── Wordmark ── -->
-    <div class="footer-brand">
-      <div style="display: flex; align-items: flex-start;"><span class="footer-wordmark" role="img" aria-label="BASSCRAFT&reg;"></span><span style="font-size: 11px; color: #1d1d1f; margin-left: 2px; margin-top: -2px; font-weight: bold; font-family: sans-serif;">&reg;</span></div>
-      <div class="footer-social">
-        <a href="https://www.instagram.com/basscraft.co/" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1.1" fill="currentColor" stroke="none"/></svg></a>
-        <a href="https://www.tiktok.com/@basscraftaudio" target="_blank" rel="noopener" aria-label="TikTok"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16.5 3a5.6 5.6 0 0 0 4 3.2v3a8.6 8.6 0 0 1-4-1.2v6.4a5.9 5.9 0 1 1-5.9-5.9c.3 0 .6 0 .9.1v3.1a2.9 2.9 0 1 0 2 2.7V3h3Z"/></svg></a>
-      </div>
-    </div>
-
-    <!-- ── Bottom: payments + legal ── -->
-    <div class="footer-bottom">
-      <div class="footer-pay" aria-label="Accepted payment methods">
-        <span class="pay-chip">Visa</span>
-        <span class="pay-chip">Mastercard</span>
-        <span class="pay-chip">Amex</span>
-        <span class="pay-chip">Discover</span>
-        <span class="pay-chip">Apple&nbsp;Pay</span>
-        <span class="pay-chip">G&nbsp;Pay</span>
-        <span class="pay-chip">Shop&nbsp;Pay</span>
-      </div>
-      <div class="footer-legal">
-        <p>&copy; 2026 BASSCRAFT&reg; Audio LLC. All rights reserved.<br>BASSCRAFT is a registered trademark of BASSCRAFT Audio LLC. The Basscraft icon is a trademark of BASSCRAFT Audio LLC. U.S. patent pending.</p>
-        <div class="footer-links">
-          <a href="shipping.html">Shipping Policy</a>
-          <a href="privacy.html">Privacy Policy</a>
-          <a href="terms.html">Terms of Service</a>
-          <a href="intellectual-property.html">Intellectual Property</a>
-        </div>
-      </div>
-    </div>
-
   </div>
 </footer>
-
-<!-- ═════ COUNTDOWN / URGENCY MODAL — Roadmap Priority 1 ═════
-     LiberNovo fires an on-load "Subscribe to Unlock 5% Off" modal with an email
-     field, consent checkbox and X close — but no timer. The doc's call was to go
-     one further and add a live ticking countdown to the pre-order deadline.
-
-     ⚠ Two values are placeholders and need Dan's sign-off before this is shown
-     to anyone: the deadline date and the incentive copy. Both are declared at
-     the top of the script block below (BC_DEADLINE / the .cd-offer text) so
-     they're a one-line change, not a hunt through markup. -->
-<div class="cd-overlay" id="cd-overlay" role="dialog" aria-modal="true" aria-labelledby="cd-title" hidden>
-  <div class="cd-modal">
-    <button class="cd-close" id="cd-close" aria-label="Close">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
-        <line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/>
-      </svg>
-    </button>
-
-    <p class="cd-eyebrow">Pre-order closes in</p>
-
-    <div class="cd-timer" id="cd-timer" role="timer" aria-live="off">
-      <div class="cd-unit"><span class="cd-num" id="cd-d">--</span><span class="cd-lbl">Days</span></div>
-      <span class="cd-sep">:</span>
-      <div class="cd-unit"><span class="cd-num" id="cd-h">--</span><span class="cd-lbl">Hrs</span></div>
-      <span class="cd-sep">:</span>
-      <div class="cd-unit"><span class="cd-num" id="cd-m">--</span><span class="cd-lbl">Min</span></div>
-      <span class="cd-sep">:</span>
-      <div class="cd-unit"><span class="cd-num" id="cd-s">--</span><span class="cd-lbl">Sec</span></div>
-    </div>
-
-    <h2 class="cd-title" id="cd-title">Lock in founding-buyer pricing.</h2>
-    <p class="cd-offer">Join the list before the pre-order window closes and we'll send your
-      founding-buyer code the moment it opens. <em>(Offer TBC — placeholder copy.)</em></p>
-
-    <form class="cd-form" id="cd-form" novalidate>
-      <label class="sr-only" for="cd-email">Email address</label>
-      <input type="email" id="cd-email" name="email" placeholder="Email address" autocomplete="email" required>
-      <button type="submit" class="buy-btn btn-ruby">NOTIFY ME</button>
-    </form>
-
-    <p class="cd-consent">
-      <input type="checkbox" id="cd-consent" name="consent">
-      <label for="cd-consent">I agree to receive marketing emails and accept the <a href="privacy.html">Privacy Policy</a>.</label>
-    </p>
-    <button class="cd-dismiss" id="cd-dismiss">No thanks, I'll pay full price</button>
-  </div>
-</div>
-
-<!-- Chat-support launcher. Visual placeholder for the real widget (Intercom/
-     Gorgias/etc.) — LiberNovo runs one bottom-right on every screen. Clicking
-     it does nothing yet by design; wire it when the provider is chosen. -->
-<button class="chat-fab" id="chat-fab" aria-label="Need help? Chat with us">
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-    <path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 9.4 9.4 0 0 1-2.8-.4L3 21l1.6-4.7A8.2 8.2 0 0 1 3.6 11.5a8.4 8.4 0 0 1 9-8.4 8.4 8.4 0 0 1 8.4 8.4Z"/>
-  </svg>
-  <span>Need Help?</span>
-</button>
 
 </div>
 
@@ -920,7 +561,7 @@
      of it. One element reused by all three lightboxes (see app.js). -->
 <div class="lightbox-chrome" id="lightbox-chrome" aria-hidden="true">
   <a class="lightbox-chrome-logo" id="lightbox-chrome-logo" href="#home" aria-label="BASSCRAFT — back to top">
-    <div style="display: flex; align-items: flex-start; justify-content: center;"><div class="lightbox-logo-icon" aria-label="Basscraft icon&trade;" role="img"></div><span style="font-size: 14px; color: #fff; margin-left: 2px; margin-top: 2px; font-weight: bold; font-family: sans-serif;">&trade;</span></div>
+    <div class="lightbox-logo-icon" aria-label="BASSCRAFT" role="img"></div>
   </a>
   <a class="lightbox-chrome-buy k-pop-btn" id="lightbox-chrome-buy" href="#order"><span>BUY NOW</span></a>
 </div>
@@ -1083,8 +724,5 @@
 })();
 </script>
 <script src="app.js"></script>
-<script src="countdown.js"></script>
-<script src="carousel.js"></script>
-<script src="spotlight.js"></script>
 </body>
 </html>
