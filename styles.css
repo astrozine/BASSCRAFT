@@ -2894,3 +2894,6 @@ body.cart-open .nav-links { opacity: 0; pointer-events: none; }
     margin-bottom: 24px;
   }
 }
+
+.nav-separator { width: 1px; height: 14px; background: rgba(255,255,255,0.3); margin: 0 4px; transition: background 0.3s; align-self: center; }
+.navbar.scrolled .nav-separator { background: rgba(0,0,0,0.2); }
