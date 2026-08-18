@@ -206,7 +206,20 @@
       .tut-knob-grid { grid-template-columns: 1fr; }
       .tut-note { margin-top: 0; }
     }
-  </style>
+  
+    .tut-desktop-vid { display: block; }
+    .tut-mobile-vid { display: none; }
+    @media (max-width: 768px) {
+      .tut-desktop-vid { display: none !important; }
+      .tut-mobile-vid { display: block !important; }
+    }
+    
+    .tut-power-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 24px; }
+    .tut-power-grid video { width: 100%; height: auto; border-radius: 12px; }
+    @media (max-width: 768px) {
+      .tut-power-grid { grid-template-columns: 1fr; }
+    }
+</style>
 </head>
 <body>
 <div id="site-wrapper">
@@ -322,15 +335,7 @@
   <a href="shipping.html">Shipping Policy</a>
 </div>
 
-<!-- ═══════════════════════════════════════════════════════════════════════
-     TUTORIALS PAGE — interim photo/diagram walkthrough
-     Per the client brief, the finished version of this page is an in-box QR
-     code linking to real video. Until that footage exists, this uses BASSCRAFT's
-     own real product photography (studio shots + the in-car stills already shot
-     for the homepage) with numbered callouts — and ONE genuine wireframe diagram
-     for the one step nothing has been photographed yet: where the cushion cables
-     route to once they're out of sight.
-     ═══════════════════════════════════════════════════════════════════════ -->
+
 <main class="inner-page tut-page">
   <div class="container">
     <p class="inner-eyebrow">Support</p>
@@ -339,12 +344,7 @@
       what the three knobs actually do. Full video walkthroughs are coming (a QR code in the box
       links straight to them); until then, here's the complete process in photos and diagrams.</p>
 
-    <p class="tut-note">
-      <strong>What's real here:</strong> the cushion, controller, and port photos below are
-      BASSCRAFT's actual product photography. The one diagram &mdash; how the cushion cables route
-      out of sight &mdash; is a schematic, since that step hasn't been filmed yet. Everything here
-      gets replaced by the real video guides once they're shot.
-    </p>
+    
 
     <!-- ═══ STEP 1 — SECURE THE CUSHION ═══ -->
     <div class="tut-step">
@@ -391,7 +391,8 @@
             optional direct audio feed. All covered in Step 3.</p>
         </div>
         <div class="tut-media tut-media--tight">
-          <video autoplay loop muted playsinline style="width: 100%; height: auto; display: block;"><source src="assets/July 2026 website video exports/controller/controller in reach - horizontal.mp4" type="video/mp4"></video>
+          <video class="tut-desktop-vid" autoplay loop muted playsinline style="width: 100%; height: auto; display: block;"><source src="assets/July 2026 website video exports/controller/controller in reach - horizontal.mp4" type="video/mp4"></video>
+          <video class="tut-mobile-vid" autoplay loop muted playsinline style="width: 100%; height: auto; display: block;"><source src="assets/July 2026 website video exports/controller/controller in reach - vertical.mp4" type="video/mp4"></video>
         </div>
       </div>
     </div>
@@ -406,7 +407,8 @@
       </div>
       <div class="tut-grid-2">
         <div class="tut-media">
-          <video autoplay loop muted playsinline style="width: 100%; height: auto; display: block;"><source src="assets/July 2026 website video exports/controller/cable inputs reveal - horizontal - h264.mp4" type="video/mp4"></video>
+          <video class="tut-desktop-vid" autoplay loop muted playsinline style="width: 100%; height: auto; display: block;"><source src="assets/July 2026 website video exports/controller/controller ports/cable inputs reveal/cable inputs reveal - horizontal - h264.mp4" type="video/mp4"></video>
+          <video class="tut-mobile-vid" autoplay loop muted playsinline style="width: 100%; height: auto; display: block;"><source src="assets/July 2026 website video exports/controller/controller ports/cable inputs reveal/cable inputs reveal - square - h264.mp4" type="video/mp4"></video>
         </div>
         <div class="tut-text">
           <p>Four ports on the back panel, left to right:</p>
@@ -467,7 +469,8 @@
         <h2>The three controls</h2>
       </div>
       <div class="tut-media tut-media--wide">
-        <video autoplay loop muted playsinline style="width: 100%; height: auto; display: block;"><source src="assets/July 2026 website video exports/controller/controller knobs - horizontal - h264.mp4" type="video/mp4"></video>
+        <video class="tut-desktop-vid" autoplay loop muted playsinline style="width: 100%; height: auto; display: block;"><source src="assets/July 2026 website video exports/controller/controller knobs/controller knobs - horizontal - h264.mp4" type="video/mp4"></video>
+        <video class="tut-mobile-vid" autoplay loop muted playsinline style="width: 100%; height: auto; display: block;"><source src="assets/July 2026 website video exports/controller/controller knobs/controller knobs - square - h264.mp4" type="video/mp4"></video>
       </div>
       <div class="tut-knob-grid">
         <div class="tut-knob-card">
@@ -499,13 +502,15 @@
         <span class="tut-step-num tut-step-num--ref">&#9679;</span>
         <h2>Power</h2>
       </div>
-      <div class="tut-grid-2 tut-grid-2--reverse">
-        <div class="tut-text">
-          <p>Plug in wherever's easiest &mdash; a USB-C port or a standard 12V cigarette lighter both
-            work. No difference in performance between the two; use whichever your car has free.</p>
-        </div>
-        <div class="tut-media tut-media--tight">
-          <img src="assets/July 2026 website video exports/controller/controller ports/2 power options/2 power options - usb c power - square-poster.webp" alt="Car console showing two power options for the BASSCRAFT controller: a 12V cigarette lighter port or a USB-C port">
+      <div>
+        <p style="font-family: 'CalSansText', sans-serif; color: #6e6e73; line-height: 1.7; font-size: clamp(.9rem, 1.05vw, 1rem);">Plug in wherever's easiest &mdash; a USB-C port or a standard 12V cigarette lighter both work. No difference in performance between the two; use whichever your car has free.</p>
+        <div class="tut-power-grid">
+          <div class="tut-media" style="background: #000;">
+            <video autoplay loop muted playsinline><source src="assets/July 2026 website video exports/controller/controller ports/2 power options/2 power options - usb c power - square - h264.mp4" type="video/mp4"></video>
+          </div>
+          <div class="tut-media" style="background: #000;">
+            <video autoplay loop muted playsinline><source src="assets/July 2026 website video exports/controller/controller ports/2 power options/2 power options - cigarette dc power - square - h264.mp4" type="video/mp4"></video>
+          </div>
         </div>
       </div>
     </div>
