@@ -8,7 +8,24 @@
   <link rel="icon" href="favicon.ico">
   <link rel="stylesheet" href="styles.css">
   <style>
-    .inner-page { background: #f7f4ef; min-height: 80vh; padding: clamp(100px,12vw,160px) 0 clamp(60px,8vw,100px); }
+    /* Full-bleed video hero, replacing the old contained placeholder block.
+       Sits ABOVE .inner-page (which keeps its own top padding for the other
+       inner pages) so this page alone gets a true full-viewport opener. */
+    .cushion-hero { position: relative; width: 100%; height: 92vh; min-height: 560px; max-height: 1100px; overflow: hidden; background: #000; }
+    .cushion-hero video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+    .cushion-hero-dim { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.1) 45%, rgba(0,0,0,0.75) 100%); }
+    .cushion-hero-copy { position: absolute; left: 0; right: 0; bottom: 0; padding: 0 5% clamp(48px,7vh,90px); color: #fff; text-align: center; }
+    .cushion-hero-copy .inner-eyebrow { color: rgba(255,255,255,0.7); }
+    /* .inner-page h1 supplies the font/size/weight everywhere else on this
+       page, but this copy block sits outside .inner-page (above it, over the
+       video), so that scoped selector can't reach it — restated here. */
+    .cushion-hero-copy h1 { font-family:'CalSansUI',sans-serif; font-weight:700; font-size:clamp(2.2rem,5vw,3.6rem); letter-spacing:-0.025em; line-height:1.08; color: #fff; text-shadow: 0 2px 20px rgba(0,0,0,0.5); margin-bottom: 16px; }
+    .cushion-hero-copy p { color: rgba(255,255,255,0.85); max-width: 620px; margin: 0 auto; font-size: clamp(1rem,1.3vw,1.2rem); line-height: 1.6; text-shadow: 0 1px 8px rgba(0,0,0,0.4); }
+    @media (max-width: 768px) {
+      .cushion-hero { height: 78vh; min-height: 440px; }
+    }
+
+    .inner-page { background: #f7f4ef; min-height: 80vh; padding: clamp(60px,8vw,100px) 0 clamp(60px,8vw,100px); }
     .inner-page .container { max-width: min(820px, 88vw); }
     .inner-eyebrow { font-family:'CalSansText',sans-serif; font-size:.75rem; letter-spacing:.12em; text-transform:uppercase; color:var(--grey); margin-bottom:18px; }
     .inner-page h1 { font-family:'CalSansUI',sans-serif; font-weight:700; font-size:clamp(2.2rem,5vw,3.6rem); letter-spacing:-0.025em; line-height:1.08; color:#1d1d1f; margin-bottom:24px; }
@@ -139,19 +156,34 @@
   <a href="returns.html">Returns &amp; Refunds</a>
   <a href="shipping.html">Shipping Policy</a>
 </div>
+<!-- Full-bleed hero: the cushion's exploded/opening view, so the very first
+     thing you see is its construction coming apart. Horizontal and vertical
+     source variants swap natively via <source media>, no JS required. -->
+<div class="cushion-hero">
+  <video autoplay muted loop playsinline poster="assets/July 2026 website video exports/cushion/cushion - exploded view/cushion - exploded view - vertical-poster.webp">
+    <source src="assets/July 2026 website video exports/cushion/cushion - exploded view/cushion - exploded view - horizontal - h264.mp4" type="video/mp4" media="(min-width: 769px)">
+    <source src="assets/July 2026 website video exports/cushion/cushion - exploded view/cushion - exploded view - vertical - h264.mp4" type="video/mp4">
+  </video>
+  <div class="cushion-hero-dim"></div>
+  <div class="cushion-hero-copy">
+    <div class="inner-eyebrow">Tool-Free Attachment</div>
+    <h1>Installs in minutes.</h1>
+    <p>Three non-destructive mounting points &mdash; a headrest hook, a seatback buckle, and a bottom rail clip &mdash; ensure the cushion stays locked in place, even under hard braking.</p>
+  </div>
+</div>
+
 <main class="inner-page">
   <div class="container" style="max-width: min(940px, 90vw);">
-    <p class="inner-eyebrow">BASSCRAFT&reg;</p>
-    <h1>The Cushion</h1>
-    <p class="inner-intro">The Basscraft cushion mounts securely to your seat, providing full-body haptic feedback.</p>
-    <div class="tut-media tut-media--wide" style="aspect-ratio: 21/9;">
-  <div style="background: repeating-linear-gradient(45deg, #e8e8eb, #e8e8eb 10px, #f2f2f5 10px, #f2f2f5 20px); border-radius: 16px; display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; border: 1px solid rgba(0,0,0,0.05);"><p style="font-family: 'Inter', sans-serif; font-size: 0.75rem; color: #8e8e93; letter-spacing: 0.1em; text-transform: uppercase; margin: 0; text-align: center;">HERO ASSET PENDING</p></div>
-</div>
-<hr class="inner-divider">
+    <hr class="inner-divider" style="margin-top: 0;">
 <div class="tut-step">
   <div class="tut-step-head"><h2>The Engine</h2></div>
   <div class="tut-grid-2">
-    <div class="tut-media"><div style="background: repeating-linear-gradient(45deg, #e8e8eb, #e8e8eb 10px, #f2f2f5 10px, #f2f2f5 20px); border-radius: 16px; display: flex; align-items: center; justify-content: center; width: 100%; aspect-ratio: 16/9; border: 1px solid rgba(0,0,0,0.05);"><p style="font-family: 'Inter', sans-serif; font-size: 0.75rem; color: #8e8e93; letter-spacing: 0.1em; text-transform: uppercase; margin: 0; text-align: center;">ASSET PENDING</p></div></div>
+    <div class="tut-media">
+      <video autoplay muted loop playsinline poster="assets/July 2026 website video exports/cushion/haptic speakers inside/haptic speakers inside - vertical-poster.webp" style="width:100%; aspect-ratio: 16/9; object-fit: cover; display: block;">
+        <source src="assets/July 2026 website video exports/cushion/haptic speakers inside/haptic speakers inside - horizontal - h264.mp4" type="video/mp4" media="(min-width: 769px)">
+        <source src="assets/July 2026 website video exports/cushion/haptic speakers inside/haptic speakers inside - vertical - h264.mp4" type="video/mp4">
+      </video>
+    </div>
     <div class="tut-text"><p>Dual high-torque haptic transducers are embedded securely inside a rigid backplate. This ensures maximum energy transfer directly into your body, completely bypassing your ears.</p></div>
   </div>
 </div>
@@ -160,17 +192,47 @@
   <div class="tut-step-head"><h2>Premium Materials</h2></div>
   <div class="tut-grid-2 tut-grid-2--reverse">
     <div class="tut-text"><p>Engineered for all-day driving comfort. The core uses high-density memory foam to absorb road bumps, wrapped in a breathable mesh fabric that keeps you cool during long sessions.</p></div>
-    <div class="tut-media"><div style="background: repeating-linear-gradient(45deg, #e8e8eb, #e8e8eb 10px, #f2f2f5 10px, #f2f2f5 20px); border-radius: 16px; display: flex; align-items: center; justify-content: center; width: 100%; aspect-ratio: 16/9; border: 1px solid rgba(0,0,0,0.05);"><p style="font-family: 'Inter', sans-serif; font-size: 0.75rem; color: #8e8e93; letter-spacing: 0.1em; text-transform: uppercase; margin: 0; text-align: center;">ASSET PENDING</p></div></div>
+    <div class="tut-media">
+      <video autoplay muted loop playsinline style="width:100%; aspect-ratio: 16/9; object-fit: cover; display: block;">
+        <source src="assets/July 2026 website video exports/cushion/intro hero scrolly backgrounds &amp; features/scrolly 3 - 4k - macro cushion embroidery - horizontal.mp4" type="video/mp4" media="(min-width: 769px)">
+        <source src="assets/July 2026 website video exports/cushion/intro hero scrolly backgrounds &amp; features/scrolly 3 - macro cushion embroidery - vertical.mp4" type="video/mp4">
+      </video>
+    </div>
   </div>
 </div>
 <hr class="inner-divider">
 <div class="tut-step">
-  <div class="tut-step-head"><h2>Tool-Free Attachment</h2></div>
-  <div class="tut-grid-2">
-    <div class="tut-text"><p>Installs in minutes. Three non-destructive mounting points &mdash; a headrest hook, a seatback buckle, and a bottom rail clip &mdash; ensure the cushion stays locked in place, even under hard braking.</p></div>
-    <div class="tut-media"><div style="background: repeating-linear-gradient(45deg, #e8e8eb, #e8e8eb 10px, #f2f2f5 10px, #f2f2f5 20px); border-radius: 16px; display: flex; align-items: center; justify-content: center; width: 100%; aspect-ratio: 16/9; border: 1px solid rgba(0,0,0,0.05);"><p style="font-family: 'Inter', sans-serif; font-size: 0.75rem; color: #8e8e93; letter-spacing: 0.1em; text-transform: uppercase; margin: 0; text-align: center;">ASSET PENDING</p></div></div>
+  <div class="tut-step-head"><h2>The Cushion</h2></div>
+    <div class="tut-grid-2">
+      <div class="tut-text"><p>The Basscraft cushion mounts securely to your seat, providing full-body haptic feedback.</p></div>
+    <div class="tut-media">
+      <video autoplay muted loop playsinline poster="assets/July 2026 website video exports/cushion/hero 2 cushions/hero 2 cushions - square-poster.webp" style="width:100%; aspect-ratio: 16/9; object-fit: cover; display: block;">
+        <source src="assets/July 2026 website video exports/cushion/hero 2 cushions/hero 2 cushions - horizontal - h264.mp4" type="video/mp4" media="(min-width: 769px)">
+        <source src="assets/July 2026 website video exports/cushion/hero 2 cushions/hero 2 cushions - vertical - h264.mp4" type="video/mp4">
+      </video>
+    </div>
   </div>
 </div>
+
+  </div>
+</div>
+
+<div class="cushion-hero">
+  <video autoplay muted loop playsinline style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;">
+    <source src="assets/July 2026 website video exports/cushion/intro hero scrolly backgrounds &amp; features/scrolly 2 - 4k - transducers spinning - horizontal.mp4" type="video/mp4" media="(min-width: 769px)">
+    <source src="assets/July 2026 website video exports/cushion/intro hero scrolly backgrounds &amp; features/scrolly 2 - transducers spinning - vertical.mp4" type="video/mp4">
+  </video>
+  <div class="cushion-hero-dim"></div>
+  <div class="cushion-hero-copy">
+    <div class="inner-eyebrow">Feel Every Beat</div>
+    <h1>The transducers don't just buzz.</h1>
+    <p>They translate the waveform itself, pulse for pulse, into the cushion's surface. Kick drums land as a sharp thump; a sustained sub note rolls through as one continuous wave.</p>
+  </div>
+</div>
+
+<div class="inner-page" style="padding-top: clamp(60px,8vw,100px);">
+  <div class="container">
+
   </div>
 </main>
 <div id="global-shopping-area"></div>
