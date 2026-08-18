@@ -711,6 +711,15 @@ document.addEventListener('keydown', (e) => {
   const hotspotLayer = document.getElementById('doc-hotspots');
   const frame = document.getElementById('doc-frame');
 
+  /* Embedded mode: some pages (The Controller) want this same pan/zoom/
+     hotspot viewer laid out inline on the page, always on, instead of a
+     click-to-open full-screen popup — set via data-doc-mode="embed" on
+     #doc-lightbox itself. Everything below (hotspots, pinch/wheel/drag,
+     focusRegion) is identical either way; only the handful of "this is a
+     modal overlay" behaviours (scroll lock, chrome, close-on-click-outside,
+     Escape, the chrome-bar-clearance margin) are skipped. */
+  const isEmbed = lb.dataset.docMode === 'embed';
+
   let nw = 0, nh = 0;               // document's natural pixel size
   let scale = 1, fitScale = 1, maxScale = 1;
   let tx = 0, ty = 0;
@@ -793,9 +802,12 @@ document.addEventListener('keydown', (e) => {
     if (!frame || !nw || !nh) return;
     const vw = lb.clientWidth, vh = lb.clientHeight;
     const narrow = vw <= 768;
-    const side = narrow ? 16 : 40;
-    const top = narrow ? 92 : 104;      // clears the chrome bar
-    const bottom = narrow ? 28 : 44;
+    // Embedded instances sit inline in the page, not under the fixed nav
+    // chrome bar, so they only need a small breathing margin, not the
+    // modal's reserved clearance.
+    const side = isEmbed ? (narrow ? 12 : 24) : (narrow ? 16 : 40);
+    const top = isEmbed ? (narrow ? 12 : 24) : (narrow ? 92 : 104);      // clears the chrome bar
+    const bottom = isEmbed ? (narrow ? 12 : 24) : (narrow ? 28 : 44);
     const availW = Math.max(120, vw - side * 2);
     const availH = Math.max(120, vh - top - bottom);
     let w = availW, h = w * nh / nw;
@@ -943,11 +955,14 @@ document.addEventListener('keydown', (e) => {
       img.addEventListener('load', start, { once: true });
     }
     lb.classList.add('is-active');
-    scrollLock.lock('doc');
-    lightboxChrome.show('doc');
+    if (!isEmbed) {
+      scrollLock.lock('doc');
+      lightboxChrome.show('doc');
+    }
   }
 
   function closeDoc() {
+    if (isEmbed) return; // always-on inline viewer — nothing to close
     if (!lb.classList.contains('is-active')) return;
     lb.classList.remove('is-active');
     scrollLock.unlock('doc');
@@ -1008,12 +1023,20 @@ document.addEventListener('keydown', (e) => {
   stage.addEventListener('pointerup', endPointer);
   stage.addEventListener('pointercancel', endPointer);
 
-  stage.addEventListener('wheel', (e) => {
-    e.preventDefault();
-    const rect = stage.getBoundingClientRect();
-    zoomTo(scale * Math.exp(-e.deltaY * 0.0018), e.clientX - rect.left, e.clientY - rect.top);
-    dismissHint();
-  }, { passive: false });
+  // Modal only: the popup owns the whole viewport and locks page scroll while
+  // open, so trading the wheel for zoom is free. An embedded instance sits
+  // inline in normal page flow — capturing the wheel there traps anyone
+  // trying to scroll past it, so it's left alone and the page scrolls
+  // straight through. Zoom is still reachable there via pinch, the +/-
+  // buttons, and the numbered hotspots.
+  if (!isEmbed) {
+    stage.addEventListener('wheel', (e) => {
+      e.preventDefault();
+      const rect = stage.getBoundingClientRect();
+      zoomTo(scale * Math.exp(-e.deltaY * 0.0018), e.clientX - rect.left, e.clientY - rect.top);
+      dismissHint();
+    }, { passive: false });
+  }
 
   stage.addEventListener('dblclick', (e) => {
     const rect = stage.getBoundingClientRect();
@@ -1051,7 +1074,26 @@ document.addEventListener('keydown', (e) => {
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && lb.classList.contains('is-active')) closeDoc();
   });
+  // Which responsive variant (data-h/data-v, set directly on the <img> for
+  // embedded instances) belongs on screen at the current width.
+  const embedSrcOf = () => {
+    const w = window.innerWidth;
+    if (w > 768 && img.dataset.h) return img.dataset.h;
+    if (w <= 768 && img.dataset.v) return img.dataset.v;
+    return img.dataset.h || img.dataset.v || '';
+  };
+
   window.addEventListener('resize', () => {
+    if (isEmbed) {
+      // Crossing the mobile/desktop breakpoint means the wide and vertical
+      // scans lay their three panels out completely differently, so a plain
+      // relayout isn't enough there — swap the source (which re-runs layout
+      // and rebuilds the hotspots for the new shape) rather than just resize.
+      const next = embedSrcOf();
+      if (next && img.getAttribute('src') !== next) { openDoc(next); return; }
+      layout(false);
+      return;
+    }
     if (lb.classList.contains('is-active')) layout(false);
   });
 
@@ -1071,6 +1113,10 @@ document.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openDoc(srcOf()); }
     });
   });
+
+  // Embedded instances have no thumbnail to click — they open themselves,
+  // immediately, with whichever responsive scan matches the current width.
+  if (isEmbed) openDoc(embedSrcOf());
 })();
 
 document.getElementById('upsell-accept-btn')?.addEventListener('click', () => {
