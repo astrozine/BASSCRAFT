@@ -465,25 +465,19 @@ p {
    and should stay as they are — only the one sitting over the video footage
    becomes glass. Overrides the gradient + roving animation .k-pop-btn sets. */
 #hero-cta {
-  background-color: rgba(18, 18, 20, 0.38);
-  background-image: none;
-  animation: none;
-  border: 1px solid rgba(255, 255, 255, 0.30);
-  color: #ffffff;
-  -webkit-backdrop-filter: blur(16px) saturate(140%);
-  backdrop-filter: blur(16px) saturate(140%);
-  box-shadow:
-    0 6px 28px rgba(0, 0, 0, 0.34),
-    inset 0 1px 0 rgba(255, 255, 255, 0.18);
-  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.45);
-}
+    background-color: #ffffff;
+    background-image: none;
+    animation: none;
+    border: 1px solid rgba(255, 255, 255, 0.30);
+    color: #000000;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    text-shadow: none;
+  }
 #hero-cta:hover {
-  background-color: rgba(26, 26, 30, 0.56);
-  border-color: rgba(255, 255, 255, 0.46);
-  box-shadow:
-    0 8px 34px rgba(0, 0, 0, 0.42),
-    inset 0 1px 0 rgba(255, 255, 255, 0.26);
-}
+    background-color: #f2f2f2;
+    border-color: rgba(255, 255, 255, 0.8);
+  }
 
 @keyframes roving-gradient {
   0% { background-position: 0% 50%; }
