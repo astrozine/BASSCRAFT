@@ -2130,7 +2130,7 @@ body.cart-open .nav-links { opacity: 0; pointer-events: none; }
 }
 .ugc-card {
   background: #fff; border: 1px solid rgba(0,0,0,.07);
-  border-radius: var(--r-sm); overflow: hidden;
+  border-radius: 24px; overflow: hidden;
 }
 /* 9:16 — the vertical TikTok/Reels shape the roadmap calls for. */
 .ugc-media {
