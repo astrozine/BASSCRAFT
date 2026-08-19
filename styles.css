@@ -2459,25 +2459,7 @@ body.cart-open .nav-links { opacity: 0; pointer-events: none; }
 /* Travelling specular highlight. Deliberately wide and soft — a hard band
    reads as a "shine" gimmick, a broad one reads as light moving over glass.
    8s and ease-in-out so it glides and pauses rather than strobing. */
-#hero-cta::before {
-  content: '';
-  position: absolute;
-  top: -70%; bottom: -70%; left: -30%;
-  width: 68%;
-  background: linear-gradient(
-    100deg,
-    rgba(180, 225, 255, 0) 0%,
-    rgba(180, 225, 255, 0.18) 28%,
-    rgba(255, 255, 255, 0.55) 50%,
-    rgba(180, 225, 255, 0.18) 72%,
-    rgba(180, 225, 255, 0) 100%
-  );
-  filter: blur(7px);
-  transform: rotate(18deg) translateX(-180px);
-  animation: cta-sheen 7s linear infinite;
-  pointer-events: none;
-  z-index: 1;
-}
+
 
 /* Static glass rim: bright along the top edge, fading out by the middle —
    the "edge highlighting" that makes the pill read as a solid piece of glass
@@ -2522,7 +2504,7 @@ body.cart-open .nav-links { opacity: 0; pointer-events: none; }
 /* A permanently-moving highlight is exactly the kind of thing that triggers
    motion sensitivity — keep the glass, drop the travel. */
 @media (prefers-reduced-motion: reduce) {
-  #hero-cta::before { animation: none; opacity: .5; transform: rotate(18deg) translateX(60px); }
+  
 }
 
 
